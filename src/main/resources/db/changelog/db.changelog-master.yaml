@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: classpath:/db/changelog/changes/1-add-and-fill-users-table.sql
+  - include:
+      file: classpath:/db/changelog/changes/2-add-tokens-table.sql
+  - include:
+      file: classpath:/db/changelog/changes/3-create-sequences.sql

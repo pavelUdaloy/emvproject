@@ -10,15 +10,15 @@ spring:
   application:
     name: emvproject
   datasource:
-    url: jdbc:postgresql://localhost:5433/emvproject
-    username: postgres
-    password: 12345678
+    url: jdbc:sqlserver://localhost:1433;databaseName=emvprojectdb;schema=dbo;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: StrongP@ssw0rd!
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           lob:
             non_contextual_creation: true
