@@ -24,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest) {
-        return authFacade.login(loginRequest.getLogin(), loginRequest.getPassword());
+        return authFacade.login(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
     @GetMapping("/refresh")

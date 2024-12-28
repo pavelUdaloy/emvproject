@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -18,9 +19,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User save(String email, String password, String title, String firstName, String lastName) {
+    public User checkAndCreate(String email, String password, String title, String firstName, String lastName) {
         Optional<User> optionalUser = userRepository.findByLogin(email);
         if (optionalUser.isPresent()) {
+            log.error("User with email {} already exists", email);
             throw new RuntimeException("User with email " + email + " already exists");
         }
         User user = new User();
@@ -42,6 +44,7 @@ public class UserService {
     public User findByEmail(String email) {
         Optional<User> user = userRepository.findByLogin(email);
         if (user.isEmpty()) {
+            log.error("Cannot find user with email = {}", email);
             throw new UsernameNotFoundException("Cannot find user with email = " + email);
         }
         return user.get();
@@ -49,16 +52,18 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User checkAccount(String email, String password) {
-        Optional<User> optionalUser = userRepository.findByLogin(email);
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User with email " + email + " already exists");
-        }
+        User user = findByEmail(email);
 
-        User user = optionalUser.get();
         if (!user.getPassword().equals(password)) {
+            log.error("Password for user with email {} not correct", email);
             throw new RuntimeException("Password for user with email " + email + " not correct");
         }
 
         return user;
+    }
+
+    @Transactional(readOnly = true)
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

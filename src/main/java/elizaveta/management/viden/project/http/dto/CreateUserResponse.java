@@ -11,8 +11,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class RegisterResponse {
+public class CreateUserResponse {
 
-    private String accessToken;
-    private String refreshToken;
+    private Integer id;
+    private String email;
+    private String password;
+    private String title;
+    private String firstName;
+    private String lastName;
 }
