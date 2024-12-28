@@ -45,3 +45,13 @@ logging:
       max-history: 30
       max-file-size: 10MB
       file-name-pattern: logs/archived/telcard.%d{dd-MM-yyyy}.%i.log
+
+jwt:
+  key: DEV-JWT-SIGN-KEY_DEV-JWT-SIGN-KEY_DEV-JWT-SIGN-KEY_DEV-JWT-SIGN-KEY
+  token-header: Authorization
+  token-prefix: "Bearer "
+  token-issuer: emvproject
+
+token-ttl:
+  access: 3600
+  refresh: 86400

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "refresh_tokens")
@@ -18,8 +17,7 @@ import java.util.UUID;
 public class RefreshToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "refresh_tokens_seq")
-    @SequenceGenerator(name = "refresh_tokens_seq", sequenceName = "refresh_tokens_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
@@ -32,6 +30,6 @@ public class RefreshToken {
     private LocalDateTime expiredAt;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER) // todo lazy
-    @JoinColumn(name = "access_token_id", columnDefinition = "UUID")
+    @JoinColumn(name = "access_token_id")
     private AccessToken accessToken;
 }

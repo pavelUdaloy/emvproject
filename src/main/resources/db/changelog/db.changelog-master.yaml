@@ -5,3 +5,5 @@ databaseChangeLog:
       file: classpath:/db/changelog/changes/2-add-tokens-table.sql
   - include:
       file: classpath:/db/changelog/changes/3-create-sequences.sql
+  - include:
+      file: classpath:/db/changelog/changes/4-edit-token-tables.sql

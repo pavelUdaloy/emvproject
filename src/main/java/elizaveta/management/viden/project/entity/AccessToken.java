@@ -1,6 +1,5 @@
 package elizaveta.management.viden.project.entity;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "access_tokens")
@@ -19,8 +17,7 @@ import java.util.UUID;
 public class AccessToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "access_tokens_seq")
-    @SequenceGenerator(name = "access_tokens_seq", sequenceName = "access_tokens_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
@@ -33,7 +30,7 @@ public class AccessToken {
     private LocalDateTime expiredAt;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER) // todo lazy
-    @JoinColumn(name = "user_id", referencedColumnName = "id", columnDefinition = "UUID")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @OneToOne(mappedBy = "accessToken", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
