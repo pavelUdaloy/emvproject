@@ -1,0 +1,47 @@
+server:
+  port: 8090
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: emvproject
+  datasource:
+    url: jdbc:postgresql://localhost:5433/emvproject
+    username: postgres
+    password: 12345678
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          time_zone: UTC
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: validate
+    open-in-view: true
+    show-sql: true
+  main:
+    allow-bean-definition-overriding: true
+
+logging:
+  level:
+    com.innowise.pathology3d: info
+    root: info
+  file:
+    name: logs/emvproject.log
+  pattern:
+    dateformat: dd-MM-yyyy HH:mm:ss.SSS, Europe/Minsk
+  logback:
+    rollingpolicy:
+      max-history: 30
+      max-file-size: 10MB
+      file-name-pattern: logs/archived/telcard.%d{dd-MM-yyyy}.%i.log
