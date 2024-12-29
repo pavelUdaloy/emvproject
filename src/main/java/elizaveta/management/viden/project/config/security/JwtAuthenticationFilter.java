@@ -3,6 +3,7 @@ package elizaveta.management.viden.project.config.security;
 import elizaveta.management.viden.project.config.prop.JwtProperties;
 import elizaveta.management.viden.project.entity.AccessToken;
 import elizaveta.management.viden.project.rep.AccessTokenRepository;
+import elizaveta.management.viden.project.utils.TimeUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -19,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (token != null) {
             String login = parseAccessToken(token);
-            Optional<AccessToken> accessToken = accessTokenRepository.findByLoginAndToken(login, token, LocalDateTime.now().minusHours(3));
+            Optional<AccessToken> accessToken = accessTokenRepository.findByLoginAndToken(login, token, TimeUtils.now().minusHours(3));
 
             if (accessToken.isEmpty()) {
                 log.error("Access token for that user (login = {}) was expired", login);

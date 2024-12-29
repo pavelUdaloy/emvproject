@@ -21,4 +21,8 @@ public interface AccessTokenRepository extends JpaRepository<AccessToken, Intege
             "AND at.user.email = :email " +
             "AND at.expiredAt > :to")
     Optional<AccessToken> findByLoginAndToken(String email, String token, LocalDateTime to);
+
+    @Modifying
+    @Query(value = "DELETE FROM access_tokens WHERE expired_at < :to", nativeQuery = true)
+    void removeByExpirationTime(String to);
 }

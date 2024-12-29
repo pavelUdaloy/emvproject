@@ -19,7 +19,7 @@ public class AccountDetails implements UserDetails {
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.email = user.getEmail();
         accountDetails.password = user.getPassword();
-        accountDetails.grantedAuthorities = List.of(new SimpleGrantedAuthority(toAuthorityValue("emvproject_user")));
+        accountDetails.grantedAuthorities = List.of(new SimpleGrantedAuthority(user.getTitle()));
         return accountDetails;
     }
 
@@ -56,9 +56,5 @@ public class AccountDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    private static String toAuthorityValue(String value) {
-        return "ROLE_" + value;
     }
 }

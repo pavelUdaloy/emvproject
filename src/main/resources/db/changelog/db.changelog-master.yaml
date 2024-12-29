@@ -7,3 +7,15 @@ databaseChangeLog:
       file: classpath:/db/changelog/changes/3-create-sequences.sql
   - include:
       file: classpath:/db/changelog/changes/4-edit-token-tables.sql
+  - include:
+      file: classpath:/db/changelog/changes/5-edit-token-reference-tables.sql
+  - include:
+      file: classpath:/db/changelog/changes/6-edit-refresh-token-table.sql
+  - include:
+      file: classpath:/db/changelog/changes/7-add-project-data.sql
+  - include:
+      file: classpath:/db/changelog/changes/8-add-project-data-to-users.sql
+  - include:
+      file: classpath:/db/changelog/changes/9-fill-project-data-in-users-table.sql
+  - include:
+      file: classpath:/db/changelog/changes/10-edit-titles-in-users-table.sql
