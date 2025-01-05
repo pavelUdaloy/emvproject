@@ -1,9 +1,11 @@
 package elizaveta.management.viden.project.facade;
 
+import elizaveta.management.viden.project.entity.Project;
 import elizaveta.management.viden.project.entity.User;
 import elizaveta.management.viden.project.http.dto.CreateUserRequest;
 import elizaveta.management.viden.project.http.dto.CreateUserResponse;
 import elizaveta.management.viden.project.http.dto.GetUserResponse;
+import elizaveta.management.viden.project.service.ProjectService;
 import elizaveta.management.viden.project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,9 +18,12 @@ import java.util.stream.Collectors;
 public class UserFacade {
 
     private final UserService userService;
+    private final ProjectService projectService;
 
     public CreateUserResponse create(CreateUserRequest createUserRequest) {
-        User user = userService.checkAndCreate(createUserRequest.getEmail(), createUserRequest.getPassword(),
+        Project project = projectService.findById(createUserRequest.getProjectId());
+
+        User user = userService.checkAndCreate(project, createUserRequest.getEmail(), createUserRequest.getPassword(),
                 createUserRequest.getTitle(), createUserRequest.getFirstName(), createUserRequest.getLastName());
 
         return CreateUserResponse.builder()
@@ -39,7 +44,12 @@ public class UserFacade {
                         .title(u.getTitle())
                         .firstName(u.getFirstName())
                         .lastName(u.getLastName())
+                        .projectName(u.getProject().getName())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public void delete(int id) {
+        userService.delete(id);
     }
 }

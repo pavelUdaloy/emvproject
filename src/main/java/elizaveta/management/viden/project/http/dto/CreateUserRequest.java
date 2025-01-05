@@ -14,4 +14,5 @@ public class CreateUserRequest {
     private String title;
     private String firstName;
     private String lastName;
+    private int projectId;
 }

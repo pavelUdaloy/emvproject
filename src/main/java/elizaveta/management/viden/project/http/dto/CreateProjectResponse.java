@@ -11,12 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class GetUserResponse {
+public class CreateProjectResponse {
 
     private Integer id;
-    private String email;
-    private String title;
-    private String firstName;
-    private String lastName;
-    private String projectName;
+    private String name;
 }
