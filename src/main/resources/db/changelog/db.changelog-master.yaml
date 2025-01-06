@@ -19,3 +19,5 @@ databaseChangeLog:
       file: classpath:/db/changelog/changes/9-fill-project-data-in-users-table.sql
   - include:
       file: classpath:/db/changelog/changes/10-edit-titles-in-users-table.sql
+  - include:
+      file: classpath:/db/changelog/changes/11-drop-not-null-in-project-table.sql

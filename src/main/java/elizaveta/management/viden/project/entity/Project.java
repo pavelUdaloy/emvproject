@@ -32,188 +32,188 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private List<User> users;
 
-    @Column(nullable = false, name = "correct_code_implementation_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String correctCodeImplementationStatus;
-    @Column(name = "correct_code_implementation_description", columnDefinition = "TEXT")
+    @Column(name = "correct_code_implementation_status")
+    private String correctCodeImplementationStatus = "N/A";
+    @Column(name = "correct_code_implementation_description")
     private String correctCodeImplementationDescription;
-    @Column(nullable = false, name = "correct_mobile_site_tracking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String correctMobileSiteTrackingStatus;
-    @Column(name = "correct_mobile_site_tracking_description", columnDefinition = "TEXT")
+    @Column(name = "correct_mobile_site_tracking_status")
+    private String correctMobileSiteTrackingStatus = "N/A";
+    @Column(name = "correct_mobile_site_tracking_description")
     private String correctMobileSiteTrackingDescription;
-    @Column(nullable = false, name = "code_singularity_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String codeSingularityStatus;
-    @Column(name = "code_singularity_description", columnDefinition = "TEXT")
+    @Column(name = "code_singularity_status")
+    private String codeSingularityStatus = "N/A";
+    @Column(name = "code_singularity_description")
     private String codeSingularityDescription;
-    @Column(nullable = false, name = "correct_single_page_application_tracking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String correctSinglePageApplicationTrackingStatus;
-    @Column(name = "correct_single_page_application_tracking_description", columnDefinition = "TEXT")
+    @Column(name = "correct_single_page_application_tracking_status")
+    private String correctSinglePageApplicationTrackingStatus = "N/A";
+    @Column(name = "correct_single_page_application_tracking_description")
     private String correctSinglePageApplicationTrackingDescription;
-    @Column(nullable = false, name = "cross_domain_tracking_configuration_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String crossDomainTrackingConfigurationStatus;
-    @Column(name = "cross_domain_tracking_configuration_description", columnDefinition = "TEXT")
+    @Column(name = "cross_domain_tracking_configuration_status")
+    private String crossDomainTrackingConfigurationStatus = "N/A";
+    @Column(name = "cross_domain_tracking_configuration_description")
     private String crossDomainTrackingConfigurationDescription;
-    @Column(nullable = false, name = "self_referrals_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String selfReferralsStatus;
-    @Column(name = "self_referrals_description", columnDefinition = "TEXT")
+    @Column(name = "self_referrals_status")
+    private String selfReferralsStatus = "N/A";
+    @Column(name = "self_referrals_description")
     private String selfReferralsDescription;
-    @Column(nullable = false, name = "payment_process_referrals_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String paymentProcessReferralsStatus;
-    @Column(name = "payment_process_referrals_description", columnDefinition = "TEXT")
+    @Column(name = "payment_process_referrals_status")
+    private String paymentProcessReferralsStatus = "N/A";
+    @Column(name = "payment_process_referrals_description")
     private String paymentProcessReferralsDescription;
-    @Column(nullable = false, name = "utm_tagging_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String utmTaggingStatus;
-    @Column(name = "utm_tagging_description", columnDefinition = "TEXT")
+    @Column(name = "utm_tagging_status")
+    private String utmTaggingStatus = "N/A";
+    @Column(name = "utm_tagging_description")
     private String utmTaggingDescription;
-    @Column(nullable = false, name = "pages_404_error_tracking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String pages404ErrorTrackingStatus;
-    @Column(name = "pages_404_error_tracking_description", columnDefinition = "TEXT")
+    @Column(name = "pages_404_error_tracking_status")
+    private String pages404ErrorTrackingStatus = "N/A";
+    @Column(name = "pages_404_error_tracking_description")
     private String pages404ErrorTrackingDescription;
-    @Column(nullable = false, name = "main_domain_in_list_unwanted_referrals_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String mainDomainInListUnwantedReferralsStatus;
-    @Column(name = "main_domain_in_list_unwanted_referrals_description", columnDefinition = "TEXT")
+    @Column(name = "main_domain_in_list_unwanted_referrals_status")
+    private String mainDomainInListUnwantedReferralsStatus = "N/A";
+    @Column(name = "main_domain_in_list_unwanted_referrals_description")
     private String mainDomainInListUnwantedReferralsDescription;
-    @Column(nullable = false, name = "session_timeout_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String sessionTimeoutStatus;
-    @Column(name = "session_timeout_description", columnDefinition = "TEXT")
+    @Column(name = "session_timeout_status")
+    private String sessionTimeoutStatus = "N/A";
+    @Column(name = "session_timeout_description")
     private String sessionTimeoutDescription;
-    @Column(nullable = false, name = "lookback_window_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String lookbackWindowStatus;
-    @Column(name = "lookback_window_description", columnDefinition = "TEXT")
+    @Column(name = "lookback_window_status")
+    private String lookbackWindowStatus = "N/A";
+    @Column(name = "lookback_window_description")
     private String lookbackWindowDescription;
-    @Column(nullable = false, name = "user_and_event_data_retention_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String userAndEventDataRetentionStatus;
-    @Column(name = "user_and_event_data_retention_description", columnDefinition = "TEXT")
+    @Column(name = "user_and_event_data_retention_status")
+    private String userAndEventDataRetentionStatus = "N/A";
+    @Column(name = "user_and_event_data_retention_description")
     private String userAndEventDataRetentionDescription;
-    @Column(nullable = false, name = "ecommerce_data_accuracy_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String ecommerceDataAccuracyStatus;
-    @Column(name = "ecommerce_data_accuracy_description", columnDefinition = "TEXT")
+    @Column(name = "ecommerce_data_accuracy_status")
+    private String ecommerceDataAccuracyStatus = "N/A";
+    @Column(name = "ecommerce_data_accuracy_description")
     private String ecommerceDataAccuracyDescription;
-    @Column(nullable = false, name = "traffic_to_not_set_landing_page_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String trafficToNotSetLandingPageStatus;
-    @Column(name = "traffic_to_not_set_landing_page_description", columnDefinition = "TEXT")
+    @Column(name = "traffic_to_not_set_landing_page_status")
+    private String trafficToNotSetLandingPageStatus = "N/A";
+    @Column(name = "traffic_to_not_set_landing_page_description")
     private String trafficToNotSetLandingPageDescription;
-    @Column(nullable = false, name = "currency_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String currencyStatus;
-    @Column(name = "currency_description", columnDefinition = "TEXT")
+    @Column(name = "currency_status")
+    private String currencyStatus = "N/A";
+    @Column(name = "currency_description")
     private String currencyDescription;
-    @Column(nullable = false, name = "define_internal_traffic_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String defineInternalTrafficStatus;
-    @Column(name = "define_internal_traffic_description", columnDefinition = "TEXT")
+    @Column(name = "define_internal_traffic_status")
+    private String defineInternalTrafficStatus = "N/A";
+    @Column(name = "define_internal_traffic_description")
     private String defineInternalTrafficDescription;
-    @Column(nullable = false, name = "industry_category_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String industryCategoryStatus;
-    @Column(name = "industry_category_description", columnDefinition = "TEXT")
+    @Column(name = "industry_category_status")
+    private String industryCategoryStatus = "N/A";
+    @Column(name = "industry_category_description")
     private String industryCategoryDescription;
-    @Column(nullable = false, name = "reporting_time_zone_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String reportingTimeZoneStatus;
-    @Column(name = "reporting_time_zone_description", columnDefinition = "TEXT")
+    @Column(name = "reporting_time_zone_status")
+    private String reportingTimeZoneStatus = "N/A";
+    @Column(name = "reporting_time_zone_description")
     private String reportingTimeZoneDescription;
-    @Column(nullable = false, name = "event_tracking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String eventTrackingStatus;
-    @Column(name = "event_tracking_description", columnDefinition = "TEXT")
+    @Column(name = "event_tracking_status")
+    private String eventTrackingStatus = "N/A";
+    @Column(name = "event_tracking_description")
     private String eventTrackingDescription;
-    @Column(nullable = false, name = "conversion_tracking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String conversionTrackingStatus;
-    @Column(name = "conversion_tracking_description", columnDefinition = "TEXT")
+    @Column(name = "conversion_tracking_status")
+    private String conversionTrackingStatus = "N/A";
+    @Column(name = "conversion_tracking_description")
     private String conversionTrackingDescription;
-    @Column(nullable = false, name = "standard_purchase_ecommerce_tracking_implementation_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String standardPurchaseEcommerceTrackingImplementationStatus;
-    @Column(name = "standard_purchase_ecommerce_tracking_implementation_description", columnDefinition = "TEXT")
+    @Column(name = "standard_purchase_ecommerce_tracking_implementation_status")
+    private String standardPurchaseEcommerceTrackingImplementationStatus = "N/A";
+    @Column(name = "standard_purchase_ecommerce_tracking_implementation_description")
     private String standardPurchaseEcommerceTrackingImplementationDescription;
-    @Column(nullable = false, name = "enhanced_measurement_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String enhancedMeasurementStatus;
-    @Column(name = "enhanced_measurement_description", columnDefinition = "TEXT")
+    @Column(name = "enhanced_measurement_status")
+    private String enhancedMeasurementStatus = "N/A";
+    @Column(name = "enhanced_measurement_description")
     private String enhancedMeasurementDescription;
-    @Column(nullable = false, name = "user_id_tracking_implementation_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String userIdTrackingImplementationStatus;
-    @Column(name = "user_id_tracking_implementation_description", columnDefinition = "TEXT")
+    @Column(name = "user_id_tracking_implementation_status")
+    private String userIdTrackingImplementationStatus = "N/A";
+    @Column(name = "user_id_tracking_implementation_description")
     private String userIdTrackingImplementationDescription;
-    @Column(nullable = false, name = "enhnanced_ecommerce_tracking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String enhnancedEcommerceTrackingStatus;
-    @Column(name = "enhnanced_ecommerce_tracking_description", columnDefinition = "TEXT")
+    @Column(name = "enhnanced_ecommerce_tracking_status")
+    private String enhnancedEcommerceTrackingStatus = "N/A";
+    @Column(name = "enhnanced_ecommerce_tracking_description")
     private String enhnancedEcommerceTrackingDescription;
-    @Column(nullable = false, name = "custom_dimensions_and_metrics_tracking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String customDimensionsAndMetricsTrackingStatus;
-    @Column(name = "custom_dimensions_and_metrics_tracking_description", columnDefinition = "TEXT")
+    @Column(name = "custom_dimensions_and_metrics_tracking_status")
+    private String customDimensionsAndMetricsTrackingStatus = "N/A";
+    @Column(name = "custom_dimensions_and_metrics_tracking_description")
     private String customDimensionsAndMetricsTrackingDescription;
-    @Column(nullable = false, name = "granular_location_and_device_data_collection_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String granularLocationAndDeviceDataCollectionStatus;
-    @Column(name = "granular_location_and_device_data_collection_description", columnDefinition = "TEXT")
+    @Column(name = "granular_location_and_device_data_collection_status")
+    private String granularLocationAndDeviceDataCollectionStatus = "N/A";
+    @Column(name = "granular_location_and_device_data_collection_description")
     private String granularLocationAndDeviceDataCollectionDescription;
-    @Column(nullable = false, name = "advanced_settings_to_allow_for_ads_personalization_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String advancedSettingsToAllowForAdsPersonalizationStatus;
-    @Column(name = "advanced_settings_to_allow_for_ads_personalization_description", columnDefinition = "TEXT")
+    @Column(name = "advanced_settings_to_allow_for_ads_personalization_status")
+    private String advancedSettingsToAllowForAdsPersonalizationStatus = "N/A";
+    @Column(name = "advanced_settings_to_allow_for_ads_personalization_description")
     private String advancedSettingsToAllowForAdsPersonalizationDescription;
-    @Column(nullable = false, name = "property_name_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String propertyNameStatus;
-    @Column(name = "property_name_description", columnDefinition = "TEXT")
+    @Column(name = "property_name_status")
+    private String propertyNameStatus = "N/A";
+    @Column(name = "property_name_description")
     private String propertyNameDescription;
-    @Column(nullable = false, name = "stream_name_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String streamNameStatus;
-    @Column(name = "stream_name_description", columnDefinition = "TEXT")
+    @Column(name = "stream_name_status")
+    private String streamNameStatus = "N/A";
+    @Column(name = "stream_name_description")
     private String streamNameDescription;
-    @Column(nullable = false, name = "event_tracking_taxonomy_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String eventTrackingTaxonomyStatus;
-    @Column(name = "event_tracking_taxonomy_description", columnDefinition = "TEXT")
+    @Column(name = "event_tracking_taxonomy_status")
+    private String eventTrackingTaxonomyStatus = "N/A";
+    @Column(name = "event_tracking_taxonomy_description")
     private String eventTrackingTaxonomyDescription;
-    @Column(nullable = false, name = "google_bigquery_linking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String googleBigqueryLinkingStatus;
-    @Column(name = "google_bigquery_linking_description", columnDefinition = "TEXT")
+    @Column(name = "google_bigquery_linking_status")
+    private String googleBigqueryLinkingStatus = "N/A";
+    @Column(name = "google_bigquery_linking_description")
     private String googleBigqueryLinkingDescription;
-    @Column(nullable = false, name = "library_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String libraryStatus;
-    @Column(name = "library_description", columnDefinition = "TEXT")
+    @Column(name = "library_status")
+    private String libraryStatus = "N/A";
+    @Column(name = "library_description")
     private String libraryDescription;
-    @Column(nullable = false, name = "google_ads_linking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String googleAdsLinkingStatus;
-    @Column(name = "google_ads_linking_description", columnDefinition = "TEXT")
+    @Column(name = "google_ads_linking_status")
+    private String googleAdsLinkingStatus = "N/A";
+    @Column(name = "google_ads_linking_description")
     private String googleAdsLinkingDescription;
-    @Column(nullable = false, name = "google_search_console_linking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String googleSearchConsoleLinkingStatus;
-    @Column(name = "google_search_console_linking_description", columnDefinition = "TEXT")
+    @Column(name = "google_search_console_linking_status")
+    private String googleSearchConsoleLinkingStatus = "N/A";
+    @Column(name = "google_search_console_linking_description")
     private String googleSearchConsoleLinkingDescription;
-    @Column(nullable = false, name = "google_merchant_center_linking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String googleMerchantCenterLinkingStatus;
-    @Column(name = "google_merchant_center_linking_description", columnDefinition = "TEXT")
+    @Column(name = "google_merchant_center_linking_status")
+    private String googleMerchantCenterLinkingStatus = "N/A";
+    @Column(name = "google_merchant_center_linking_description")
     private String googleMerchantCenterLinkingDescription;
-    @Column(nullable = false, name = "display_and_video_360_linking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String displayAndVideo360LinkingStatus;
-    @Column(name = "display_and_video_360_linking_description", columnDefinition = "TEXT")
+    @Column(name = "display_and_video_360_linking_status")
+    private String displayAndVideo360LinkingStatus = "N/A";
+    @Column(name = "display_and_video_360_linking_description")
     private String displayAndVideo360LinkingDescription;
-    @Column(nullable = false, name = "data_import_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String dataImportStatus;
-    @Column(name = "data_import_description", columnDefinition = "TEXT")
+    @Column(name = "data_import_status")
+    private String dataImportStatus = "N/A";
+    @Column(name = "data_import_description")
     private String dataImportDescription;
-    @Column(nullable = false, name = "ad_manager_linking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String adManagerLinkingStatus;
-    @Column(name = "ad_manager_linking_description", columnDefinition = "TEXT")
+    @Column(name = "ad_manager_linking_status")
+    private String adManagerLinkingStatus = "N/A";
+    @Column(name = "ad_manager_linking_description")
     private String adManagerLinkingDescription;
-    @Column(nullable = false, name = "search_ads_360_linking_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String searchAds360LinkingStatus;
-    @Column(name = "search_ads_360_linking_description", columnDefinition = "TEXT")
+    @Column(name = "search_ads_360_linking_status")
+    private String searchAds360LinkingStatus = "N/A";
+    @Column(name = "search_ads_360_linking_description")
     private String searchAds360LinkingDescription;
-    @Column(nullable = false, name = "google_signals_data_collection_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String googleSignalsDataCollectionStatus;
-    @Column(name = "google_signals_data_collection_description", columnDefinition = "TEXT")
+    @Column(name = "google_signals_data_collection_status")
+    private String googleSignalsDataCollectionStatus = "N/A";
+    @Column(name = "google_signals_data_collection_description")
     private String googleSignalsDataCollectionDescription;
-    @Column(nullable = false, name = "reporting_attribution_model_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String reportingAttributionModelStatus;
-    @Column(name = "reporting_attribution_model_description", columnDefinition = "TEXT")
+    @Column(name = "reporting_attribution_model_status")
+    private String reportingAttributionModelStatus = "N/A";
+    @Column(name = "reporting_attribution_model_description")
     private String reportingAttributionModelDescription;
-    @Column(nullable = false, name = "reporting_attribution_identity_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String reportingAttributionIdentityStatus;
-    @Column(name = "reporting_attribution_identity_description", columnDefinition = "TEXT")
+    @Column(name = "reporting_attribution_identity_status")
+    private String reportingAttributionIdentityStatus = "N/A";
+    @Column(name = "reporting_attribution_identity_description")
     private String reportingAttributionIdentityDescription;
-    @Column(nullable = false, name = "server_side_tracking_implementation_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String serverSideTrackingImplementationStatus;
-    @Column(name = "server_side_tracking_implementation_description", columnDefinition = "TEXT")
+    @Column(name = "server_side_tracking_implementation_status")
+    private String serverSideTrackingImplementationStatus = "N/A";
+    @Column(name = "server_side_tracking_implementation_description")
     private String serverSideTrackingImplementationDescription;
-    @Column(nullable = false, name = "consent_mode_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String consentModeStatus;
-    @Column(name = "consent_mode_description", columnDefinition = "TEXT")
+    @Column(name = "consent_mode_status")
+    private String consentModeStatus = "N/A";
+    @Column(name = "consent_mode_description")
     private String consentModeDescription;
-    @Column(nullable = false, name = "pii_data_not_collection_status", columnDefinition = "VARCHAR(100) DEFAULT 'N/A'")
-    private String piiDataNotCollectionStatus;
-    @Column(name = "pii_data_not_collection_description", columnDefinition = "TEXT")
+    @Column(name = "pii_data_not_collection_status")
+    private String piiDataNotCollectionStatus = "N/A";
+    @Column(name = "pii_data_not_collection_description")
     private String piiDataNotCollectionDescription;
 }
