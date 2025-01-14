@@ -3,6 +3,7 @@ package elizaveta.management.viden.project.http;
 import elizaveta.management.viden.project.facade.ProjectFacade;
 import elizaveta.management.viden.project.http.dto.CreateProjectRequest;
 import elizaveta.management.viden.project.http.dto.CreateProjectResponse;
+import elizaveta.management.viden.project.http.dto.GetProjectResponse;
 import elizaveta.management.viden.project.http.dto.GetProjectShortedResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,13 +24,18 @@ public class ProjectController {
     private final ProjectFacade projectFacade;
 
     @PostMapping
-    public CreateProjectResponse create(@RequestBody CreateProjectRequest createProjectRequest) { // todo not-null property references a null or transient value : elizaveta.management.viden.project.entity.Project.adManagerLinkingStatus
+    public CreateProjectResponse create(@RequestBody CreateProjectRequest createProjectRequest) {
         return projectFacade.create(createProjectRequest);
     }
 
     @GetMapping
     public List<GetProjectShortedResponse> getAll() {
         return projectFacade.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public GetProjectResponse getById(@PathVariable("id") int id) {
+        return projectFacade.getById(id);
     }
 
     @DeleteMapping("/{id}")
