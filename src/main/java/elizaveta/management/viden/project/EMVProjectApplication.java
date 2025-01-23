@@ -15,5 +15,4 @@ public class EMVProjectApplication {
     public static void main(String[] args) {
         SpringApplication.run(EMVProjectApplication.class, args);
     }
-
 }

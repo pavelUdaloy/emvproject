@@ -1,9 +1,8 @@
-package elizaveta.management.viden.project.config.security;
+package elizaveta.management.viden.project.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -11,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.RestTemplate;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -22,20 +20,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfiguration {
 
     public static final int REST_TIMEOUT = 5000;
-    private final JwtAuthenticationFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/auth/refresh").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/auth/logout", "/users", "/projects").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/users", "/projects").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/users/**", "/projects/**").authenticated()
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(withDefaults())
                 .formLogin(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)

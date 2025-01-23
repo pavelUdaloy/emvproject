@@ -10,7 +10,10 @@ spring:
   application:
     name: emvproject
   datasource:
-    url: Server=WIN-2OR5H1CA80E\\MSSQLSERVER01;Database=bd_adds103;Trusted_Connection=True;
+    url: jdbc:sqlserver://localhost:1433;databaseName=emvprojectdb;schema=dbo;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: StrongP@ssw0rd!
+#    url: Server=WIN-2OR5H1CA80E\\MSSQLSERVER01;Database=bd_adds103;Trusted_Connection=True;
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml

@@ -13,6 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginResponse {
 
-    private String accessToken;
-    private String refreshToken;
+    private Integer id;
+    private String email;
+    private String password;
+    private String title;
+    private String firstName;
+    private String lastName;
 }

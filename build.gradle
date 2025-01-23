@@ -29,16 +29,7 @@ dependencies {
 	implementation 'com.microsoft.sqlserver:mssql-jdbc:11.2.1.jre17'
 	implementation 'org.liquibase:liquibase-core'
 	implementation "org.apache.commons:commons-lang3"
-	implementation 'io.jsonwebtoken:jjwt-impl:0.10.7'
-	implementation 'io.jsonwebtoken:jjwt-jackson:0.10.7'
 
 	compileOnly "org.projectlombok:lombok"
 	annotationProcessor "org.projectlombok:lombok"
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
 }
