@@ -31,6 +31,8 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private List<User> users;
+    @OneToMany(mappedBy = "project")
+    private List<Note> notes;
 
     @Column(name = "correct_code_implementation_status")
     private String correctCodeImplementationStatus = "N/A";

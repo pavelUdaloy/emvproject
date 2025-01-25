@@ -1,6 +1,6 @@
 CREATE TABLE projects
 (
-    id                                                              INT          NOT NULL IDENTITY(1,1) UNIQUE,
+    id                                                              INT          NOT NULL IDENTITY (1,1) UNIQUE,
     name                                                            VARCHAR(100) NOT NULL UNIQUE,
     correct_code_implementation_status                              VARCHAR(100),
     correct_code_implementation_description                         TEXT,
@@ -103,13 +103,13 @@ VALUES ('VIDEN'),
 
 CREATE TABLE users
 (
-    id         INT NOT NULL IDENTITY(1,1) UNIQUE,
+    id         INT          NOT NULL IDENTITY (1,1) UNIQUE,
     email      VARCHAR(100) NOT NULL UNIQUE,
     password   VARCHAR(100) NOT NULL,
     title      VARCHAR(100) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name  VARCHAR(100) NOT NULL,
-    project_id INT NOT NULL,
+    project_id INT          NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -120,8 +120,39 @@ ALTER TABLE users
             ON DELETE CASCADE;
 
 INSERT INTO users (email, password, title, first_name, last_name, project_id)
-VALUES ('dzianis.zakharych@viden.com', '1234', 'FOUNDER', 'Dzianis', 'Zakharych', (SELECT id FROM projects WHERE name = 'VIDEN')),
-       ('elizaveta.tsypenkova@viden.com', '1234', 'ANALYST', 'Elizaveta', 'Tsypenkova', (SELECT id FROM projects WHERE name = 'VIDEN')),
-       ('jack.jackson@google.com', '1234', 'ANALYST', 'Jack', 'Jackson', (SELECT id FROM projects WHERE name = 'GOOGLE'));
+VALUES ('dzianis.zakharych@viden.com', '1234', 'FOUNDER', 'Dzianis', 'Zakharych',
+        (SELECT id FROM projects WHERE name = 'VIDEN')),
+       ('elizaveta.tsypenkova@viden.com', '1234', 'ANALYST', 'Elizaveta', 'Tsypenkova',
+        (SELECT id FROM projects WHERE name = 'VIDEN')),
+       ('jack.jackson@google.com', '1234', 'ANALYST', 'Jack', 'Jackson',
+        (SELECT id FROM projects WHERE name = 'GOOGLE'));
 
 CREATE SEQUENCE users_SEQ START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE notes_SEQ START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE notes
+(
+    id           INT  NOT NULL IDENTITY (1,1) UNIQUE,
+    message      TEXT NOT NULL,
+    project_id   INT  NOT NULL,
+    root_note_id INT,
+    user_id      INT  NOT NULL,
+    sended_at    DATETIME2 NOT NULL,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE notes
+    ADD CONSTRAINT fk_notes_projects
+        FOREIGN KEY (project_id)
+            REFERENCES projects (id)
+            ON DELETE NO ACTION;
+ALTER TABLE notes
+    ADD CONSTRAINT fk_notes_notes
+        FOREIGN KEY (root_note_id)
+            REFERENCES notes (id)
+            ON DELETE NO ACTION;
+ALTER TABLE notes
+    ADD CONSTRAINT fk_notes_users
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
+            ON DELETE NO ACTION;

@@ -14,39 +14,39 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "notes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Note {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
     @Column(nullable = false)
-    private String password;
+    private String message;
 
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false, name = "first_name")
-    private String firstName;
-
-    @Column(nullable = false, name = "last_name")
-    private String lastName;
+    @Column(nullable = false, name = "sended_at")
+    private LocalDateTime sendedAt;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @OneToMany(mappedBy = "user")
-    private List<Note> notes;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "root_note_id")
+    private Note rootNote;
+
+    @OneToMany(mappedBy = "rootNote")
+    private List<Note> childNotes;
 }
