@@ -22,6 +22,8 @@ public class AuthFacade {
                 .title(user.getTitle())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
+                .projectName(user.getProject().getName())
+                .projectId(user.getProject().getId())
                 .build();
     }
 }

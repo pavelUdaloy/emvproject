@@ -19,4 +19,6 @@ public class LoginResponse {
     private String title;
     private String firstName;
     private String lastName;
+    private String projectName;
+    private int projectId;
 }
