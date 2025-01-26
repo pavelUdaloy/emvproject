@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viden - Регистрация</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: #ffffff;
+      border: none;
+      border-radius: 20px;
+      padding: 30px;
+      width: 360px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      animation: floatIn 0.5s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container h1 {
+      color: #003d7a;
+      margin-bottom: 20px;
+      font-size: 26px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333333;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+      transition: box-shadow 0.3s, border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      box-shadow: 0 0 8px rgba(0, 61, 122, 0.4);
+      border-color: #003d7a;
+    }
+
+    .form-group input[title]:hover::after {
+      content: attr(title);
+      position: absolute;
+      background-color: #0056a3;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      transform: translateY(-110%);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn {
+      background-color: #0056a3;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s, transform 0.2s;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background-color: #004080;
+      transform: translateY(-2px);
+    }
+
+    .toggle-button {
+      background: none;
+      color: #0056a3;
+      border: none;
+      font-size: 14px;
+      margin-top: 15px;
+      cursor: pointer;
+      text-decoration: underline;
+      transition: color 0.3s;
+    }
+
+    .toggle-button:hover {
+      color: #003d7a;
+    }
+
+    .forms {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form {
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .form.hidden {
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="formTitle">Регистрация</h1>
+    <div class="forms">
+      <form id="registerForm" class="form" action="/api/register" method="POST">
+        <div class="form-group">
+          <label for="registerUsername">Логин</label>
+          <input type="text" id="registerUsername" name="username" required pattern="[a-zA-Z0-9]+|[a-zA-Z]+" title="Логин должен содержать только латинские буквы или буквы с цифрами">
+        </div>
+        <div class="form-group">
+          <label for="registerPassword">Пароль</label>
+          <input type="password" id="registerPassword" name="password" required pattern="\d{7,}" title="Пароль должен содержать только цифры и быть не менее 7 символов">
+        </div>
+        <button type="submit" class="btn">Зарегистрироваться</button>
+      </form>
+
+      <form id="loginForm" class="form hidden" action="/api/login" method="POST">
+        <div class="form-group">
+          <label for="loginUsername">Логин</label>
+          <input type="text" id="loginUsername" name="username" required pattern="[a-zA-Z0-9]+|[a-zA-Z]+" title="Логин должен содержать только латинские буквы или буквы с цифрами">
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Пароль</label>
+          <input type="password" id="loginPassword" name="password" required pattern="\d{7,}" title="Пароль должен содержать только цифры и быть не менее 7 символов">
+        </div>
+        <button type="submit" class="btn">Войти</button>
+      </form>
+    </div>
+    <button class="toggle-button" id="toggleButton">Вход</button>
+  </div>
+
+  <script>
+    const registerForm = document.getElementById('registerForm');
+    const loginForm = document.getElementById('loginForm');
+    const toggleButton = document.getElementById('toggleButton');
+    const formTitle = document.getElementById('formTitle');
+
+    toggleButton.addEventListener('click', () => {
+      if (registerForm.classList.contains('hidden')) {
+        registerForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        formTitle.textContent = 'Регистрация';
+        toggleButton.textContent = 'Вход';
+      } else {
+        registerForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+        formTitle.textContent = 'Вход';
+        toggleButton.textContent = 'Регистрация';
+      }
+    });
+  </script>
+</body>
+</html>
