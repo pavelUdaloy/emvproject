@@ -78,13 +78,17 @@
                     const noteElement = document.createElement("div");
                     noteElement.className = "note" + (isNested ? " nested-note" : "");
                     noteElement.innerHTML = `
-                            <p><strong>${note.userEmail}</strong> (${new Date(note.sendedAt).toLocaleString()}):</p>
-                            <p>${note.message}</p>
-                            <div class="reply-form">
-                                <textarea rows="2" cols="40" placeholder="Ваш ответ"></textarea>
-                                <button onclick="submitReply(${note.id}, this)">Отправить</button>
-                            </div>
-                        `;
+        <div style="display: flex; align-items: center;">
+            <div>
+                <p><strong>${note.userEmail}</strong> (${new Date(note.sendedAt).toLocaleString()}):</p>
+                <p>${note.message}</p>
+            </div>
+            <div class="reply-form" style="margin-left: auto;">
+                <textarea rows="2" cols="40" placeholder="Ваш ответ"></textarea>
+                <button onclick="submitReply(${note.id}, this)">Отправить</button>
+            </div>
+        </div>
+    `;
                     if (note.notes && note.notes.length > 0) {
                         const nestedNotes = document.createElement("div");
                         note.notes.forEach(nestedNote => {
@@ -106,6 +110,7 @@
             alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
         }
     }
+
     async function submitReply(rootNoteId, button) {
         const replyForm = button.closest('.reply-form');
         const commentMessage = replyForm.querySelector('textarea').value;
@@ -137,6 +142,7 @@
             }
         }
     }
+
     window.addEventListener("load", async function () {
             document.getElementById("id").innerText = urlParams.get("id");
             document.getElementById("email").innerText = urlParams.get("email");
