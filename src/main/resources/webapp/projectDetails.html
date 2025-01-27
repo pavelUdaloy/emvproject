@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Details</title>
+    <style>
+        .editable {
+            width: 100%;
+            border: 1px solid #ccc;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body>
 <h2>Project Details</h2>
@@ -24,6 +32,7 @@
             <th>Title</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Project Name</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -58,6 +67,8 @@
     </tbody>
 </table>
 
+<button id="saveChangesButton">Сохранить изменения</button>
+
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     let adminProjectId = urlParams.get("adminProjectId");
@@ -84,6 +95,7 @@
                                 <td>${user.title}</td>
                                 <td>${user.firstName}</td>
                                 <td>${user.lastName}</td>
+                                <td>${user.projectName}</td>
                                 <td><button onclick="deleteUser(${user.id})">Удалить</button></td>
                             `;
                         usersTableBody.appendChild(row);
@@ -114,15 +126,34 @@
                 const tableBody = document.getElementById("projectInfoTable");
 
                 // Преобразование данных в строки таблицы
-                const createRow = (stage, status, description) => {
+                const createEditableRow = (field, stage, status, description) => {
                     const row = document.createElement("tr");
-                    const stageCell = document.createElement("td");
-                    const statusCell = document.createElement("td");
-                    const descriptionCell = document.createElement("td");
 
+                    const stageCell = document.createElement("td");
                     stageCell.innerText = stage;
-                    statusCell.innerText = status ?? 'N/A';
-                    descriptionCell.innerText = description;
+
+                    const statusCell = document.createElement("td");
+                    const statusSelect = document.createElement("select");
+                    statusSelect.className = "editable";
+                    ["N/A", "In Progress", "Done", "Error"].forEach(optionValue => {
+                        const option = document.createElement("option");
+                        option.value = optionValue;
+                        option.innerText = optionValue;
+                        if (optionValue === status) {
+                            option.selected = true;
+                        }
+                        statusSelect.appendChild(option);
+                    });
+                    statusSelect.dataset.field = field + "Status";
+                    statusCell.appendChild(statusSelect);
+
+                    const descriptionCell = document.createElement("td");
+                    const descriptionInput = document.createElement("input");
+                    descriptionInput.className = "editable";
+                    descriptionInput.type = "text";
+                    descriptionInput.value = description;
+                    descriptionInput.dataset.field = field + "Description";
+                    descriptionCell.appendChild(descriptionInput);
 
                     row.appendChild(stageCell);
                     row.appendChild(statusCell);
@@ -130,107 +161,101 @@
 
                     tableBody.appendChild(row);
                 };
+                createEditableRow("correctCodeImplementation", "Описание кода", projectData.correctCodeImplementationStatus, projectData.correctCodeImplementationDescription);
+                createEditableRow("correctMobileSiteTracking", "Описание мобильного трекинга", projectData.correctMobileSiteTrackingStatus, projectData.correctMobileSiteTrackingDescription);
+                createEditableRow("codeSingularity", "Описание сингулярности кода", projectData.codeSingularityStatus, projectData.codeSingularityDescription);
+                createEditableRow("correctSinglePageApplicationTracking", "Описание одностраничного приложения", projectData.correctSinglePageApplicationTrackingStatus, projectData.correctSinglePageApplicationTrackingDescription);
+                createEditableRow("crossDomainTrackingConfiguration", "Описание конфигурации трекинга через домены", projectData.crossDomainTrackingConfigurationStatus, projectData.crossDomainTrackingConfigurationDescription);
+                createEditableRow("selfReferrals", "Описание саморефералов", projectData.selfReferralsStatus, projectData.selfReferralsDescription);
+                createEditableRow("paymentProcessReferrals", "Описание процесса рефералов оплаты", projectData.paymentProcessReferralsStatus, projectData.paymentProcessReferralsDescription);
+                createEditableRow("utmTagging", "Описание UTM тегирования", projectData.utmTaggingStatus, projectData.utmTaggingDescription);
+                createEditableRow("pages404ErrorTracking", "Описание трекинга 404 ошибок", projectData.pages404ErrorTrackingStatus, projectData.pages404ErrorTrackingDescription);
+                createEditableRow("mainDomainInListUnwantedReferrals", "Описание нежелательных рефералов основного домена", projectData.mainDomainInListUnwantedReferralsStatus, projectData.mainDomainInListUnwantedReferralsDescription);
+                createEditableRow("sessionTimeout", "Описание времени ожидания сессии", projectData.sessionTimeoutStatus, projectData.sessionTimeoutDescription);
+                createEditableRow("lookbackWindow", "Описание окна обратного просмотра", projectData.lookbackWindowStatus, projectData.lookbackWindowDescription);
+                createEditableRow("userAndEventDataRetention", "Описание хранения данных пользователей и событий", projectData.userAndEventDataRetentionStatus, projectData.userAndEventDataRetentionDescription);
+                createEditableRow("ecommerceDataAccuracy", "Описание точности данных электронной коммерции", projectData.ecommerceDataAccuracyStatus, projectData.ecommerceDataAccuracyDescription);
+                createEditableRow("trafficToNotSetLandingPage", "Описание трафика на ненастроенную целевую страницу", projectData.trafficToNotSetLandingPageStatus, projectData.trafficToNotSetLandingPageDescription);
+                createEditableRow("currency", "Описание валюты", projectData.currencyStatus, projectData.currencyDescription);
+                createEditableRow("defineInternalTraffic", "Описание внутреннего трафика", projectData.defineInternalTrafficStatus, projectData.defineInternalTrafficDescription);
+                createEditableRow("industryCategory", "Описание категории отрасли", projectData.industryCategoryStatus, projectData.industryCategoryDescription);
+                createEditableRow("reportingTimeZone", "Описание часового пояса отчетности", projectData.reportingTimeZoneStatus, projectData.reportingTimeZoneDescription);
+                createEditableRow("eventTracking", "Описание трекинга событий", projectData.eventTrackingStatus, projectData.eventTrackingDescription);
+                createEditableRow("conversionTracking", "Описание трекинга конверсий", projectData.conversionTrackingStatus, projectData.conversionTrackingDescription);
+                createEditableRow("standardPurchaseEcommerceTrackingImplementation", "Описание стандартного трекинга покупок в электронной коммерции", projectData.standardPurchaseEcommerceTrackingImplementationStatus, projectData.standardPurchaseEcommerceTrackingImplementationDescription);
+                createEditableRow("enhancedMeasurement", "Описание расширенного измерения", projectData.enhancedMeasurementStatus, projectData.enhancedMeasurementDescription);
+                createEditableRow("userIdTrackingImplementation", "Описание трекинга идентификаторов пользователей", projectData.userIdTrackingImplementationStatus, projectData.userIdTrackingImplementationDescription);
+                createEditableRow("enhancedEcommerceTracking", "Описание улучшенного трекинга электронной коммерции", projectData.enhancedEcommerceTrackingStatus, projectData.enhancedEcommerceTrackingDescription);
+                createEditableRow("customDimensionsAndMetricsTracking", "Описание трекинга пользовательских измерений и метрик", projectData.customDimensionsAndMetricsTrackingStatus, projectData.customDimensionsAndMetricsTrackingDescription);
+                createEditableRow("granularLocationAndDeviceDataCollection", "Описание сбора данных о местоположении и устройстве", projectData.granularLocationAndDeviceDataCollectionStatus, projectData.granularLocationAndDeviceDataCollectionDescription);
+                createEditableRow("advancedSettingsToAllowForAdsPersonalization", "Описание расширенных настроек для персонализации рекламы", projectData.advancedSettingsToAllowForAdsPersonalizationStatus, projectData.advancedSettingsToAllowForAdsPersonalizationDescription);
+                createEditableRow("propertyName", "Описание имени собственности", projectData.propertyNameStatus, projectData.propertyNameDescription);
+                createEditableRow("streamName", "Описание имени потока", projectData.streamNameStatus, projectData.streamNameDescription);
+                createEditableRow("eventTrackingTaxonomy", "Описание таксономии трекинга событий", projectData.eventTrackingTaxonomyStatus, projectData.eventTrackingTaxonomyDescription);
+                createEditableRow("googleBigqueryLinking", "Описание связывания с Google BigQuery", projectData.googleBigqueryLinkingStatus, projectData.googleBigqueryLinkingDescription);
+                createEditableRow("library", "Описание библиотеки", projectData.libraryStatus, projectData.libraryDescription);
+                createEditableRow("googleAdsLinking", "Описание связывания с Google Ads", projectData.googleAdsLinkingStatus, projectData.googleAdsLinkingDescription);
+                createEditableRow("googleSearchConsoleLinking", "Описание связывания с Google Search Console", projectData.googleSearchConsoleLinkingStatus, projectData.googleSearchConsoleLinkingDescription);
+                createEditableRow("googleMerchantCenterLinking", "Описание связывания с Google Merchant Center", projectData.googleMerchantCenterLinkingStatus, projectData.googleMerchantCenterLinkingDescription);
+                createEditableRow("displayAndVideo360Linking", "Описание связывания с Display and Video 360", projectData.displayAndVideo360LinkingStatus, projectData.displayAndVideo360LinkingDescription);
+                createEditableRow("dataImport", "Описание импорта данных", projectData.dataImportStatus, projectData.dataImportDescription);
+                createEditableRow("adManagerLinking", "Описание связывания с Ad Manager", projectData.adManagerLinkingStatus, projectData.adManagerLinkingDescription);
+                createEditableRow("searchAds360Linking", "Описание связывания с Search Ads 360", projectData.searchAds360LinkingStatus, projectData.searchAds360LinkingDescription);
+                createEditableRow("googleSignalsDataCollection", "Описание сбора данных Google Signals", projectData.googleSignalsDataCollectionStatus, projectData.googleSignalsDataCollectionDescription);
+                createEditableRow("reportingAttributionModel", "Описание модели атрибуции отчетов", projectData.reportingAttributionModelStatus, projectData.reportingAttributionModelDescription);
+                createEditableRow("reportingAttributionIdentity", "Описание идентичности атрибуции отчетов", projectData.reportingAttributionIdentityStatus, projectData.reportingAttributionIdentityDescription);
+                createEditableRow("serverSideTrackingImplementation", "Описание реализации серверного трекинга", projectData.serverSideTrackingImplementationStatus, projectData.serverSideTrackingImplementationDescription);
+                createEditableRow("consentMode", "Описание режима согласия", projectData.consentModeStatus, projectData.consentModeDescription);
+                createEditableRow("piiDataNotCollection", "Описание не сбора персональных данных", projectData.piiDataNotCollectionStatus, projectData.piiDataNotCollectionDescription);
+                // Обработчик для сохранения изменений
+                document.getElementById("saveChangesButton").addEventListener("click", async function () {
+                    const updatedProjectData = {};
+                    document.querySelectorAll(".editable").forEach(input => {
+                        updatedProjectData[input.dataset.field] = input.value;
+                    });
 
-                createRow("Описание кода", projectData.correctCodeImplementationStatus, projectData.correctCodeImplementationDescription);
-                createRow("Описание мобильного трекинга", projectData.correctMobileSiteTrackingStatus, projectData.correctMobileSiteTrackingDescription);
-                createRow("Описание сингулярности кода", projectData.codeSingularityStatus, projectData.codeSingularityDescription);
-                createRow("Описание одностраничного приложения", projectData.correctSinglePageApplicationTrackingStatus, projectData.correctSinglePageApplicationTrackingDescription);
-                createRow("Описание конфигурации трекинга через домены", projectData.crossDomainTrackingConfigurationStatus, projectData.crossDomainTrackingConfigurationDescription);
-                createRow("Описание саморефералов", projectData.selfReferralsStatus, projectData.selfReferralsDescription);
-                createRow("Описание процесса рефералов оплаты", projectData.paymentProcessReferralsStatus, projectData.paymentProcessReferralsDescription);
-                createRow("Описание UTM тегирования", projectData.utmTaggingStatus, projectData.utmTaggingDescription);
-                createRow("Описание трекинга 404 ошибок", projectData.pages404ErrorTrackingStatus, projectData.pages404ErrorTrackingDescription);
-                createRow("Описание нежелательных рефералов основного домена", projectData.mainDomainInListUnwantedReferralsStatus, projectData.mainDomainInListUnwantedReferralsDescription);
-                createRow("Описание времени ожидания сессии", projectData.sessionTimeoutStatus, projectData.sessionTimeoutDescription);
-                createRow("Описание окна обратного просмотра", projectData.lookbackWindowStatus, projectData.lookbackWindowDescription);
-                createRow("Описание хранения данных пользователей и событий", projectData.userAndEventDataRetentionStatus, projectData.userAndEventDataRetentionDescription);
-                createRow("Описание точности данных электронной коммерции", projectData.ecommerceDataAccuracyStatus, projectData.ecommerceDataAccuracyDescription);
-                createRow("Описание трафика на ненастроенную целевую страницу", projectData.trafficToNotSetLandingPageStatus, projectData.trafficToNotSetLandingPageDescription);
-                createRow("Описание валюты", projectData.currencyStatus, projectData.currencyDescription);
-                createRow("Описание внутреннего трафика", projectData.defineInternalTrafficStatus, projectData.defineInternalTrafficDescription);
-                createRow("Описание категории отрасли", projectData.industryCategoryStatus, projectData.industryCategoryDescription);
-                createRow("Описание часового пояса отчетности", projectData.reportingTimeZoneStatus, projectData.reportingTimeZoneDescription);
-                createRow("Описание трекинга событий", projectData.eventTrackingStatus, projectData.eventTrackingDescription);
-                createRow("Описание трекинга конверсий", projectData.conversionTrackingStatus, projectData.conversionTrackingDescription);
-                createRow("Описание стандартного трекинга покупок в электронной коммерции", projectData.standardPurchaseEcommerceTrackingImplementationStatus, projectData.standardPurchaseEcommerceTrackingImplementationDescription);
-                createRow("Описание расширенного измерения", projectData.enhancedMeasurementStatus, projectData.enhancedMeasurementDescription);
-                createRow("Описание трекинга идентификаторов пользователей", projectData.userIdTrackingImplementationStatus, projectData.userIdTrackingImplementationDescription);
-                createRow("Описание улучшенного трекинга электронной коммерции", projectData.enhnancedEcommerceTrackingStatus, projectData.enhnancedEcommerceTrackingDescription);
-                createRow("Описание трекинга пользовательских измерений и метрик", projectData.customDimensionsAndMetricsTrackingStatus, projectData.customDimensionsAndMetricsTrackingDescription);
-                createRow("Описание сбора данных о местоположении и устройстве", projectData.granularLocationAndDeviceDataCollectionStatus, projectData.granularLocationAndDeviceDataCollectionDescription);
-                createRow("Описание расширенных настроек для персонализации рекламы", projectData.advancedSettingsToAllowForAdsPersonalizationStatus, projectData.advancedSettingsToAllowForAdsPersonalizationDescription);
-                createRow("Описание имени собственности", projectData.propertyNameStatus, projectData.propertyNameDescription);
-                createRow("Описание имени потока", projectData.streamNameStatus, projectData.streamNameDescription);
-                createRow("Описание таксономии трекинга событий", projectData.eventTrackingTaxonomyStatus, projectData.eventTrackingTaxonomyDescription);
-                createRow("Описание связывания с Google BigQuery", projectData.googleBigqueryLinkingStatus, projectData.googleBigqueryLinkingDescription);
-                createRow("Описание библиотеки", projectData.libraryStatus, projectData.libraryDescription);
-                createRow("Описание связывания с Google Ads", projectData.googleAdsLinkingStatus, projectData.googleAdsLinkingDescription);
-                createRow("Описание связывания с Google Search Console", projectData.googleSearchConsoleLinkingStatus, projectData.googleSearchConsoleLinkingDescription);
-                createRow("Описание связывания с Google Merchant Center", projectData.googleMerchantCenterLinkingStatus, projectData.googleMerchantCenterLinkingDescription);
-                createRow("Описание связывания с Display and Video 360", projectData.displayAndVideo360LinkingStatus, projectData.displayAndVideo360LinkingDescription);
-                createRow("Описание импорта данных", projectData.dataImportStatus, projectData.dataImportDescription);
-                createRow("Описание связывания с Ad Manager", projectData.adManagerLinkingStatus, projectData.adManagerLinkingDescription);
-                createRow("Описание связывания с Search Ads 360", projectData.searchAds360LinkingStatus, projectData.searchAds360LinkingDescription);
-                createRow("Описание сбора данных Google Signals", projectData.googleSignalsDataCollectionStatus, projectData.googleSignalsDataCollectionDescription);
-                createRow("Описание модели атрибуции отчетов", projectData.reportingAttributionModelStatus, projectData.reportingAttributionModelDescription);
-                createRow("Описание идентичности атрибуции отчетов", projectData.reportingAttributionIdentityStatus, projectData.reportingAttributionIdentityDescription);
-                createRow("Описание реализации серверного трекинга", projectData.serverSideTrackingImplementationStatus, projectData.serverSideTrackingImplementationDescription);
-                createRow("Описание режима согласия", projectData.consentModeStatus, projectData.consentModeDescription);
-                createRow("Описание не сбора персональных данных", projectData.piiDataNotCollectionStatus, projectData.piiDataNotCollectionDescription);
+                    try {
+                        const response = await fetch(`http://localhost:8090/projects/${projectId}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(updatedProjectData)
+                        });
+
+                        if (response.ok) {
+                            loadProjectData(); // Обновляем данные проекта
+                        } else {
+                            alert("Ошибка сохранения изменений: " + response.status);
+                        }
+                    } catch (error) {
+                        console.error("Ошибка при выполнении запроса:", error);
+                        alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+                    }
+                });
+
+                async function loadProjectData() {
+                    try {
+                        const response = await fetch(`http://localhost:8090/projects/${projectId}`);
+                        if (response.ok) {
+                            const projectData = await response.json();
+                            document.getElementById("projectName").innerText = projectData.name;
+                            // Здесь вы можете обновить таблицу с новыми данными
+                        } else {
+                            alert("Ошибка обновления данных проекта: " + response.status);
+                        }
+                    } catch (error) {
+                        console.error("Ошибка при выполнении запроса:", error);
+                        alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+                    }
+                }
             } else {
                 alert("Ошибка получения данных проекта: " + projectResponse.status);
             }
         } catch (error) {
             console.error("Ошибка при выполнении запроса:", error);
-            alert("Произошла ошибка при выполнении запроса. Проверьте консоль");
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
         }
-
-        // Обработчик для добавления пользователя
-        document.getElementById("addUserButton").addEventListener("click", async function () {
-            const email = document.getElementById("userEmail").value;
-            const password = document.getElementById("userPassword").value;
-            const title = document.getElementById("userTitle").value;
-            const firstName = document.getElementById("userFirstName").value;
-            const lastName = document.getElementById("userLastName").value;
-
-            if (email && password) {
-                const requestBody = {
-                    email: email,
-                    password: password,
-                    title: title,
-                    firstName: firstName,
-                    lastName: lastName,
-                    projectId: projectId
-                };
-
-                try {
-                    const response = await fetch("http://localhost:8090/users", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(requestBody)
-                    });
-
-                    if (response.ok) {
-                        // Очистка полей ввода после успешного добавления пользователя
-                        document.getElementById("userEmail").value = "";
-                        document.getElementById("userPassword").value = "";
-                        document.getElementById("userTitle").value = "";
-                        document.getElementById("userFirstName").value = "";
-                        document.getElementById("userLastName").value = "";
-                        loadUsers(); // Обновляем список пользователей
-                    } else {
-                        alert("Ошибка добавления пользователя: " + response.status);
-                    }
-                } catch (error) {
-                    console.error("Ошибка при выполнении запроса:", error);
-                    alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-                }
-            } else {
-                alert("Пожалуйста, заполните обязательные поля: Email и Password.");
-            }
-        });
     });
 
     async function deleteUser(userId) {
@@ -249,6 +274,52 @@
             alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
         }
     }
+
+    document.getElementById("addUserButton").addEventListener("click", async function () {
+        const email = document.getElementById("userEmail").value;
+        const password = document.getElementById("userPassword").value;
+        const title = document.getElementById("userTitle").value;
+        const firstName = document.getElementById("userFirstName").value;
+        const lastName = document.getElementById("userLastName").value;
+
+        if (email && password) {
+            const requestBody = {
+                email: email,
+                password: password,
+                title: title,
+                firstName: firstName,
+                lastName: lastName,
+                projectId: projectId
+            };
+
+            try {
+                const response = await fetch("http://localhost:8090/users", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (response.ok) {
+                    // Очистка полей ввода после успешного добавления пользователя
+                    document.getElementById("userEmail").value = "";
+                    document.getElementById("userPassword").value = "";
+                    document.getElementById("userTitle").value = "";
+                    document.getElementById("userFirstName").value = "";
+                    document.getElementById("userLastName").value = "";
+                    loadUsers(); // Обновляем список пользователей
+                } else {
+                    alert("Ошибка добавления пользователя: " + response.status);
+                }
+            } catch (error) {
+                console.error("Ошибка при выполнении запроса:", error);
+                alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+            }
+        } else {
+            alert("Пожалуйста, заполните обязательные поля: Email и Password.");
+        }
+    });
 
     document.getElementById("backButton").addEventListener("click", function () {
         window.location.href = `adminProjectAndAccPage.html?id=${adminUserId}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${adminProjectId}`;
