@@ -52,4 +52,18 @@ public class UserFacade {
     public void delete(int id) {
         userService.delete(id);
     }
+
+    public List<GetUserResponse> getByProjectId(int projectId) {
+        return userService.findAll().stream()
+                .filter(user -> user.getProject().getId() == projectId)
+                .map(u -> GetUserResponse.builder()
+                        .id(u.getId())
+                        .email(u.getEmail())
+                        .title(u.getTitle())
+                        .firstName(u.getFirstName())
+                        .lastName(u.getLastName())
+                        .projectName(u.getProject().getName())
+                        .build())
+                .collect(Collectors.toList());
+    }
 }

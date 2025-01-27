@@ -10,7 +10,29 @@
 <p>Project ID: <span id="projectId"></span></p>
 <p>Project Name: <span id="projectName"></span></p>
 
-<p><button id="backButton">Вернуться к странице админа</button></p>
+<p>
+    <button id="backButton">Вернуться к странице админа</button>
+</p>
+
+<h3>Пользователи проекта</h3>
+<div id="usersContainer">
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Title</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Project Name</th>
+        </tr>
+        </thead>
+        <tbody id="usersTable">
+        <!-- Здесь будут отображены пользователи -->
+        </tbody>
+    </table>
+    <p id="noUsersMessage" style="display: none;">Пользователей нет</p>
+</div>
 
 <h3>Проект</h3>
 <table border="1">
@@ -33,88 +55,118 @@
     let adminUserId = urlParams.get("adminId");
 
     window.addEventListener("load", async function () {
-            document.getElementById("projectId").innerText = projectId;
-            // Выполнение GET запроса
-            try {
-                const response = await fetch(`http://localhost:8090/projects/${projectId}`);
-                if (response.ok) {
-                    const projectData = await response.json();
-                    document.getElementById("projectName").innerText = projectData.name;
-                    const tableBody = document.getElementById("projectInfoTable");
+        document.getElementById("projectId").innerText = projectId;
 
-                    // Преобразование данных в строки таблицы
-                    const createRow = (stage, status, description) => {
-                        const row = document.createElement("tr");
-                        const stageCell = document.createElement("td");
-                        const statusCell = document.createElement("td");
-                        const descriptionCell = document.createElement("td");
+        // Выполнение GET запроса для пользователей по проекту
+        try {
+            const usersResponse = await fetch(`http://localhost:8090/users/${projectId}`);
+            if (usersResponse.ok) {
+                const usersData = await usersResponse.json();
+                const usersTableBody = document.getElementById("usersTable");
 
-                        stageCell.innerText = stage;
-                        statusCell.innerText = status ?? 'N/A';
-                        descriptionCell.innerText = description;
-
-                        row.appendChild(stageCell);
-                        row.appendChild(statusCell);
-                        row.appendChild(descriptionCell);
-
-                        tableBody.appendChild(row);
-                    };
-
-                    createRow("Описание кода", projectData.correctCodeImplementationStatus, projectData.correctCodeImplementationDescription);
-                    createRow("Описание мобильного трекинга", projectData.correctMobileSiteTrackingStatus, projectData.correctMobileSiteTrackingDescription);
-                    createRow("Описание сингулярности кода", projectData.codeSingularityStatus, projectData.codeSingularityDescription);
-                    createRow("Описание одностраничного приложения", projectData.correctSinglePageApplicationTrackingStatus, projectData.correctSinglePageApplicationTrackingDescription);
-                    createRow("Описание конфигурации трекинга через домены", projectData.crossDomainTrackingConfigurationStatus, projectData.crossDomainTrackingConfigurationDescription);
-                    createRow("Описание саморефералов", projectData.selfReferralsStatus, projectData.selfReferralsDescription);
-                    createRow("Описание процесса рефералов оплаты", projectData.paymentProcessReferralsStatus, projectData.paymentProcessReferralsDescription);
-                    createRow("Описание UTM тегирования", projectData.utmTaggingStatus, projectData.utmTaggingDescription);
-                    createRow("Описание трекинга 404 ошибок", projectData.pages404ErrorTrackingStatus, projectData.pages404ErrorTrackingDescription);
-                    createRow("Описание нежелательных рефералов основного домена", projectData.mainDomainInListUnwantedReferralsStatus, projectData.mainDomainInListUnwantedReferralsDescription);
-                    createRow("Описание времени ожидания сессии", projectData.sessionTimeoutStatus, projectData.sessionTimeoutDescription);
-                    createRow("Описание окна обратного просмотра", projectData.lookbackWindowStatus, projectData.lookbackWindowDescription);
-                    createRow("Описание хранения данных пользователей и событий", projectData.userAndEventDataRetentionStatus, projectData.userAndEventDataRetentionDescription);
-                    createRow("Описание точности данных электронной коммерции", projectData.ecommerceDataAccuracyStatus, projectData.ecommerceDataAccuracyDescription);
-                    createRow("Описание трафика на ненастроенную целевую страницу", projectData.trafficToNotSetLandingPageStatus, projectData.trafficToNotSetLandingPageDescription);
-                    createRow("Описание валюты", projectData.currencyStatus, projectData.currencyDescription);
-                    createRow("Описание внутреннего трафика", projectData.defineInternalTrafficStatus, projectData.defineInternalTrafficDescription);
-                    createRow("Описание категории отрасли", projectData.industryCategoryStatus, projectData.industryCategoryDescription);
-                    createRow("Описание часового пояса отчетности", projectData.reportingTimeZoneStatus, projectData.reportingTimeZoneDescription);
-                    createRow("Описание трекинга событий", projectData.eventTrackingStatus, projectData.eventTrackingDescription);
-                    createRow("Описание трекинга конверсий", projectData.conversionTrackingStatus, projectData.conversionTrackingDescription);
-                    createRow("Описание стандартного трекинга покупок в электронной коммерции", projectData.standardPurchaseEcommerceTrackingImplementationStatus, projectData.standardPurchaseEcommerceTrackingImplementationDescription);
-                    createRow("Описание расширенного измерения", projectData.enhancedMeasurementStatus, projectData.enhancedMeasurementDescription);
-                    createRow("Описание трекинга идентификаторов пользователей", projectData.userIdTrackingImplementationStatus, projectData.userIdTrackingImplementationDescription);
-                    createRow("Описание улучшенного трекинга электронной коммерции", projectData.enhnancedEcommerceTrackingStatus, projectData.enhnancedEcommerceTrackingDescription);
-                    createRow("Описание трекинга пользовательских измерений и метрик", projectData.customDimensionsAndMetricsTrackingStatus, projectData.customDimensionsAndMetricsTrackingDescription);
-                    createRow("Описание сбора данных о местоположении и устройстве", projectData.granularLocationAndDeviceDataCollectionStatus, projectData.granularLocationAndDeviceDataCollectionDescription);
-                    createRow("Описание расширенных настроек для персонализации рекламы", projectData.advancedSettingsToAllowForAdsPersonalizationStatus, projectData.advancedSettingsToAllowForAdsPersonalizationDescription);
-                    createRow("Описание имени собственности", projectData.propertyNameStatus, projectData.propertyNameDescription);
-                    createRow("Описание имени потока", projectData.streamNameStatus, projectData.streamNameDescription);
-                    createRow("Описание таксономии трекинга событий", projectData.eventTrackingTaxonomyStatus, projectData.eventTrackingTaxonomyDescription);
-                    createRow("Описание связывания с Google BigQuery", projectData.googleBigqueryLinkingStatus, projectData.googleBigqueryLinkingDescription);
-                    createRow("Описание библиотеки", projectData.libraryStatus, projectData.libraryDescription);
-                    createRow("Описание связывания с Google Ads", projectData.googleAdsLinkingStatus, projectData.googleAdsLinkingDescription);
-                    createRow("Описание связывания с Google Search Console", projectData.googleSearchConsoleLinkingStatus, projectData.googleSearchConsoleLinkingDescription);
-                    createRow("Описание связывания с Google Merchant Center", projectData.googleMerchantCenterLinkingStatus, projectData.googleMerchantCenterLinkingDescription);
-                    createRow("Описание связывания с Display and Video 360", projectData.displayAndVideo360LinkingStatus, projectData.displayAndVideo360LinkingDescription);
-                    createRow("Описание импорта данных", projectData.dataImportStatus, projectData.dataImportDescription);
-                    createRow("Описание связывания с Ad Manager", projectData.adManagerLinkingStatus, projectData.adManagerLinkingDescription);
-                    createRow("Описание связывания с Search Ads 360", projectData.searchAds360LinkingStatus, projectData.searchAds360LinkingDescription);
-                    createRow("Описание сбора данных Google Signals", projectData.googleSignalsDataCollectionStatus, projectData.googleSignalsDataCollectionDescription);
-                    createRow("Описание модели атрибуции отчетов", projectData.reportingAttributionModelStatus, projectData.reportingAttributionModelDescription);
-                    createRow("Описание идентичности атрибуции отчетов", projectData.reportingAttributionIdentityStatus, projectData.reportingAttributionIdentityDescription);
-                    createRow("Описание реализации серверного трекинга", projectData.serverSideTrackingImplementationStatus, projectData.serverSideTrackingImplementationDescription);
-                    createRow("Описание режима согласия", projectData.consentModeStatus, projectData.consentModeDescription);
-                    createRow("Описание не сбора персональных данных", projectData.piiDataNotCollectionStatus, projectData.piiDataNotCollectionDescription);
+                if (usersData.length === 0) {
+                    document.getElementById("noUsersMessage").style.display = "block";
                 } else {
-                    alert("Ошибка получения данных проекта: " + response.status);
+                    usersData.forEach(user => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.email}</td>
+                        <td>${user.title}</td>
+                        <td>${user.firstName}</td>
+                        <td>${user.lastName}</td>
+                    `;
+                        usersTableBody.appendChild(row);
+                    });
                 }
-            } catch (error) {
-                console.error("Ошибка при выполнении запроса:", error);
-                alert("Произошла ошибка при выполнении запроса. Проверьте консоль");
+            } else {
+                alert("Ошибка получения списка пользователей: " + usersResponse.status);
             }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
         }
-    );
+
+        // Выполнение GET запроса для информации о проекте
+        try {
+            const projectResponse = await fetch(`http://localhost:8090/projects/${projectId}`);
+            if (projectResponse.ok) {
+                const projectData = await projectResponse.json();
+                document.getElementById("projectName").innerText = projectData.name;
+                const tableBody = document.getElementById("projectInfoTable");
+
+                // Преобразование данных в строки таблицы
+                const createRow = (stage, status, description) => {
+                    const row = document.createElement("tr");
+                    const stageCell = document.createElement("td");
+                    const statusCell = document.createElement("td");
+                    const descriptionCell = document.createElement("td");
+
+                    stageCell.innerText = stage;
+                    statusCell.innerText = status ?? 'N/A';
+                    descriptionCell.innerText = description;
+
+                    row.appendChild(stageCell);
+                    row.appendChild(statusCell);
+                    row.appendChild(descriptionCell);
+
+                    tableBody.appendChild(row);
+                };
+
+                createRow("Описание кода", projectData.correctCodeImplementationStatus, projectData.correctCodeImplementationDescription);
+                createRow("Описание мобильного трекинга", projectData.correctMobileSiteTrackingStatus, projectData.correctMobileSiteTrackingDescription);
+                createRow("Описание сингулярности кода", projectData.codeSingularityStatus, projectData.codeSingularityDescription);
+                createRow("Описание одностраничного приложения", projectData.correctSinglePageApplicationTrackingStatus, projectData.correctSinglePageApplicationTrackingDescription);
+                createRow("Описание конфигурации трекинга через домены", projectData.crossDomainTrackingConfigurationStatus, projectData.crossDomainTrackingConfigurationDescription);
+                createRow("Описание саморефералов", projectData.selfReferralsStatus, projectData.selfReferralsDescription);
+                createRow("Описание процесса рефералов оплаты", projectData.paymentProcessReferralsStatus, projectData.paymentProcessReferralsDescription);
+                createRow("Описание UTM тегирования", projectData.utmTaggingStatus, projectData.utmTaggingDescription);
+                createRow("Описание трекинга 404 ошибок", projectData.pages404ErrorTrackingStatus, projectData.pages404ErrorTrackingDescription);
+                createRow("Описание нежелательных рефералов основного домена", projectData.mainDomainInListUnwantedReferralsStatus, projectData.mainDomainInListUnwantedReferralsDescription);
+                createRow("Описание времени ожидания сессии", projectData.sessionTimeoutStatus, projectData.sessionTimeoutDescription);
+                createRow("Описание окна обратного просмотра", projectData.lookbackWindowStatus, projectData.lookbackWindowDescription);
+                createRow("Описание хранения данных пользователей и событий", projectData.userAndEventDataRetentionStatus, projectData.userAndEventDataRetentionDescription);
+                createRow("Описание точности данных электронной коммерции", projectData.ecommerceDataAccuracyStatus, projectData.ecommerceDataAccuracyDescription);
+                createRow("Описание трафика на ненастроенную целевую страницу", projectData.trafficToNotSetLandingPageStatus, projectData.trafficToNotSetLandingPageDescription);
+                createRow("Описание валюты", projectData.currencyStatus, projectData.currencyDescription);
+                createRow("Описание внутреннего трафика", projectData.defineInternalTrafficStatus, projectData.defineInternalTrafficDescription);
+                createRow("Описание категории отрасли", projectData.industryCategoryStatus, projectData.industryCategoryDescription);
+                createRow("Описание часового пояса отчетности", projectData.reportingTimeZoneStatus, projectData.reportingTimeZoneDescription);
+                createRow("Описание трекинга событий", projectData.eventTrackingStatus, projectData.eventTrackingDescription);
+                createRow("Описание трекинга конверсий", projectData.conversionTrackingStatus, projectData.conversionTrackingDescription);
+                createRow("Описание стандартного трекинга покупок в электронной коммерции", projectData.standardPurchaseEcommerceTrackingImplementationStatus, projectData.standardPurchaseEcommerceTrackingImplementationDescription);
+                createRow("Описание расширенного измерения", projectData.enhancedMeasurementStatus, projectData.enhancedMeasurementDescription);
+                createRow("Описание трекинга идентификаторов пользователей", projectData.userIdTrackingImplementationStatus, projectData.userIdTrackingImplementationDescription);
+                createRow("Описание улучшенного трекинга электронной коммерции", projectData.enhnancedEcommerceTrackingStatus, projectData.enhnancedEcommerceTrackingDescription);
+                createRow("Описание трекинга пользовательских измерений и метрик", projectData.customDimensionsAndMetricsTrackingStatus, projectData.customDimensionsAndMetricsTrackingDescription);
+                createRow("Описание сбора данных о местоположении и устройстве", projectData.granularLocationAndDeviceDataCollectionStatus, projectData.granularLocationAndDeviceDataCollectionDescription);
+                createRow("Описание расширенных настроек для персонализации рекламы", projectData.advancedSettingsToAllowForAdsPersonalizationStatus, projectData.advancedSettingsToAllowForAdsPersonalizationDescription);
+                createRow("Описание имени собственности", projectData.propertyNameStatus, projectData.propertyNameDescription);
+                createRow("Описание имени потока", projectData.streamNameStatus, projectData.streamNameDescription);
+                createRow("Описание таксономии трекинга событий", projectData.eventTrackingTaxonomyStatus, projectData.eventTrackingTaxonomyDescription);
+                createRow("Описание связывания с Google BigQuery", projectData.googleBigqueryLinkingStatus, projectData.googleBigqueryLinkingDescription);
+                createRow("Описание библиотеки", projectData.libraryStatus, projectData.libraryDescription);
+                createRow("Описание связывания с Google Ads", projectData.googleAdsLinkingStatus, projectData.googleAdsLinkingDescription);
+                createRow("Описание связывания с Google Search Console", projectData.googleSearchConsoleLinkingStatus, projectData.googleSearchConsoleLinkingDescription);
+                createRow("Описание связывания с Google Merchant Center", projectData.googleMerchantCenterLinkingStatus, projectData.googleMerchantCenterLinkingDescription);
+                createRow("Описание связывания с Display and Video 360", projectData.displayAndVideo360LinkingStatus, projectData.displayAndVideo360LinkingDescription);
+                createRow("Описание импорта данных", projectData.dataImportStatus, projectData.dataImportDescription);
+                createRow("Описание связывания с Ad Manager", projectData.adManagerLinkingStatus, projectData.adManagerLinkingDescription);
+                createRow("Описание связывания с Search Ads 360", projectData.searchAds360LinkingStatus, projectData.searchAds360LinkingDescription);
+                createRow("Описание сбора данных Google Signals", projectData.googleSignalsDataCollectionStatus, projectData.googleSignalsDataCollectionDescription);
+                createRow("Описание модели атрибуции отчетов", projectData.reportingAttributionModelStatus, projectData.reportingAttributionModelDescription);
+                createRow("Описание идентичности атрибуции отчетов", projectData.reportingAttributionIdentityStatus, projectData.reportingAttributionIdentityDescription);
+                createRow("Описание реализации серверного трекинга", projectData.serverSideTrackingImplementationStatus, projectData.serverSideTrackingImplementationDescription);
+                createRow("Описание режима согласия", projectData.consentModeStatus, projectData.consentModeDescription);
+                createRow("Описание не сбора персональных данных", projectData.piiDataNotCollectionStatus, projectData.piiDataNotCollectionDescription);
+            } else {
+                alert("Ошибка получения данных проекта: " + projectResponse.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль");
+        }
+    });
 
     document.getElementById("backButton").addEventListener("click", function () {
         window.location.href = `adminProjectAndAccPage.html?id=${adminUserId}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${adminProjectId}`;
