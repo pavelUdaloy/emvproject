@@ -1,27 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Вход</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+            position: relative;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-container:hover {
+            border-color: #002b80;
+            box-shadow: 0 6px 15px rgba(0, 43, 128, 0.3);
+        }
+
+        h2 {
+            color: #002b80;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #002b80;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #002b80;
+            box-shadow: 0 0 5px rgba(0, 43, 128, 0.5);
+        }
+
+        button {
+            width: 100%;
+            background-color: #002b80;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0044cc;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
-<h2>Login</h2>
-<form id="loginForm">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    <br><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <br><br>
-    <button type="submit">Вход</button>
-</form>
+<div class="login-container">
+    <h2>Вход</h2>
+    <form id="loginForm">
+        <label for="email">Электронная почта:</label>
+        <input type="email" id="email" name="email" placeholder="Введите вашу почту" required>
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" placeholder="Введите ваш пароль" required>
+
+        <button type="submit">Войти</button>
+        <div class="error-message" id="errorMessage" style="display: none;">Неверные учетные данные. Пожалуйста, попробуйте еще раз.</div>
+    </form>
+</div>
 <script>
     document.getElementById("loginForm").addEventListener("submit", async function(event) {
         event.preventDefault();
 
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
+        const errorMessage = document.getElementById("errorMessage");
 
         try {
             const response = await fetch("http://localhost:8090/auth/login", {
@@ -40,11 +136,11 @@
                     window.location.href = `notAdminProjectAndAccPage.html?id=${result.id}&email=${result.email}&title=${result.title}&firstName=${result.firstName}&lastName=${result.lastName}&projectName=${result.projectName}&projectId=${result.projectId}`;
                 }
             } else {
-                alert("Ошибка входа: " + response.status);
+                errorMessage.style.display = "block";
             }
         } catch (error) {
-            console.error("Ошибка при отправке запроса:", error);
-            alert("Произошла ошибка при отправке запроса. Проверьте консоль для подробностей.");
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка. Пожалуйста, попробуйте позже.");
         }
     });
 </script>

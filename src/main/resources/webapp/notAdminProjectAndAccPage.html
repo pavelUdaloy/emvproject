@@ -5,79 +5,248 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOT ADMIN</title>
     <style>
+        /* Общие стили */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #002b80;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .info {
+            text-align: left;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info:hover {
+            border-color: #002b80;
+            box-shadow: 0 6px 15px rgba(0, 43, 128, 0.3);
+        }
+
+        .info p {
+            margin: 10px 0;
+        }
+
+        .info p span {
+            font-weight: bold;
+            color: #002b80;
+        }
+
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #002b80;
+            color: #fff;
+        }
+
         .note {
             border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-            position: relative;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .nested-note {
-            margin-left: 20px;
-        }
+
         .reply-form {
             display: flex;
             align-items: center;
             margin-top: 10px;
         }
+
         .reply-form textarea {
             margin-right: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #333;
+            flex: 1;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+
+        .reply-form textarea:focus {
+            border-color: #002b80;
+            box-shadow: 0 0 5px rgba(0, 43, 128, 0.5);
+        }
+
+        .reply-form button {
+            background-color: #002b80;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .reply-form button:hover {
+            background-color: #0044cc;
+        }
+
+        #logoutButton {
+            background-color: #002b80;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 20px auto;
+        }
+
+        #logoutButton:hover {
+            background-color: #0044cc;
+        }
+
+        #commentForm {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        #commentMessage {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+
+        #commentMessage:focus {
+            border-color: #002b80;
+            box-shadow: 0 0 5px rgba(0, 43, 128, 0.5);
+        }
+
+        #addCommentButton {
+            background-color: #002b80;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        #addCommentButton:hover {
+            background-color: #0044cc;
+        }
+
+        /* Анимации */
+        button, textarea {
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-<h2>NOT ADMIN</h2>
-<p>ID: <span id="id"></span></p>
-<p>Email: <span id="email"></span></p>
-<p>Title: <span id="title"></span></p>
-<p>First Name: <span id="firstName"></span></p>
-<p>Last Name: <span id="lastName"></span></p>
-<p>Project Name: <span id="projectName"></span></p>
-<p>Project Id: <span id="projectId"></span></p>
-<button id="logoutButton">Выход</button>
+<header>
+    <h1>Панель управления</h1>
+</header>
 
-<h3>Мой проект</h3>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Stage</th>
-        <th>Status</th>
-        <th>Description</th>
-    </tr>
-    </thead>
-    <tbody id="projectInfoTable">
-    <!-- Здесь будут отображены данные -->
-    </tbody>
-</table>
+<div class="container">
+    <div class="info">
+        <p>ID: <span id="id"></span></p>
+        <p>Email: <span id="email"></span></p>
+        <p>Название проекта: <span id="projectName"></span></p>
+        <p>ID проекта: <span id="projectId"></span></p>
+    </div>
 
-<h3>Комментарии</h3>
-<div id="notesContainer">
-    <!-- Здесь будут отображены комментарии -->
-</div>
+    <button id="logoutButton">Выход</button>
 
-<h3>Добавить комментарий</h3>
-<form id="commentForm">
-    <textarea id="commentMessage" rows="4" cols="50" placeholder="Ваш комментарий"></textarea>
-    <br>
-    <button type="button" id="addCommentButton">Прокомментировать</button>
-</form>
+    <h3>Информация о проекте</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Этап</th>
+            <th>Статус</th>
+            <th>Описание</th>
+        </tr>
+        </thead>
+        <tbody id="projectInfoTable">
+        <!-- Здесь будут отображены данные -->
+        </tbody>
+    </table>
 
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
-    let projectId = urlParams.get("projectId");
-    let userId = urlParams.get("id");
+    <h3>Комментарии</h3>
+    <div id="notesContainer">
+        <!-- Здесь будут отображены комментарии -->
+    </div>
 
-    async function loadNotes() {
-        try {
-            const notesResponse = await fetch(`http://localhost:8090/notes/${projectId}`);
-            if (notesResponse.ok) {
-                const notesData = await notesResponse.json();
-                const notesContainer = document.getElementById("notesContainer");
-                notesContainer.innerHTML = ""; // Очищаем контейнер перед загрузкой новых данных
+    <h3>Добавить комментарий</h3>
+    <form id="commentForm">
+        <textarea id="commentMessage" rows="4" cols="50" placeholder="Ваш комментарий"></textarea>
+        <br>
+        <button type="button" id="addCommentButton">Прокомментировать</button>
+    </form>
 
-                const createNoteElement = (note, isNested = false) => {
-                    const noteElement = document.createElement("div");
-                    noteElement.className = "note" + (isNested ? " nested-note" : "");
-                    noteElement.innerHTML = `
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let projectId = urlParams.get("projectId");
+        let userId = urlParams.get("id");
+
+        async function loadNotes() {
+            try {
+                const notesResponse = await fetch(`http://localhost:8090/notes/${projectId}`);
+                if (notesResponse.ok) {
+                    const notesData = await notesResponse.json();
+                    const notesContainer = document.getElementById("notesContainer");
+                    notesContainer.innerHTML = ""; // Очищаем контейнер перед загрузкой новых данных
+
+                    const createNoteElement = (note, isNested = false) => {
+                        const noteElement = document.createElement("div");
+                        noteElement.className = "note" + (isNested ? " nested-note" : "");
+                        noteElement.innerHTML = `
                             <div style="display: flex; align-items: center;">
                                 <div>
                                     <p><strong>${note.userEmail}</strong> (${new Date(note.sendedAt).toLocaleString()}):</p>
@@ -89,68 +258,77 @@
                                 </div>
                             </div>
                         `;
-                    if (note.notes && note.notes.length > 0) {
-                        const nestedNotes = document.createElement("div");
-                        note.notes.forEach(nestedNote => {
-                            nestedNotes.appendChild(createNoteElement(nestedNote, true));
-                        });
-                        noteElement.appendChild(nestedNotes);
-                    }
-                    return noteElement;
-                };
+                        if (note.notes && note.notes.length > 0) {
+                            const nestedNotes = document.createElement("div");
+                            note.notes.forEach(nestedNote => {
+                                nestedNotes.appendChild(createNoteElement(nestedNote, true));
+                            });
+                            noteElement.appendChild(nestedNotes);
+                        }
+                        return noteElement;
+                    };
 
-                notesData.forEach(note => {
-                    notesContainer.appendChild(createNoteElement(note));
-                });
-            } else {
-                alert("Ошибка получения комментариев: " + notesResponse.status);
-            }
-        } catch (error) {
-            console.error("Ошибка при выполнении запроса:", error);
-            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-        }
-    }
-
-    async function submitReply(rootNoteId, button) {
-        const replyForm = button.closest('.reply-form');
-        const commentMessage = replyForm.querySelector('textarea').value;
-        if (commentMessage) {
-            const requestBody = {
-                message: commentMessage,
-                projectId: projectId,
-                userId: userId,
-                rootNoteId: rootNoteId
-            };
-
-            try {
-                const response = await fetch("http://localhost:8090/notes", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (response.ok) {
-                    await loadNotes(); // Обновляем комментарии
+                    notesData.forEach(note => {
+                        notesContainer.appendChild(createNoteElement(note));
+                    });
                 } else {
-                    alert("Ошибка добавления комментария: " + response.status);
+                    alert("Ошибка получения комментариев: " + notesResponse.status);
                 }
             } catch (error) {
                 console.error("Ошибка при выполнении запроса:", error);
                 alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
             }
         }
-    }
 
-    window.addEventListener("load", async function () {
-            document.getElementById("id").innerText = urlParams.get("id");
-            document.getElementById("email").innerText = urlParams.get("email");
-            document.getElementById("title").innerText = urlParams.get("title");
-            document.getElementById("firstName").innerText = urlParams.get("firstName");
-            document.getElementById("lastName").innerText = urlParams.get("lastName");
-            document.getElementById("projectName").innerText = urlParams.get("projectName");
-            document.getElementById("projectId").innerText = projectId;
+        async function submitReply(rootNoteId, button) {
+            const replyForm = button.closest('.reply-form');
+            const commentMessage = replyForm.querySelector('textarea').value;
+            if (commentMessage) {
+                const requestBody = {
+                    message: commentMessage,
+                    projectId: projectId,
+                    userId: userId,
+                    rootNoteId: rootNoteId
+                };
+
+                try {
+                    const response = await fetch("http://localhost:8090/notes", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    if (response.ok) {
+                        await loadNotes(); // Обновляем комментарии
+                    } else {
+                        alert("Ошибка добавления комментария: " + response.status);
+                    }
+                } catch (error) {
+                    console.error("Ошибка при выполнении запроса:", error);
+                    alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+                }
+            }
+        }
+
+        window.addEventListener("load", async function () {
+            const idElem = document.getElementById("id");
+            const emailElem = document.getElementById("email");
+            const titleElem = document.getElementById("title");
+            const firstNameElem = document.getElementById("firstName");
+            const lastNameElem = document.getElementById("lastName");
+            const projectNameElem = document.getElementById("projectName");
+            const projectIdElem = document.getElementById("projectId");
+
+            if (idElem) idElem.innerText = urlParams.get("id");
+            if (emailElem) emailElem.innerText = urlParams.get("email");
+            if (titleElem) titleElem.innerText = urlParams.get("title");
+            if (firstNameElem) firstNameElem.innerText = urlParams.get("firstName");
+            if (lastNameElem) lastNameElem.innerText = urlParams.get("lastName");
+            if (projectNameElem) projectNameElem.innerText = urlParams.get("projectName");
+            if (projectIdElem) projectIdElem.innerText = projectId;
+
             // Выполнение GET запроса
             try {
                 const response = await fetch(`http://localhost:8090/projects/${projectId}`);
@@ -158,7 +336,6 @@
                     const projectData = await response.json();
                     const tableBody = document.getElementById("projectInfoTable");
 
-                    // Преобразование данных в строки таблицы
                     const createRow = (stage, status, description) => {
                         const row = document.createElement("tr");
                         const stageCell = document.createElement("td");
@@ -222,8 +399,9 @@
                     createRow("Описание реализации серверного трекинга", projectData.serverSideTrackingImplementationStatus, projectData.serverSideTrackingImplementationDescription);
                     createRow("Описание режима согласия", projectData.consentModeStatus, projectData.consentModeDescription);
                     createRow("Описание не сбора персональных данных", projectData.piiDataNotCollectionStatus, projectData.piiDataNotCollectionDescription);
+
                 } else {
-                    alert("Ошибка получения данных проекта: " + response.status);
+                    alert("Ошибка проекта: " + response.status);
                 }
             } catch (error) {
                 console.error("Ошибка при выполнении запроса:", error);
@@ -232,73 +410,120 @@
 
             // Инициализируем загрузку комментариев
             loadNotes();
-            // Обработчик для добавления комментария
-            document.getElementById("addCommentButton").addEventListener("click", async function () {
-                const message = document.getElementById("commentMessage").value;
-                const rootNoteId = null; // Для первого комментария в ветке
+        });
 
-                const requestBody = {
-                    message: message,
-                    projectId: projectId,
-                    userId: userId,
-                    rootNoteId: rootNoteId
-                };
-
+        window.addEventListener("load", async function () {
+                document.getElementById("id").innerText = urlParams.get("id");
+                document.getElementById("email").innerText = urlParams.get("email");
+                document.getElementById("title").innerText = urlParams.get("title");
+                document.getElementById("firstName").innerText = urlParams.get("firstName");
+                document.getElementById("lastName").innerText = urlParams.get("lastName");
+                document.getElementById("projectName").innerText = urlParams.get("projectName");
+                document.getElementById("projectId").innerText = projectId;
+                // Выполнение GET запроса
                 try {
-                    const response = await fetch("http://localhost:8090/notes", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(requestBody)
-                    });
-
+                    const response = await fetch(`http://localhost:8090/projects/${projectId}`);
                     if (response.ok) {
-                        document.getElementById("commentMessage").value = ""; // Очищаем текстовое поле после отправки
-                        loadNotes(); // Обновляем комментарии
+                        const projectData = await response.json();
+                        const tableBody = document.getElementById("projectInfoTable");
+
+                        // Преобразование данных в строки таблицы
+                        const createRow = (stage, status, description) => {
+                            const row = document.createElement("tr");
+                            const stageCell = document.createElement("td");
+                            const statusCell = document.createElement("td");
+                            const descriptionCell = document.createElement("td");
+
+                            stageCell.innerText = stage;
+                            statusCell.innerText = status ?? 'N/A';
+                            descriptionCell.innerText = description;
+
+                            row.appendChild(stageCell);
+                            row.appendChild(statusCell);
+                            row.appendChild(descriptionCell);
+
+                            tableBody.appendChild(row);
+                        };
+
+
                     } else {
-                        alert("Ошибка добавления комментария: " + response.status);
+                        alert("Ошибка получения данных проекта: " + response.status);
                     }
                 } catch (error) {
                     console.error("Ошибка при выполнении запроса:", error);
+                    alert("Произошла ошибка при выполнении запроса. Проверьте консоль");
+                }
+
+                // Инициализируем загрузку комментариев
+                loadNotes();
+                // Обработчик для добавления комментария
+                document.getElementById("addCommentButton").addEventListener("click", async function () {
+                    const message = document.getElementById("commentMessage").value;
+                    const rootNoteId = null; // Для первого комментария в ветке
+
+                    const requestBody = {
+                        message: message,
+                        projectId: projectId,
+                        userId: userId,
+                        rootNoteId: rootNoteId
+                    };
+
+                    try {
+                        const response = await fetch("http://localhost:8090/notes", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(requestBody)
+                        });
+
+                        if (response.ok) {
+                            document.getElementById("commentMessage").value = ""; // Очищаем текстовое поле после отправки
+                            loadNotes(); // Обновляем комментарии
+                        } else {
+                            alert("Ошибка добавления комментария: " + response.status);
+                        }
+                    } catch (error) {
+                        console.error("Ошибка при выполнении запроса:", error);
+                        alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+                    }
+                });
+            }
+        );
+
+        function addReply(rootNoteId) {
+            const commentMessage = prompt("Введите ваш комментарий:");
+            if (commentMessage) {
+                const requestBody = {
+                    message: commentMessage,
+                    projectId: projectId,
+                    userId: userId, // Замените на реальный userId
+                    rootNoteId: rootNoteId
+                };
+
+                fetch("http://localhost:8090/notes", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestBody)
+                }).then(response => {
+                    if (response.ok) {
+                        loadNotes();
+                    } else {
+                        alert("Ошибка добавления комментария: " + response.status);
+                    }
+                }).catch(error => {
+                    console.error("Ошибка при выполнении запроса:", error);
                     alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-                }
-            });
+                });
+            }
         }
-    );
 
-    function addReply(rootNoteId) {
-        const commentMessage = prompt("Введите ваш комментарий:");
-        if (commentMessage) {
-            const requestBody = {
-                message: commentMessage,
-                projectId: projectId,
-                userId: userId, // Замените на реальный userId
-                rootNoteId: rootNoteId
-            };
-
-            fetch("http://localhost:8090/notes", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(requestBody)
-            }).then(response => {
-                if (response.ok) {
-                    loadNotes();
-                } else {
-                    alert("Ошибка добавления комментария: " + response.status);
-                }
-            }).catch(error => {
-                console.error("Ошибка при выполнении запроса:", error);
-                alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-            });
-        }
-    }
-
-    document.getElementById("logoutButton").addEventListener("click", function () {
-        window.location.href = "login.html";
-    });
-</script>
+        document.getElementById("logoutButton").addEventListener("click", function () {
+            window.location.href = "login.html";
+        });
+    </script>
+</div>
 </body>
 </html>
