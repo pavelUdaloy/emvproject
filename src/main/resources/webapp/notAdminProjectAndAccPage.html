@@ -78,17 +78,17 @@
                     const noteElement = document.createElement("div");
                     noteElement.className = "note" + (isNested ? " nested-note" : "");
                     noteElement.innerHTML = `
-        <div style="display: flex; align-items: center;">
-            <div>
-                <p><strong>${note.userEmail}</strong> (${new Date(note.sendedAt).toLocaleString()}):</p>
-                <p>${note.message}</p>
-            </div>
-            <div class="reply-form" style="margin-left: auto;">
-                <textarea rows="2" cols="40" placeholder="Ваш ответ"></textarea>
-                <button onclick="submitReply(${note.id}, this)">Отправить</button>
-            </div>
-        </div>
-    `;
+                            <div style="display: flex; align-items: center;">
+                                <div>
+                                    <p><strong>${note.userEmail}</strong> (${new Date(note.sendedAt).toLocaleString()}):</p>
+                                    <p>${note.message}</p>
+                                </div>
+                                <div class="reply-form" style="margin-left: auto;">
+                                    <textarea rows="2" cols="40" placeholder="Ваш ответ"></textarea>
+                                    <button onclick="submitReply(${note.id}, this)">Отправить</button>
+                                </div>
+                            </div>
+                        `;
                     if (note.notes && note.notes.length > 0) {
                         const nestedNotes = document.createElement("div");
                         note.notes.forEach(nestedNote => {
