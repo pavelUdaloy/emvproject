@@ -16,7 +16,7 @@
 <p>Project Id: <span id="projectId"></span></p>
 <button id="logoutButton">Выход</button>
 
-<h3>Project Information</h3>
+<h3>Мой проект</h3>
 <table border="1">
     <thead>
     <tr>
@@ -29,6 +29,11 @@
     <!-- Здесь будут отображены данные -->
     </tbody>
 </table>
+
+<h3>Комментарии</h3>
+<div id="notesContainer">
+    <!-- Здесь будут отображены комментарии -->
+</div>
 
 <script>
     window.addEventListener("load", async function() {
@@ -120,9 +125,46 @@
             console.error("Ошибка при выполнении запроса:", error);
             alert("Произошла ошибка при выполнении запроса. Проверьте консоль");
         }
+        // Выполнение GET запроса для комментариев
+        try {
+            const notesResponse = await fetch(`http://localhost:8090/notes/${projectId}`);
+            if (notesResponse.ok) {
+                const notesData = await notesResponse.json();
+                const notesContainer = document.getElementById("notesContainer");
+
+                // Функция для создания элемента комментария с вложенностью
+                const createNoteElement = (note, isNested = false) => {
+                    const noteElement = document.createElement("div");
+                    if (isNested) {
+                        noteElement.style.marginLeft = "50px";
+                    }
+                    noteElement.innerHTML = `
+                            <p><strong>${note.userEmail}</strong> (${new Date(note.sendedAt).toLocaleString()}):</p>
+                            <p>${note.message}</p>
+                        `;
+                    if (note.notes && note.notes.length > 0) {
+                        const nestedNotes = document.createElement("div");
+                        note.notes.forEach(nestedNote => {
+                            nestedNotes.appendChild(createNoteElement(nestedNote, true));
+                        });
+                        noteElement.appendChild(nestedNotes);
+                    }
+                    return noteElement;
+                };
+
+                notesData.forEach(note => {
+                    notesContainer.appendChild(createNoteElement(note));
+                });
+            } else {
+                alert("Ошибка получения комментариев: " + notesResponse.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+        }
     });
 
-    document.getElementById("logoutButton").addEventListener("click", function () {
+    document.getElementById("logoutButton").addEventListener("click", function() {
         window.location.href = "login.html";
     });
 </script>
