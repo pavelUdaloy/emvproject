@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+</head>
+<body>
+<h2>Project Details</h2>
+<p>Project ID: <span id="projectId"></span></p>
+<p>Project Name: <span id="projectName"></span></p>
+<p>Project Details: <span id="projectDetails"></span></p>
+<button id="backButton">Вернуться к странице админа</button>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    let adminProjectId = urlParams.get("adminProjectId");
+    let projectId = urlParams.get("projectId");
+    let adminUserId = urlParams.get("adminId");
+
+    window.addEventListener("load", async function() {
+        document.getElementById("projectId").innerText = projectId;
+
+        // Выполнение GET запроса для получения информации о проекте
+        try {
+            const response = await fetch(`http://localhost:8090/projects/${projectId}`);
+            if (response.ok) {
+                const project = await response.json();
+                document.getElementById("projectName").innerText = project.name;
+                // Добавьте здесь отображение дополнительной информации о проекте, если необходимо
+            } else {
+                alert("Ошибка получения данных проекта: " + response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+        }
+    });
+
+    document.getElementById("backButton").addEventListener("click", function() {
+        window.location.href = `adminProjectAndAccPage.html?id=${adminUserId}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${urlParams.get("adminProjectId")}`;
+    });
+</script>
+</body>
+</html>

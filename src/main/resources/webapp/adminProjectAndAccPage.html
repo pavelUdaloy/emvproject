@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADMIN</title>
+    <style>
+        .project-list {
+            margin-top: 20px;
+        }
+        .project-item {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
 <h2>ADMIN</h2>
@@ -13,20 +21,54 @@
 <p>First Name: <span id="firstName"></span></p>
 <p>Last Name: <span id="lastName"></span></p>
 <p>Project Name: <span id="projectName"></span></p>
-<p>Project Id: <span id="projectId"></span></p>
+<p>Project Id: <span id="adminProjectId"></span></p>
 <button id="logoutButton">Выход</button>
 
+<h3>Выбор проекта</h3>
+<div id="projectsContainer" class="project-list">
+    <!-- Здесь будут отображены проекты -->
+</div>
+
 <script>
-    window.addEventListener("load", function() {
-        const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
+    let adminUserId = urlParams.get("id");
+
+    window.addEventListener("load", async function() {
         document.getElementById("id").innerText = urlParams.get("id");
         document.getElementById("email").innerText = urlParams.get("email");
         document.getElementById("title").innerText = urlParams.get("title");
         document.getElementById("firstName").innerText = urlParams.get("firstName");
         document.getElementById("lastName").innerText = urlParams.get("lastName");
         document.getElementById("projectName").innerText = urlParams.get("projectName");
-        document.getElementById("projectId").innerText = urlParams.get("projectId");
+        document.getElementById("adminProjectId").innerText = urlParams.get("adminProjectId");
+
+        // Выполнение GET запроса для получения списка проектов
+        try {
+            const response = await fetch("http://localhost:8090/projects");
+            if (response.ok) {
+                const projects = await response.json();
+                const projectsContainer = document.getElementById("projectsContainer");
+
+                projects.forEach(project => {
+                    const projectItem = document.createElement("div");
+                    projectItem.className = "project-item";
+                    projectItem.innerHTML = `
+                        <button onclick="viewProject(${project.id})">${project.name}</button>
+                    `;
+                    projectsContainer.appendChild(projectItem);
+                });
+            } else {
+                alert("Ошибка получения списка проектов: " + response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+        }
     });
+
+    function viewProject(projectId) {
+        window.location.href = `projectDetails.html?projectId=${projectId}&adminId=${adminUserId}&id=${urlParams.get("id")}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${urlParams.get("adminProjectId")}`;
+    }
 
     document.getElementById("logoutButton").addEventListener("click", function() {
         window.location.href = "login.html";
