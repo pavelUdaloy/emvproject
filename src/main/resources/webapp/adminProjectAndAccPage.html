@@ -9,7 +9,12 @@
             margin-top: 20px;
         }
         .project-item {
+            display: flex;
+            align-items: center;
             margin: 5px 0;
+        }
+        .project-item button {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -29,9 +34,43 @@
     <!-- Здесь будут отображены проекты -->
 </div>
 
+<h3>Добавить проект</h3>
+<form id="createProjectForm">
+    <input type="text" id="projectNameInput" placeholder="Название проекта">
+    <button type="button" id="addProjectButton">Добавить проект</button>
+</form>
+
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     let adminUserId = urlParams.get("id");
+
+    // Функция для загрузки списка проектов
+    async function loadProjects() {
+        try {
+            const response = await fetch("http://localhost:8090/projects");
+            if (response.ok) {
+                const projects = await response.json();
+                const projectsContainer = document.getElementById("projectsContainer");
+                projectsContainer.innerHTML = ""; // Очищаем контейнер перед загрузкой новых данных
+
+                projects.forEach(project => {
+                    const projectItem = document.createElement("div");
+                    projectItem.className = "project-item";
+                    projectItem.innerHTML = `
+                            <span>${project.name}</span>
+                            <button onclick="viewProject(${project.id})">Просмотреть</button>
+                            <button onclick="deleteProject(${project.id})">Удалить</button>
+                        `;
+                    projectsContainer.appendChild(projectItem);
+                });
+            } else {
+                alert("Ошибка получения списка проектов: " + response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+        }
+    }
 
     window.addEventListener("load", async function() {
         document.getElementById("id").innerText = urlParams.get("id");
@@ -42,37 +81,66 @@
         document.getElementById("projectName").innerText = urlParams.get("projectName");
         document.getElementById("adminProjectId").innerText = urlParams.get("adminProjectId");
 
-        // Выполнение GET запроса для получения списка проектов
-        try {
-            const response = await fetch("http://localhost:8090/projects");
-            if (response.ok) {
-                const projects = await response.json();
-                const projectsContainer = document.getElementById("projectsContainer");
+        // Инициализируем загрузку списка проектов
+        loadProjects();
 
-                projects.forEach(project => {
-                    const projectItem = document.createElement("div");
-                    projectItem.className = "project-item";
-                    projectItem.innerHTML = `
-                        <button onclick="viewProject(${project.id})">${project.name}</button>
-                    `;
-                    projectsContainer.appendChild(projectItem);
-                });
+        document.getElementById("addProjectButton").addEventListener("click", async function() {
+            const projectName = document.getElementById("projectNameInput").value;
+
+            if (projectName) {
+                const requestBody = {
+                    name: projectName
+                };
+
+                try {
+                    const response = await fetch("http://localhost:8090/projects", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    if (response.ok) {
+                        document.getElementById("projectNameInput").value = ""; // Очищаем поле ввода после отправки
+                        loadProjects(); // Обновляем список проектов
+                    } else {
+                        alert("Ошибка добавления проекта: " + response.status);
+                    }
+                } catch (error) {
+                    console.error("Ошибка при выполнении запроса:", error);
+                    alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+                }
             } else {
-                alert("Ошибка получения списка проектов: " + response.status);
+                alert("Введите название проекта.");
             }
-        } catch (error) {
-            console.error("Ошибка при выполнении запроса:", error);
-            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-        }
+        });
+
+        document.getElementById("logoutButton").addEventListener("click", function() {
+            window.location.href = "login.html";
+        });
     });
 
     function viewProject(projectId) {
         window.location.href = `projectDetails.html?projectId=${projectId}&adminId=${adminUserId}&id=${urlParams.get("id")}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${urlParams.get("adminProjectId")}`;
     }
 
-    document.getElementById("logoutButton").addEventListener("click", function() {
-        window.location.href = "login.html";
-    });
+    async function deleteProject(projectId) {
+        try {
+            const response = await fetch(`http://localhost:8090/projects/${projectId}`, {
+                method: "DELETE"
+            });
+
+            if (response.ok) {
+                loadProjects(); // Обновляем список проектов
+            } else {
+                alert("Ошибка удаления проекта: " + response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+        }
+    }
 </script>
 </body>
 </html>
