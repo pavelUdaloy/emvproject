@@ -35,102 +35,25 @@
     <!-- Здесь будут отображены комментарии -->
 </div>
 
+<h3>Добавить комментарий</h3>
+<form id="commentForm">
+    <textarea id="commentMessage" rows="4" cols="50" placeholder="Ваш комментарий"></textarea>
+    <br>
+    <button type="button" id="addCommentButton">Прокомментировать</button>
+</form>
+
 <script>
-    window.addEventListener("load", async function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById("id").innerText = urlParams.get("id");
-        document.getElementById("email").innerText = urlParams.get("email");
-        document.getElementById("title").innerText = urlParams.get("title");
-        document.getElementById("firstName").innerText = urlParams.get("firstName");
-        document.getElementById("lastName").innerText = urlParams.get("lastName");
-        document.getElementById("projectName").innerText = urlParams.get("projectName");
-        const projectId = urlParams.get("projectId");
-        document.getElementById("projectId").innerText = projectId;
-
-        // Выполнение GET запроса
-        try {
-            const response = await fetch(`http://localhost:8090/projects/${projectId}`);
-            if (response.ok) {
-                const projectData = await response.json();
-                const tableBody = document.getElementById("projectInfoTable");
-
-                // Преобразование данных в строки таблицы
-                const createRow = (stage, status, description) => {
-                    const row = document.createElement("tr");
-                    const stageCell = document.createElement("td");
-                    const statusCell = document.createElement("td");
-                    const descriptionCell = document.createElement("td");
-
-                    stageCell.innerText = stage;
-                    statusCell.innerText = status ?? 'N/A';
-                    descriptionCell.innerText = description;
-
-                    row.appendChild(stageCell);
-                    row.appendChild(statusCell);
-                    row.appendChild(descriptionCell);
-
-                    tableBody.appendChild(row);
-                };
-
-                createRow("Описание кода", projectData.correctCodeImplementationStatus, projectData.correctCodeImplementationDescription);
-                createRow("Описание мобильного трекинга", projectData.correctMobileSiteTrackingStatus, projectData.correctMobileSiteTrackingDescription);
-                createRow("Описание сингулярности кода", projectData.codeSingularityStatus, projectData.codeSingularityDescription);
-                createRow("Описание одностраничного приложения", projectData.correctSinglePageApplicationTrackingStatus, projectData.correctSinglePageApplicationTrackingDescription);
-                createRow("Описание конфигурации трекинга через домены", projectData.crossDomainTrackingConfigurationStatus, projectData.crossDomainTrackingConfigurationDescription);
-                createRow("Описание саморефералов", projectData.selfReferralsStatus, projectData.selfReferralsDescription);
-                createRow("Описание процесса рефералов оплаты", projectData.paymentProcessReferralsStatus, projectData.paymentProcessReferralsDescription);
-                createRow("Описание UTM тегирования", projectData.utmTaggingStatus, projectData.utmTaggingDescription);
-                createRow("Описание трекинга 404 ошибок", projectData.pages404ErrorTrackingStatus, projectData.pages404ErrorTrackingDescription);
-                createRow("Описание нежелательных рефералов основного домена", projectData.mainDomainInListUnwantedReferralsStatus, projectData.mainDomainInListUnwantedReferralsDescription);
-                createRow("Описание времени ожидания сессии", projectData.sessionTimeoutStatus, projectData.sessionTimeoutDescription);
-                createRow("Описание окна обратного просмотра", projectData.lookbackWindowStatus, projectData.lookbackWindowDescription);
-                createRow("Описание хранения данных пользователей и событий", projectData.userAndEventDataRetentionStatus, projectData.userAndEventDataRetentionDescription);
-                createRow("Описание точности данных электронной коммерции", projectData.ecommerceDataAccuracyStatus, projectData.ecommerceDataAccuracyDescription);
-                createRow("Описание трафика на ненастроенную целевую страницу", projectData.trafficToNotSetLandingPageStatus, projectData.trafficToNotSetLandingPageDescription);
-                createRow("Описание валюты", projectData.currencyStatus, projectData.currencyDescription);
-                createRow("Описание внутреннего трафика", projectData.defineInternalTrafficStatus, projectData.defineInternalTrafficDescription);
-                createRow("Описание категории отрасли", projectData.industryCategoryStatus, projectData.industryCategoryDescription);
-                createRow("Описание часового пояса отчетности", projectData.reportingTimeZoneStatus, projectData.reportingTimeZoneDescription);
-                createRow("Описание трекинга событий", projectData.eventTrackingStatus, projectData.eventTrackingDescription);
-                createRow("Описание трекинга конверсий", projectData.conversionTrackingStatus, projectData.conversionTrackingDescription);
-                createRow("Описание стандартного трекинга покупок в электронной коммерции", projectData.standardPurchaseEcommerceTrackingImplementationStatus, projectData.standardPurchaseEcommerceTrackingImplementationDescription);
-                createRow("Описание расширенного измерения", projectData.enhancedMeasurementStatus, projectData.enhancedMeasurementDescription);
-                createRow("Описание трекинга идентификаторов пользователей", projectData.userIdTrackingImplementationStatus, projectData.userIdTrackingImplementationDescription);
-                createRow("Описание улучшенного трекинга электронной коммерции", projectData.enhnancedEcommerceTrackingStatus, projectData.enhnancedEcommerceTrackingDescription);
-                createRow("Описание трекинга пользовательских измерений и метрик", projectData.customDimensionsAndMetricsTrackingStatus, projectData.customDimensionsAndMetricsTrackingDescription);
-                createRow("Описание сбора данных о местоположении и устройстве", projectData.granularLocationAndDeviceDataCollectionStatus, projectData.granularLocationAndDeviceDataCollectionDescription);
-                createRow("Описание расширенных настроек для персонализации рекламы", projectData.advancedSettingsToAllowForAdsPersonalizationStatus, projectData.advancedSettingsToAllowForAdsPersonalizationDescription);
-                createRow("Описание имени собственности", projectData.propertyNameStatus, projectData.propertyNameDescription);
-                createRow("Описание имени потока", projectData.streamNameStatus, projectData.streamNameDescription);
-                createRow("Описание таксономии трекинга событий", projectData.eventTrackingTaxonomyStatus, projectData.eventTrackingTaxonomyDescription);
-                createRow("Описание связывания с Google BigQuery", projectData.googleBigqueryLinkingStatus, projectData.googleBigqueryLinkingDescription);
-                createRow("Описание библиотеки", projectData.libraryStatus, projectData.libraryDescription);
-                createRow("Описание связывания с Google Ads", projectData.googleAdsLinkingStatus, projectData.googleAdsLinkingDescription);
-                createRow("Описание связывания с Google Search Console", projectData.googleSearchConsoleLinkingStatus, projectData.googleSearchConsoleLinkingDescription);
-                createRow("Описание связывания с Google Merchant Center", projectData.googleMerchantCenterLinkingStatus, projectData.googleMerchantCenterLinkingDescription);
-                createRow("Описание связывания с Display and Video 360", projectData.displayAndVideo360LinkingStatus, projectData.displayAndVideo360LinkingDescription);
-                createRow("Описание импорта данных", projectData.dataImportStatus, projectData.dataImportDescription);
-                createRow("Описание связывания с Ad Manager", projectData.adManagerLinkingStatus, projectData.adManagerLinkingDescription);
-                createRow("Описание связывания с Search Ads 360", projectData.searchAds360LinkingStatus, projectData.searchAds360LinkingDescription);
-                createRow("Описание сбора данных Google Signals", projectData.googleSignalsDataCollectionStatus, projectData.googleSignalsDataCollectionDescription);
-                createRow("Описание модели атрибуции отчетов", projectData.reportingAttributionModelStatus, projectData.reportingAttributionModelDescription);
-                createRow("Описание идентичности атрибуции отчетов", projectData.reportingAttributionIdentityStatus, projectData.reportingAttributionIdentityDescription);
-                createRow("Описание реализации серверного трекинга", projectData.serverSideTrackingImplementationStatus, projectData.serverSideTrackingImplementationDescription);
-                createRow("Описание режима согласия", projectData.consentModeStatus, projectData.consentModeDescription);
-                createRow("Описание не сбора персональных данных", projectData.piiDataNotCollectionStatus, projectData.piiDataNotCollectionDescription);
-            } else {
-                alert("Ошибка получения данных проекта: " + response.status);
-            }
-        } catch (error) {
-            console.error("Ошибка при выполнении запроса:", error);
-            alert("Произошла ошибка при выполнении запроса. Проверьте консоль");
-        }
+    const urlParams = new URLSearchParams(window.location.search);
+    let projectId = urlParams.get("projectId");
+    let userId = urlParams.get("id"); // Замените на реальный userId
+    const loadNotes = async () => {
         // Выполнение GET запроса для комментариев
         try {
             const notesResponse = await fetch(`http://localhost:8090/notes/${projectId}`);
             if (notesResponse.ok) {
                 const notesData = await notesResponse.json();
                 const notesContainer = document.getElementById("notesContainer");
+                notesContainer.innerHTML = ""; // Очищаем контейнер перед загрузкой новых данных
 
                 // Функция для создания элемента комментария с вложенностью
                 const createNoteElement = (note, isNested = false) => {
@@ -139,9 +62,10 @@
                         noteElement.style.marginLeft = "50px";
                     }
                     noteElement.innerHTML = `
-                            <p><strong>${note.userEmail}</strong> (${new Date(note.sendedAt).toLocaleString()}):</p>
-                            <p>${note.message}</p>
-                        `;
+                                <p><strong>${note.userEmail}</strong> (${new Date(note.sendedAt).toLocaleString()}):</p>
+                                <p>${note.message}</p>
+                                <button onclick="addReply(${note.id})">Ответить</button>
+                            `;
                     if (note.notes && note.notes.length > 0) {
                         const nestedNotes = document.createElement("div");
                         note.notes.forEach(nestedNote => {
@@ -162,9 +86,164 @@
             console.error("Ошибка при выполнении запроса:", error);
             alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
         }
-    });
+    };
+    window.addEventListener("load", async function () {
 
-    document.getElementById("logoutButton").addEventListener("click", function() {
+            document.getElementById("id").innerText = urlParams.get("id");
+            document.getElementById("email").innerText = urlParams.get("email");
+            document.getElementById("title").innerText = urlParams.get("title");
+            document.getElementById("firstName").innerText = urlParams.get("firstName");
+            document.getElementById("lastName").innerText = urlParams.get("lastName");
+            document.getElementById("projectName").innerText = urlParams.get("projectName");
+            document.getElementById("projectId").innerText = projectId;
+
+            // Выполнение GET запроса
+            try {
+                const response = await fetch(`http://localhost:8090/projects/${projectId}`);
+                if (response.ok) {
+                    const projectData = await response.json();
+                    const tableBody = document.getElementById("projectInfoTable");
+
+                    // Преобразование данных в строки таблицы
+                    const createRow = (stage, status, description) => {
+                        const row = document.createElement("tr");
+                        const stageCell = document.createElement("td");
+                        const statusCell = document.createElement("td");
+                        const descriptionCell = document.createElement("td");
+
+                        stageCell.innerText = stage;
+                        statusCell.innerText = status ?? 'N/A';
+                        descriptionCell.innerText = description;
+
+                        row.appendChild(stageCell);
+                        row.appendChild(statusCell);
+                        row.appendChild(descriptionCell);
+
+                        tableBody.appendChild(row);
+                    };
+
+                    createRow("Описание кода", projectData.correctCodeImplementationStatus, projectData.correctCodeImplementationDescription);
+                    createRow("Описание мобильного трекинга", projectData.correctMobileSiteTrackingStatus, projectData.correctMobileSiteTrackingDescription);
+                    createRow("Описание сингулярности кода", projectData.codeSingularityStatus, projectData.codeSingularityDescription);
+                    createRow("Описание одностраничного приложения", projectData.correctSinglePageApplicationTrackingStatus, projectData.correctSinglePageApplicationTrackingDescription);
+                    createRow("Описание конфигурации трекинга через домены", projectData.crossDomainTrackingConfigurationStatus, projectData.crossDomainTrackingConfigurationDescription);
+                    createRow("Описание саморефералов", projectData.selfReferralsStatus, projectData.selfReferralsDescription);
+                    createRow("Описание процесса рефералов оплаты", projectData.paymentProcessReferralsStatus, projectData.paymentProcessReferralsDescription);
+                    createRow("Описание UTM тегирования", projectData.utmTaggingStatus, projectData.utmTaggingDescription);
+                    createRow("Описание трекинга 404 ошибок", projectData.pages404ErrorTrackingStatus, projectData.pages404ErrorTrackingDescription);
+                    createRow("Описание нежелательных рефералов основного домена", projectData.mainDomainInListUnwantedReferralsStatus, projectData.mainDomainInListUnwantedReferralsDescription);
+                    createRow("Описание времени ожидания сессии", projectData.sessionTimeoutStatus, projectData.sessionTimeoutDescription);
+                    createRow("Описание окна обратного просмотра", projectData.lookbackWindowStatus, projectData.lookbackWindowDescription);
+                    createRow("Описание хранения данных пользователей и событий", projectData.userAndEventDataRetentionStatus, projectData.userAndEventDataRetentionDescription);
+                    createRow("Описание точности данных электронной коммерции", projectData.ecommerceDataAccuracyStatus, projectData.ecommerceDataAccuracyDescription);
+                    createRow("Описание трафика на ненастроенную целевую страницу", projectData.trafficToNotSetLandingPageStatus, projectData.trafficToNotSetLandingPageDescription);
+                    createRow("Описание валюты", projectData.currencyStatus, projectData.currencyDescription);
+                    createRow("Описание внутреннего трафика", projectData.defineInternalTrafficStatus, projectData.defineInternalTrafficDescription);
+                    createRow("Описание категории отрасли", projectData.industryCategoryStatus, projectData.industryCategoryDescription);
+                    createRow("Описание часового пояса отчетности", projectData.reportingTimeZoneStatus, projectData.reportingTimeZoneDescription);
+                    createRow("Описание трекинга событий", projectData.eventTrackingStatus, projectData.eventTrackingDescription);
+                    createRow("Описание трекинга конверсий", projectData.conversionTrackingStatus, projectData.conversionTrackingDescription);
+                    createRow("Описание стандартного трекинга покупок в электронной коммерции", projectData.standardPurchaseEcommerceTrackingImplementationStatus, projectData.standardPurchaseEcommerceTrackingImplementationDescription);
+                    createRow("Описание расширенного измерения", projectData.enhancedMeasurementStatus, projectData.enhancedMeasurementDescription);
+                    createRow("Описание трекинга идентификаторов пользователей", projectData.userIdTrackingImplementationStatus, projectData.userIdTrackingImplementationDescription);
+                    createRow("Описание улучшенного трекинга электронной коммерции", projectData.enhnancedEcommerceTrackingStatus, projectData.enhnancedEcommerceTrackingDescription);
+                    createRow("Описание трекинга пользовательских измерений и метрик", projectData.customDimensionsAndMetricsTrackingStatus, projectData.customDimensionsAndMetricsTrackingDescription);
+                    createRow("Описание сбора данных о местоположении и устройстве", projectData.granularLocationAndDeviceDataCollectionStatus, projectData.granularLocationAndDeviceDataCollectionDescription);
+                    createRow("Описание расширенных настроек для персонализации рекламы", projectData.advancedSettingsToAllowForAdsPersonalizationStatus, projectData.advancedSettingsToAllowForAdsPersonalizationDescription);
+                    createRow("Описание имени собственности", projectData.propertyNameStatus, projectData.propertyNameDescription);
+                    createRow("Описание имени потока", projectData.streamNameStatus, projectData.streamNameDescription);
+                    createRow("Описание таксономии трекинга событий", projectData.eventTrackingTaxonomyStatus, projectData.eventTrackingTaxonomyDescription);
+                    createRow("Описание связывания с Google BigQuery", projectData.googleBigqueryLinkingStatus, projectData.googleBigqueryLinkingDescription);
+                    createRow("Описание библиотеки", projectData.libraryStatus, projectData.libraryDescription);
+                    createRow("Описание связывания с Google Ads", projectData.googleAdsLinkingStatus, projectData.googleAdsLinkingDescription);
+                    createRow("Описание связывания с Google Search Console", projectData.googleSearchConsoleLinkingStatus, projectData.googleSearchConsoleLinkingDescription);
+                    createRow("Описание связывания с Google Merchant Center", projectData.googleMerchantCenterLinkingStatus, projectData.googleMerchantCenterLinkingDescription);
+                    createRow("Описание связывания с Display and Video 360", projectData.displayAndVideo360LinkingStatus, projectData.displayAndVideo360LinkingDescription);
+                    createRow("Описание импорта данных", projectData.dataImportStatus, projectData.dataImportDescription);
+                    createRow("Описание связывания с Ad Manager", projectData.adManagerLinkingStatus, projectData.adManagerLinkingDescription);
+                    createRow("Описание связывания с Search Ads 360", projectData.searchAds360LinkingStatus, projectData.searchAds360LinkingDescription);
+                    createRow("Описание сбора данных Google Signals", projectData.googleSignalsDataCollectionStatus, projectData.googleSignalsDataCollectionDescription);
+                    createRow("Описание модели атрибуции отчетов", projectData.reportingAttributionModelStatus, projectData.reportingAttributionModelDescription);
+                    createRow("Описание идентичности атрибуции отчетов", projectData.reportingAttributionIdentityStatus, projectData.reportingAttributionIdentityDescription);
+                    createRow("Описание реализации серверного трекинга", projectData.serverSideTrackingImplementationStatus, projectData.serverSideTrackingImplementationDescription);
+                    createRow("Описание режима согласия", projectData.consentModeStatus, projectData.consentModeDescription);
+                    createRow("Описание не сбора персональных данных", projectData.piiDataNotCollectionStatus, projectData.piiDataNotCollectionDescription);
+                } else {
+                    alert("Ошибка получения данных проекта: " + response.status);
+                }
+            } catch (error) {
+                console.error("Ошибка при выполнении запроса:", error);
+                alert("Произошла ошибка при выполнении запроса. Проверьте консоль");
+            }
+
+
+            // Инициализируем загрузку комментариев
+            loadNotes();
+            // Обработчик для добавления комментария
+            document.getElementById("addCommentButton").addEventListener("click", async function () {
+                const message = document.getElementById("commentMessage").value;
+                const rootNoteId = null; // Для первого комментария в ветке
+
+                const requestBody = {
+                    message: message,
+                    projectId: projectId,
+                    userId: userId,
+                    rootNoteId: rootNoteId
+                };
+
+                try {
+                    const response = await fetch("http://localhost:8090/notes", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    if (response.ok) {
+                        document.getElementById("commentMessage").value = ""; // Очищаем текстовое поле после отправки
+                        loadNotes(); // Обновляем комментарии
+                    } else {
+                        alert("Ошибка добавления комментария: " + response.status);
+                    }
+                } catch (error) {
+                    console.error("Ошибка при выполнении запроса:", error);
+                    alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+                }
+            });
+        }
+    );
+
+    function addReply(rootNoteId) {
+        const commentMessage = prompt("Введите ваш комментарий:");
+        if (commentMessage) {
+            const requestBody = {
+                message: commentMessage,
+                projectId: projectId,
+                userId: userId, // Замените на реальный userId
+                rootNoteId: rootNoteId
+            };
+
+            fetch("http://localhost:8090/notes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            }).then(response => {
+                if (response.ok) {
+                    loadNotes();
+                } else {
+                    alert("Ошибка добавления комментария: " + response.status);
+                }
+            }).catch(error => {
+                console.error("Ошибка при выполнении запроса:", error);
+                alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+            });
+        }
+    }
+
+    document.getElementById("logoutButton").addEventListener("click", function () {
         window.location.href = "login.html";
     });
 </script>

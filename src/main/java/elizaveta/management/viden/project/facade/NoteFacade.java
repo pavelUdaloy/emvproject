@@ -41,6 +41,7 @@ public class NoteFacade {
 
     private GetNoteResponse convertToResponse(Note note) {
         GetNoteResponse response = GetNoteResponse.builder()
+                .id(note.getId())
                 .message(note.getMessage())
                 .sendedAt(note.getSendedAt())
                 .userEmail(note.getUser().getEmail())

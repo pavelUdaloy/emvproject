@@ -15,6 +15,7 @@ import java.util.List;
 @SuperBuilder
 public class GetNoteResponse {
 
+    private int id;
     private String message;
     private LocalDateTime sendedAt;
     private String userEmail;
