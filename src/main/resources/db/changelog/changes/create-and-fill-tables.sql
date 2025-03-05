@@ -1,100 +1,25 @@
+CREATE SEQUENCE roles_SEQ START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE projects_SEQ START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE users_SEQ START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE logs_SEQ START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE notes_SEQ START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE criteries_SEQ START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE roles
+(
+    id   INT          NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL UNIQUE
+);
+
+INSERT INTO roles (name)
+VALUES ('VIDEN_ADMIN'),
+       ('VIDEN_ANALYST'),
+       ('CLIENT');
+
 CREATE TABLE projects
 (
-    id                                                              INT          NOT NULL IDENTITY (1,1) UNIQUE,
-    name                                                            VARCHAR(100) NOT NULL UNIQUE,
-    correct_code_implementation_status                              VARCHAR(100),
-    correct_code_implementation_description                         TEXT,
-    correct_mobile_site_tracking_status                             VARCHAR(100),
-    correct_mobile_site_tracking_description                        TEXT,
-    code_singularity_status                                         VARCHAR(100),
-    code_singularity_description                                    TEXT,
-    correct_single_page_application_tracking_status                 VARCHAR(100),
-    correct_single_page_application_tracking_description            TEXT,
-    cross_domain_tracking_configuration_status                      VARCHAR(100),
-    cross_domain_tracking_configuration_description                 TEXT,
-    self_referrals_status                                           VARCHAR(100),
-    self_referrals_description                                      TEXT,
-    payment_process_referrals_status                                VARCHAR(100),
-    payment_process_referrals_description                           TEXT,
-    utm_tagging_status                                              VARCHAR(100),
-    utm_tagging_description                                         TEXT,
-    pages_404_error_tracking_status                                 VARCHAR(100),
-    pages_404_error_tracking_description                            TEXT,
-    main_domain_in_list_unwanted_referrals_status                   VARCHAR(100),
-    main_domain_in_list_unwanted_referrals_description              TEXT,
-    session_timeout_status                                          VARCHAR(100),
-    session_timeout_description                                     TEXT,
-    lookback_window_status                                          VARCHAR(100),
-    lookback_window_description                                     TEXT,
-    user_and_event_data_retention_status                            VARCHAR(100),
-    user_and_event_data_retention_description                       TEXT,
-    ecommerce_data_accuracy_status                                  VARCHAR(100),
-    ecommerce_data_accuracy_description                             TEXT,
-    traffic_to_not_set_landing_page_status                          VARCHAR(100),
-    traffic_to_not_set_landing_page_description                     TEXT,
-    currency_status                                                 VARCHAR(100),
-    currency_description                                            TEXT,
-    define_internal_traffic_status                                  VARCHAR(100),
-    define_internal_traffic_description                             TEXT,
-    industry_category_status                                        VARCHAR(100),
-    industry_category_description                                   TEXT,
-    reporting_time_zone_status                                      VARCHAR(100),
-    reporting_time_zone_description                                 TEXT,
-    event_tracking_status                                           VARCHAR(100),
-    event_tracking_description                                      TEXT,
-    conversion_tracking_status                                      VARCHAR(100),
-    conversion_tracking_description                                 TEXT,
-    standard_purchase_ecommerce_tracking_implementation_status      VARCHAR(100),
-    standard_purchase_ecommerce_tracking_implementation_description TEXT,
-    enhanced_measurement_status                                     VARCHAR(100),
-    enhanced_measurement_description                                TEXT,
-    user_id_tracking_implementation_status                          VARCHAR(100),
-    user_id_tracking_implementation_description                     TEXT,
-    enhnanced_ecommerce_tracking_status                             VARCHAR(100),
-    enhnanced_ecommerce_tracking_description                        TEXT,
-    custom_dimensions_and_metrics_tracking_status                   VARCHAR(100),
-    custom_dimensions_and_metrics_tracking_description              TEXT,
-    granular_location_and_device_data_collection_status             VARCHAR(100),
-    granular_location_and_device_data_collection_description        TEXT,
-    advanced_settings_to_allow_for_ads_personalization_status       VARCHAR(100),
-    advanced_settings_to_allow_for_ads_personalization_description  TEXT,
-    property_name_status                                            VARCHAR(100),
-    property_name_description                                       TEXT,
-    stream_name_status                                              VARCHAR(100),
-    stream_name_description                                         TEXT,
-    event_tracking_taxonomy_status                                  VARCHAR(100),
-    event_tracking_taxonomy_description                             TEXT,
-    google_bigquery_linking_status                                  VARCHAR(100),
-    google_bigquery_linking_description                             TEXT,
-    library_status                                                  VARCHAR(100),
-    library_description                                             TEXT,
-    google_ads_linking_status                                       VARCHAR(100),
-    google_ads_linking_description                                  TEXT,
-    google_search_console_linking_status                            VARCHAR(100),
-    google_search_console_linking_description                       TEXT,
-    google_merchant_center_linking_status                           VARCHAR(100),
-    google_merchant_center_linking_description                      TEXT,
-    display_and_video_360_linking_status                            VARCHAR(100),
-    display_and_video_360_linking_description                       TEXT,
-    data_import_status                                              VARCHAR(100),
-    data_import_description                                         TEXT,
-    ad_manager_linking_status                                       VARCHAR(100),
-    ad_manager_linking_description                                  TEXT,
-    search_ads_360_linking_status                                   VARCHAR(100),
-    search_ads_360_linking_description                              TEXT,
-    google_signals_data_collection_status                           VARCHAR(100),
-    google_signals_data_collection_description                      TEXT,
-    reporting_attribution_model_status                              VARCHAR(100),
-    reporting_attribution_model_description                         TEXT,
-    reporting_attribution_identity_status                           VARCHAR(100),
-    reporting_attribution_identity_description                      TEXT,
-    server_side_tracking_implementation_status                      VARCHAR(100),
-    server_side_tracking_implementation_description                 TEXT,
-    consent_mode_status                                             VARCHAR(100),
-    consent_mode_description                                        TEXT,
-    pii_data_not_collection_status                                  VARCHAR(100),
-    pii_data_not_collection_description                             TEXT,
-    PRIMARY KEY (id)
+    id   INT          NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL UNIQUE
 );
 
 INSERT INTO projects (name)
@@ -103,56 +28,107 @@ VALUES ('VIDEN'),
 
 CREATE TABLE users
 (
-    id         INT          NOT NULL IDENTITY (1,1) UNIQUE,
-    email      VARCHAR(100) NOT NULL UNIQUE,
-    password   VARCHAR(100) NOT NULL,
-    title      VARCHAR(100) NOT NULL,
-    first_name VARCHAR(100) NOT NULL,
-    last_name  VARCHAR(100) NOT NULL,
+    id         INT          NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    email      NVARCHAR(100) NOT NULL UNIQUE,
+    password   NVARCHAR(100) NOT NULL,
+    first_name NVARCHAR(100) NOT NULL,
+    last_name  NVARCHAR(100) NOT NULL,
     project_id INT          NOT NULL,
-    PRIMARY KEY (id)
+    role_id    INT          NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
 
-ALTER TABLE users
-    ADD CONSTRAINT fk_users_projects
-        FOREIGN KEY (project_id)
-            REFERENCES projects (id)
-            ON DELETE CASCADE;
+INSERT INTO users (email, password, first_name, last_name, role_id, project_id)
+VALUES ('dzianis.zakharych@viden.com', '1234', N'Денис', N'Захарич',
+        (SELECT id FROM roles WHERE name = 'VIDEN_ADMIN'), (SELECT id FROM projects WHERE name = 'VIDEN')),
+       ('elizaveta.tsypenkova@viden.com', '1234', N'Елизавета', N'Цыпенкова',
+        (SELECT id FROM roles WHERE name = 'VIDEN_ANALYST'), (SELECT id FROM projects WHERE name = 'VIDEN')),
+       ('michael.jackson@google.com', '1234', N'Майкл', N'Джексон',
+        (SELECT id FROM roles WHERE name = 'CLIENT'), (SELECT id FROM projects WHERE name = 'GOOGLE'));
 
-INSERT INTO users (email, password, title, first_name, last_name, project_id)
-VALUES ('dzianis.zakharych@viden.com', '1234', 'FOUNDER', 'Dzianis', 'Zakharych',
-        (SELECT id FROM projects WHERE name = 'VIDEN')),
-       ('elizaveta.tsypenkova@viden.com', '1234', 'ANALYST', 'Elizaveta', 'Tsypenkova',
-        (SELECT id FROM projects WHERE name = 'VIDEN')),
-       ('jack.jackson@google.com', '1234', 'ANALYST', 'Jack', 'Jackson',
-        (SELECT id FROM projects WHERE name = 'GOOGLE'));
-
-CREATE SEQUENCE users_SEQ START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE notes_SEQ START WITH 1 INCREMENT BY 1;
+CREATE TABLE logs
+(
+    id        INT          NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    type      NVARCHAR(100) NOT NULL,
+    action_at DATETIME2    NOT NULL
+);
 
 CREATE TABLE notes
 (
-    id           INT  NOT NULL IDENTITY (1,1) UNIQUE,
-    message      TEXT NOT NULL,
-    project_id   INT  NOT NULL,
+    id           INT       NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    message      TEXT      NOT NULL,
+    project_id   INT       NOT NULL,
     root_note_id INT,
-    user_id      INT  NOT NULL,
+    user_id      INT       NOT NULL,
     sended_at    DATETIME2 NOT NULL,
-    PRIMARY KEY (id)
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE NO ACTION,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION,
+    FOREIGN KEY (root_note_id) REFERENCES notes (id) ON DELETE NO ACTION
 );
 
-ALTER TABLE notes
-    ADD CONSTRAINT fk_notes_projects
-        FOREIGN KEY (project_id)
-            REFERENCES projects (id)
-            ON DELETE NO ACTION;
-ALTER TABLE notes
-    ADD CONSTRAINT fk_notes_notes
-        FOREIGN KEY (root_note_id)
-            REFERENCES notes (id)
-            ON DELETE NO ACTION;
-ALTER TABLE notes
-    ADD CONSTRAINT fk_notes_users
-        FOREIGN KEY (user_id)
-            REFERENCES users (id)
-            ON DELETE NO ACTION;
+CREATE TABLE criteries
+(
+    id   INT          NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL UNIQUE
+);
+
+INSERT INTO criteries (name)
+VALUES (N'Правильная реализация кода'),
+       (N'Корректное отслеживание мобильного сайта'),
+       (N'Уникальность кода'),
+       (N'Корректное отслеживание одностраничного приложения'),
+       (N'Настройка междоменного отслеживания'),
+       (N'Самоотсылки'),
+       (N'Отслеживание процесса оплаты'),
+       (N'Маркировка UTM'),
+       (N'Отслеживание ошибок страниц 404'),
+       (N'Основной домен в списке нежелательных рефералов'),
+       (N'Тайм-аут сессии'),
+       (N'Окно возврата'),
+       (N'Хранение данных пользователей и событий'),
+       (N'Точность данных электронной коммерции'),
+       (N'Трафик на не заданную целевую страницу'),
+       (N'Валюта'),
+       (N'Определение внутреннего трафика'),
+       (N'Категория отрасли'),
+       (N'Часовой пояс для отчетности'),
+       (N'Отслеживание событий'),
+       (N'Отслеживание конверсий'),
+       (N'Стандартная реализация отслеживания покупок в электронной коммерции'),
+       (N'Расширенное измерение'),
+       (N'Реализация отслеживания идентификатора пользователя'),
+       (N'Расширенное отслеживание электронной коммерции'),
+       (N'Отслеживание пользовательских измерений и метрик'),
+       (N'Детализированный сбор данных о местоположении и устройствах'),
+       (N'Расширенные настройки для персонализации рекламы'),
+       (N'Имя ресурса'),
+       (N'Имя потока'),
+       (N'Таксономия отслеживания событий'),
+       (N'Связь с Google BigQuery'),
+       (N'Библиотека'),
+       (N'Связь с Google Ads'),
+       (N'Связь с Google Search Console'),
+       (N'Связь с Google Merchant Center'),
+       (N'Связь с Display & Video 360'),
+       (N'Импорт данных'),
+       (N'Связь с Ad Manager'),
+       (N'Связь с Search Ads 360'),
+       (N'Сбор данных Google Signals'),
+       (N'Модель атрибуции отчетов'),
+       (N'Атрибуция личности для отчетности'),
+       (N'Реализация серверного отслеживания'),
+       (N'Режим согласия'),
+       (N'Отсутствие сбора PII данных');
+
+CREATE TABLE project_criteries
+(
+    project_id  INT NOT NULL,
+    criteria_id INT NOT NULL,
+    status      NVARCHAR(100),
+    description TEXT,
+    deadline    DATETIME2,
+    PRIMARY KEY (project_id, criteria_id),
+    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
+    FOREIGN KEY (criteria_id) REFERENCES criteries (id) ON DELETE CASCADE
+);
