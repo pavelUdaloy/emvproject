@@ -34,9 +34,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String title;
-
     @Column(nullable = false, name = "first_name")
     private String firstName;
 
@@ -44,8 +41,12 @@ public class User {
     private String lastName;
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
     @OneToMany(mappedBy = "user")
     private List<Note> notes;

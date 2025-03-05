@@ -1,6 +1,7 @@
 package elizaveta.management.viden.project.service;
 
 import elizaveta.management.viden.project.entity.Project;
+import elizaveta.management.viden.project.entity.Role;
 import elizaveta.management.viden.project.entity.User;
 import elizaveta.management.viden.project.rep.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User checkAndCreate(Project project, String email, String password, String title, String firstName, String lastName) {
+    public User checkAndCreate(Project project, Role role, String email, String password, String firstName, String lastName) {
         Optional<User> optionalUser = userRepository.findByLogin(email);
         if (optionalUser.isPresent()) {
             log.error("User with email {} already exists", email);
@@ -30,10 +31,10 @@ public class UserService {
         User user = new User();
         user.setEmail(email);
         user.setPassword(password);
-        user.setTitle(title);
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setProject(project);
+        user.setRole(role);
 
         try {
             return userRepository.save(user);

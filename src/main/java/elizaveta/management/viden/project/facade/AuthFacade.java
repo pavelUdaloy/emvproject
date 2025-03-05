@@ -19,11 +19,12 @@ public class AuthFacade {
                 .id(user.getId())
                 .email(user.getEmail())
                 .password(user.getPassword())
-                .title(user.getTitle())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .projectName(user.getProject().getName())
                 .projectId(user.getProject().getId())
+                .roleId(user.getRole().getId())
+                .roleName(user.getRole().getName())
                 .build();
     }
 }

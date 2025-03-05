@@ -11,8 +11,8 @@ public class CreateUserRequest {
 
     private String email;
     private String password;
-    private String title;
     private String firstName;
     private String lastName;
     private int projectId;
+    private int roleId;
 }

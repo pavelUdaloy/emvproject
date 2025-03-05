@@ -32,15 +32,15 @@ public class Note {
     @Column(nullable = false)
     private String message;
 
-    @Column(nullable = false, name = "sended_at")
+    @Column(name = "sended_at", nullable = false)
     private LocalDateTime sendedAt;
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne

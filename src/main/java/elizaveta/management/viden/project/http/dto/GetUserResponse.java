@@ -15,8 +15,8 @@ public class GetUserResponse {
 
     private Integer id;
     private String email;
-    private String title;
     private String firstName;
     private String lastName;
     private String projectName;
+    private String roleName;
 }

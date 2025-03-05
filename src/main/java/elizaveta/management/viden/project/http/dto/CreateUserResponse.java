@@ -16,7 +16,6 @@ public class CreateUserResponse {
     private Integer id;
     private String email;
     private String password;
-    private String title;
     private String firstName;
     private String lastName;
 }
