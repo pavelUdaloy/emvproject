@@ -34,4 +34,14 @@ public class RoleService {
         }
         return role.get();
     }
+
+    @Transactional(readOnly = true)
+    public Role findByName(String name) {
+        Optional<Role> role = roleRepository.findByName(name);
+        if (role.isEmpty()) {
+            log.error("Cannot find role with name = {}", name);
+            throw new UsernameNotFoundException("Cannot find role with name = " + name);
+        }
+        return role.get();
+    }
 }

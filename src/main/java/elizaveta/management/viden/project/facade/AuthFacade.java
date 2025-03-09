@@ -25,6 +25,7 @@ public class AuthFacade {
                 .projectId(user.getProject().getId())
                 .roleId(user.getRole().getId())
                 .roleName(user.getRole().getName())
+                .projectApproved(user.getProject().isApproved())
                 .build();
     }
 }

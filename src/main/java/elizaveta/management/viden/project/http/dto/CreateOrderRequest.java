@@ -1,7 +1,5 @@
 package elizaveta.management.viden.project.http.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,18 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
-@AllArgsConstructor
-public class LoginResponse {
+public class CreateOrderRequest {
 
-    private Integer id;
     private String email;
     private String password;
     private String firstName;
     private String lastName;
     private String projectName;
-    private int projectId;
-    private int roleId;
-    private String roleName;
-    private boolean projectApproved;
 }

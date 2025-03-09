@@ -50,6 +50,7 @@ public class ProjectService {
 
         Project project = new Project();
         project.setName(name);
+        project.setApproved(false);
 
         return projectRepository.save(project);
     }
