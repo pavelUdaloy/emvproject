@@ -6,7 +6,6 @@ import elizaveta.management.viden.project.http.dto.CreateProjectResponse;
 import elizaveta.management.viden.project.http.dto.EditProjectRequest;
 import elizaveta.management.viden.project.http.dto.EditProjectResponse;
 import elizaveta.management.viden.project.http.dto.GetProjectResponse;
-import elizaveta.management.viden.project.http.dto.GetProjectShortedResponse;
 import elizaveta.management.viden.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +30,12 @@ public class ProjectFacade {
                 .build();
     }
 
-    public List<GetProjectShortedResponse> getAll() {
+    public List<GetProjectResponse> getAll() {
         return projectService.findAll().stream()
-                .map(project -> GetProjectShortedResponse.builder()
+                .map(project -> GetProjectResponse.builder()
                         .id(project.getId())
                         .name(project.getName())
+                        .usersCount(project.getUsers().size())
                         .build())
                 .collect(Collectors.toList());
     }

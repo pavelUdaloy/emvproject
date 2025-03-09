@@ -7,7 +7,7 @@ CREATE SEQUENCE criteries_SEQ START WITH 1 INCREMENT BY 1;
 
 CREATE TABLE roles
 (
-    id   INT          NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    id   INT           NOT NULL IDENTITY (1,1) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL UNIQUE
 );
 
@@ -18,23 +18,24 @@ VALUES ('VIDEN_ADMIN'),
 
 CREATE TABLE projects
 (
-    id   INT          NOT NULL IDENTITY (1,1) PRIMARY KEY,
-    name NVARCHAR(100) NOT NULL UNIQUE
+    id       INT           NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    name     NVARCHAR(100) NOT NULL UNIQUE,
+    approved BIT           NOT NULL DEFAULT 0
 );
 
-INSERT INTO projects (name)
-VALUES ('VIDEN'),
-       ('GOOGLE');
+INSERT INTO projects (name, approved)
+VALUES ('VIDEN', 1),
+       ('GOOGLE', 1);
 
 CREATE TABLE users
 (
-    id         INT          NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    id         INT           NOT NULL IDENTITY (1,1) PRIMARY KEY,
     email      NVARCHAR(100) NOT NULL UNIQUE,
     password   NVARCHAR(100) NOT NULL,
     first_name NVARCHAR(100) NOT NULL,
     last_name  NVARCHAR(100) NOT NULL,
-    project_id INT          NOT NULL,
-    role_id    INT          NOT NULL,
+    project_id INT           NOT NULL,
+    role_id    INT           NOT NULL,
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
     FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
@@ -49,9 +50,9 @@ VALUES ('dzianis.zakharych@viden.com', '1234', N'Денис', N'Захарич',
 
 CREATE TABLE logs
 (
-    id        INT          NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    id        INT           NOT NULL IDENTITY (1,1) PRIMARY KEY,
     type      NVARCHAR(100) NOT NULL,
-    action_at DATETIME2    NOT NULL
+    action_at DATETIME2     NOT NULL
 );
 
 CREATE TABLE notes
@@ -69,7 +70,7 @@ CREATE TABLE notes
 
 CREATE TABLE criteries
 (
-    id   INT          NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    id   INT           NOT NULL IDENTITY (1,1) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL UNIQUE
 );
 

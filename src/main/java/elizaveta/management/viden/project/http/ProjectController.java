@@ -6,7 +6,6 @@ import elizaveta.management.viden.project.http.dto.CreateProjectResponse;
 import elizaveta.management.viden.project.http.dto.EditProjectRequest;
 import elizaveta.management.viden.project.http.dto.EditProjectResponse;
 import elizaveta.management.viden.project.http.dto.GetProjectResponse;
-import elizaveta.management.viden.project.http.dto.GetProjectShortedResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +31,7 @@ public class ProjectController {
     }
 
     @GetMapping
-    public List<GetProjectShortedResponse> getAll() {
+    public List<GetProjectResponse> getAll() {
         return projectFacade.getAll();
     }
 

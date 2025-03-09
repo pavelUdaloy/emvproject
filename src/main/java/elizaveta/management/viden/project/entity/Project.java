@@ -29,6 +29,9 @@ public class Project {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(nullable = false)
+    private boolean approved;
+
     @OneToMany(mappedBy = "project")
     private List<User> users;
 
