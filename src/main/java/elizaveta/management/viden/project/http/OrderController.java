@@ -7,6 +7,7 @@ import elizaveta.management.viden.project.http.dto.CreateProjectRequest;
 import elizaveta.management.viden.project.http.dto.CreateProjectResponse;
 import elizaveta.management.viden.project.http.dto.EditProjectRequest;
 import elizaveta.management.viden.project.http.dto.EditProjectResponse;
+import elizaveta.management.viden.project.http.dto.GetOrderResponse;
 import elizaveta.management.viden.project.http.dto.GetProjectResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,5 +31,15 @@ public class OrderController {
     @PostMapping
     public void create(@RequestBody CreateOrderRequest createOrderRequest) {
         orderFacade.create(createOrderRequest);
+    }
+
+    @GetMapping
+    public List<GetOrderResponse> getOrders() {
+        return orderFacade.getAll();
+    }
+
+    @PutMapping("/{projectId}")
+    public void approveProject(@PathVariable("projectId") int projectId) {
+        orderFacade.approve(projectId);
     }
 }

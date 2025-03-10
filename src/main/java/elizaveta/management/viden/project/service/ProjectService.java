@@ -30,8 +30,8 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public List<Project> findAll() {
-        return projectRepository.findAll();
+    public List<Project> findAllApproved() {
+        return projectRepository.findAllApproved();
     }
 
     @Transactional
@@ -64,5 +64,18 @@ public class ProjectService {
         }
 
         return projectRepository.save(project);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Project> findAllNotApproved() {
+        return projectRepository.findAllNotApproved();
+    }
+
+    @Transactional
+    public void approve(int projectId) {
+        Project project = findById(projectId);
+        project.setApproved(true);
+
+        projectRepository.save(project);
     }
 }

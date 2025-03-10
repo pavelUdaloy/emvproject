@@ -13,7 +13,6 @@
             padding: 0;
         }
 
-        /* Шапка */
         header {
             background-color: #002b80;
             color: white;
@@ -32,74 +31,51 @@
             font-size: 16px;
         }
 
-        /* Контейнер основной части */
         .main-container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
             padding: 30px;
             max-width: 1200px;
             margin: 0 auto;
-            flex-wrap: wrap;
         }
 
-        /* Слева - информация о пользователе */
-        .user-info {
+        .section {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            flex: 1 1 300px;
-            margin-right: 20px;
+            width: 100%;
+            max-width: 800px;
             margin-bottom: 20px;
         }
 
-        .user-info h3 {
+        .section h3 {
             color: #002b80;
+            margin-bottom: 15px;
         }
 
-        .user-info p {
-            margin: 10px 0;
-            font-size: 16px;
+        .list {
+            margin-top: 15px;
         }
 
-        /* Справочная информация о проектах */
-        .projects-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            flex: 2 1 600px;
-            margin-bottom: 20px;
-        }
-
-        .projects-section h3 {
-            color: #002b80;
-            margin-bottom: 20px;
-        }
-
-        .project-list {
-            margin-top: 20px;
-        }
-
-        .project-item {
+        .item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px;
             background-color: #ecf0f1;
             border-radius: 8px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             transition: transform 0.2s;
         }
 
-        .project-item:hover {
+        .item:hover {
             transform: translateY(-5px);
             background-color: #dfe6e9;
         }
 
-        .project-item button {
-            background-color: #002b80;
-            color: white;
+        .item button {
             padding: 8px 15px;
             border: none;
             border-radius: 5px;
@@ -107,32 +83,40 @@
             transition: background-color 0.3s;
         }
 
-        .project-item button:hover {
+        .project-button {
+            background-color: #002b80;
+            color: white;
+        }
+
+        .project-button:hover {
             background-color: #0044cc;
         }
 
-        /* Форма добавления нового проекта */
-        .add-project {
+        .confirm-button {
+            background-color: #008000;
+            color: white;
+        }
+
+        .confirm-button:hover {
+            background-color: #006400;
+        }
+
+        .add-section {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 40px;
+            margin-top: 15px;
         }
 
-        .add-project input {
+        .add-section input {
             padding: 10px;
             border-radius: 8px;
             border: 1px solid #bdc3c7;
             font-size: 16px;
             width: 70%;
-            transition: border-color 0.3s;
         }
 
-        .add-project input:focus {
-            border-color: #002b80;
-        }
-
-        .add-project button {
+        .add-section button {
             background-color: #002b80;
             color: white;
             padding: 10px 20px;
@@ -140,14 +124,8 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
 
-        .add-project button:hover {
-            background-color: #0044cc;
-        }
-
-        /* Выход из аккаунта */
         .logout-section {
             text-align: center;
             margin-top: 30px;
@@ -161,160 +139,140 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
 
         .logout-button:hover {
             background-color: #0044cc;
         }
-
-        /* Анимация */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
     </style>
 </head>
 <body>
 
 <header>
     <h1>Панель Администратора</h1>
-    <p>Управление проектами и пользователями</p>
+    <p>Управление проектами и заказами</p>
 </header>
 
 <div class="main-container">
-    <!-- Информация о пользователе -->
-    <div class="user-info">
+    <div class="section">
         <h3>Информация о пользователе</h3>
         <p><strong>ID:</strong> <span id="id"></span></p>
         <p><strong>Электронная почта:</strong> <span id="email"></span></p>
-        <p><strong>Должность:</strong> <span id="title"></span></p>
         <p><strong>Имя:</strong> <span id="firstName"></span></p>
         <p><strong>Фамилия:</strong> <span id="lastName"></span></p>
         <p><strong>Название проекта:</strong> <span id="projectName"></span></p>
-        <p><strong>ID проекта:</strong> <span id="adminProjectId"></span></p>
     </div>
 
-    <!-- Секция проектов -->
-    <div class="projects-section">
+    <div class="section">
         <h3>Список проектов</h3>
-        <div id="projectsContainer" class="project-list">
-            <!-- Проекты будут загружены сюда -->
-        </div>
+        <div id="projectsContainer" class="list"></div>
 
-        <div class="add-project">
+        <div class="add-section">
             <input type="text" id="projectNameInput" placeholder="Введите название нового проекта">
-            <button id="addProjectButton">Добавить проект</button>
+            <button id="addProjectButton">Добавить</button>
         </div>
+    </div>
+
+    <div class="section">
+        <h3>Список заказов</h3>
+        <div id="ordersContainer" class="list"></div>
     </div>
 </div>
 
-<!-- Кнопка выхода -->
 <div class="logout-section">
     <button class="logout-button" id="logoutButton">Выйти</button>
 </div>
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    let adminUserId = urlParams.get("id");
 
     async function loadProjects() {
         try {
             const response = await fetch("http://localhost:8090/projects");
             if (response.ok) {
                 const projects = await response.json();
-                const projectsContainer = document.getElementById("projectsContainer");
-                projectsContainer.innerHTML = ""; 
+                const container = document.getElementById("projectsContainer");
+                container.innerHTML = "";
 
                 projects.forEach(project => {
-                    const projectItem = document.createElement("div");
-                    projectItem.className = "project-item";
-                    projectItem.innerHTML = `
+                    const item = document.createElement("div");
+                    item.className = "item";
+                    item.innerHTML = `
                         <span>${project.name}</span>
-                        <div>
-                            <button onclick="viewProject(${project.id})">Просмотреть</button>
-                            <button onclick="deleteProject(${project.id})">Удалить</button>
-                        </div>
+                        <button class="project-button" onclick="viewProject(${project.id})">Просмотреть</button>
                     `;
-                    projectsContainer.appendChild(projectItem);
+                    container.appendChild(item);
                 });
-            } else {
-                alert("Ошибка получения списка проектов: " + response.status);
             }
         } catch (error) {
-            console.error("Ошибка при выполнении запроса:", error);
-            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+            console.error("Ошибка при загрузке проектов:", error);
         }
     }
 
-    window.addEventListener("load", async function() {
+    async function loadOrders() {
+        try {
+            const response = await fetch("http://localhost:8090/orders");
+            if (response.ok) {
+                const orders = await response.json();
+                const container = document.getElementById("ordersContainer");
+                container.innerHTML = "";
+
+                orders.forEach(order => {
+                    const item = document.createElement("div");
+                    item.className = "item";
+                    item.innerHTML = `
+                        <span>${order.name}</span>
+                        <button class="confirm-button" onclick="confirmOrder(${order.id})">Подтвердить</button>
+                    `;
+                    container.appendChild(item);
+                });
+            }
+        } catch (error) {
+            console.error("Ошибка при загрузке заказов:", error);
+        }
+    }
+
+    async function confirmOrder(orderId) {
+        try {
+            const response = await fetch(`http://localhost:8090/orders/${orderId}`, { method: "PUT" });
+            if (response.ok) {
+                loadProjects();
+                loadOrders();
+            }
+        } catch (error) {
+            console.error("Ошибка при подтверждении заказа:", error);
+        }
+    }
+
+    document.getElementById("addProjectButton").addEventListener("click", async function() {
+        const projectName = document.getElementById("projectNameInput").value;
+        if (projectName) {
+            const response = await fetch("http://localhost:8090/projects", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: projectName })
+            });
+
+            if (response.ok) {
+                document.getElementById("projectNameInput").value = "";
+                loadProjects();
+            }
+        }
+    });
+
+    document.getElementById("logoutButton").addEventListener("click", function() {
+        window.location.href = "start.html";
+    });
+
+    window.addEventListener("load", function() {
         document.getElementById("id").innerText = urlParams.get("id");
         document.getElementById("email").innerText = urlParams.get("email");
-        document.getElementById("title").innerText = urlParams.get("title");
         document.getElementById("firstName").innerText = urlParams.get("firstName");
         document.getElementById("lastName").innerText = urlParams.get("lastName");
         document.getElementById("projectName").innerText = urlParams.get("projectName");
-        document.getElementById("adminProjectId").innerText = urlParams.get("adminProjectId");
-
         loadProjects();
-
-        document.getElementById("addProjectButton").addEventListener("click", async function() {
-            const projectName = document.getElementById("projectNameInput").value;
-
-            if (projectName) {
-                const requestBody = { name: projectName };
-
-                try {
-                    const response = await fetch("http://localhost:8090/projects", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(requestBody)
-                    });
-
-                    if (response.ok) {
-                        document.getElementById("projectNameInput").value = "";
-                        loadProjects();
-                    } else {
-                        alert("Ошибка добавления проекта: " + response.status);
-                    }
-                } catch (error) {
-                    console.error("Ошибка при выполнении запроса:", error);
-                    alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-                }
-            } else {
-                alert("Введите название проекта.");
-            }
-        });
-
-        document.getElementById("logoutButton").addEventListener("click", function() {
-            window.location.href = "login.html";
-        });
+        loadOrders();
     });
-
-    function viewProject(projectId) {
-        window.location.href = `projectDetails.html?projectId=${projectId}&adminId=${adminUserId}&id=${urlParams.get("id")}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${urlParams.get("adminProjectId")}`;
-    }
-
-    async function deleteProject(projectId) {
-        try {
-            const response = await fetch(`http://localhost:8090/projects/${projectId}`, { method: "DELETE" });
-            if (response.ok) {
-                loadProjects();
-            } else {
-                alert("Ошибка удаления проекта: " + response.status);
-            }
-        } catch (error) {
-            console.error("Ошибка при выполнении запроса:", error);
-            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-        }
-    }
 </script>
 
 </body>

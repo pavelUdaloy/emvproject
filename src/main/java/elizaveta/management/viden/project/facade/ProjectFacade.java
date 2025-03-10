@@ -31,7 +31,7 @@ public class ProjectFacade {
     }
 
     public List<GetProjectResponse> getAll() {
-        return projectService.findAll().stream()
+        return projectService.findAllApproved().stream()
                 .map(project -> GetProjectResponse.builder()
                         .id(project.getId())
                         .name(project.getName())

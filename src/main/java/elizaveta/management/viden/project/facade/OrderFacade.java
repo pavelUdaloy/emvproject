@@ -6,6 +6,7 @@ import elizaveta.management.viden.project.http.dto.CreateOrderRequest;
 import elizaveta.management.viden.project.http.dto.CreateProjectResponse;
 import elizaveta.management.viden.project.http.dto.EditProjectRequest;
 import elizaveta.management.viden.project.http.dto.EditProjectResponse;
+import elizaveta.management.viden.project.http.dto.GetOrderResponse;
 import elizaveta.management.viden.project.http.dto.GetProjectResponse;
 import elizaveta.management.viden.project.service.ProjectService;
 import elizaveta.management.viden.project.service.RoleService;
@@ -32,5 +33,19 @@ public class OrderFacade {
         userService.checkAndCreate(project, role, createProjectRequest.getEmail(),
                 createProjectRequest.getPassword(), createProjectRequest.getFirstName(),
                 createProjectRequest.getLastName());
+    }
+
+    public List<GetOrderResponse> getAll() {
+        List<Project> projects = projectService.findAllNotApproved();
+        return projects.stream()
+                .map(project -> GetOrderResponse.builder()
+                        .id(project.getId())
+                        .name(project.getName())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public void approve(int projectId) {
+        projectService.approve(projectId);
     }
 }
