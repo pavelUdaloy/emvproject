@@ -204,6 +204,10 @@
         }
     }
 
+    function viewProject(projectId) {
+        window.location.href = `projectDetails.html?projectId=${projectId}&id=${urlParams.get("id")}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${urlParams.get("adminProjectId")}`;
+    }
+
     async function confirmOrder(orderId) {
         try {
             const response = await fetch(`http://localhost:8090/orders/${orderId}`, { method: "PUT" });
