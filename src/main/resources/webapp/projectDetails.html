@@ -286,18 +286,6 @@
     <button id="addCriteriaButton">Добавить критерий</button>
 </p>
 
-<h3>Комментарии</h3>
-<div id="notesContainer">
-    <!-- Здесь будут отображены комментарии -->
-</div>
-
-<h3>Добавить комментарий</h3>
-<form id="commentForm">
-    <textarea id="commentMessage" rows="4" cols="50" placeholder="Ваш комментарий"></textarea>
-    <br>
-    <button type="button" id="addCommentButton">Прокомментировать</button>
-</form>
-
 <div id="criteriaModal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close">&times;</span>
@@ -427,83 +415,6 @@
     let projectId = urlParams.get("projectId");
     let adminUserId = urlParams.get("adminId");
 
-    async function loadNotes() {
-        try {
-            const notesResponse = await fetch(`http://localhost:8090/notes/${projectId}`);
-            if (notesResponse.ok) {
-                const notesData = await notesResponse.json();
-                const notesContainer = document.getElementById("notesContainer");
-                notesContainer.innerHTML = ""; // Очищаем контейнер перед загрузкой новых данных
-
-                const createNoteElement = (note, isNested = false) => {
-                    const noteElement = document.createElement("div");
-                    noteElement.className = "note" + (isNested ? " nested-note" : "");
-                    noteElement.innerHTML = `
-                            <div style="display: flex; align-items: center;">
-                                <div>
-                                    <p><strong>${note.userEmail}</strong> (${new Date(note.sendedAt).toLocaleString()}):</p>
-                                    <p>${note.message}</p>
-                                </div>
-                                <div class="reply-form" style="margin-left: auto;">
-                                    <textarea rows="2" cols="40" placeholder="Ваш ответ"></textarea>
-                                    <button onclick="submitReply(${note.id}, this)">Отправить</button>
-                                </div>
-                            </div>
-                        `;
-                    if (note.notes && note.notes.length > 0) {
-                        const nestedNotes = document.createElement("div");
-                        note.notes.forEach(nestedNote => {
-                            nestedNotes.appendChild(createNoteElement(nestedNote, true));
-                        });
-                        noteElement.appendChild(nestedNotes);
-                    }
-                    return noteElement;
-                };
-
-                notesData.forEach(note => {
-                    notesContainer.appendChild(createNoteElement(note));
-                });
-            } else {
-                alert("Ошибка получения комментариев: " + notesResponse.status);
-            }
-        } catch (error) {
-            console.error("Ошибка при выполнении запроса:", error);
-            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-        }
-    }
-
-    async function submitReply(rootNoteId, button) {
-        const replyForm = button.closest('.reply-form');
-        const commentMessage = replyForm.querySelector('textarea').value;
-        if (commentMessage) {
-            const requestBody = {
-                message: commentMessage,
-                projectId: projectId,
-                userId: adminUserId,
-                rootNoteId: rootNoteId
-            };
-
-            try {
-                const response = await fetch("http://localhost:8090/notes", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (response.ok) {
-                    await loadNotes(); // Обновляем комментарии
-                } else {
-                    alert("Ошибка добавления комментария: " + response.status);
-                }
-            } catch (error) {
-                console.error("Ошибка при выполнении запроса:", error);
-                alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-            }
-        }
-    }
-
     // Функция для загрузки пользователей по проекту
     async function loadUsers() {
         try {
@@ -579,72 +490,8 @@
         document.getElementById("targetProjectName").innerText = urlParams.get("targetProjectName");
 
         loadUsers();
-
-        loadNotes();
-
         loadCriteries();
-
-        document.getElementById("addCommentButton").addEventListener("click", async function () {
-            const message = document.getElementById("commentMessage").value;
-            const rootNoteId = null; // Для первого комментария в ветке
-
-            const requestBody = {
-                message: message,
-                projectId: projectId,
-                userId: adminUserId,
-                rootNoteId: rootNoteId
-            };
-
-            try {
-                const response = await fetch("http://localhost:8090/notes", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (response.ok) {
-                    document.getElementById("commentMessage").value = ""; // Очищаем текстовое поле после отправки
-                    loadNotes(); // Обновляем комментарии
-                } else {
-                    alert("Ошибка добавления комментария: " + response.status);
-                }
-            } catch (error) {
-                console.error("Ошибка при выполнении запроса:", error);
-                alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-            }
-        });
     });
-
-    function addReply(rootNoteId) {
-        const commentMessage = prompt("Введите ваш комментарий:");
-        if (commentMessage) {
-            const requestBody = {
-                message: commentMessage,
-                projectId: projectId,
-                userId: adminUserId,
-                rootNoteId: rootNoteId
-            };
-
-            fetch("http://localhost:8090/notes", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(requestBody)
-            }).then(response => {
-                if (response.ok) {
-                    loadNotes();
-                } else {
-                    alert("Ошибка добавления комментария: " + response.status);
-                }
-            }).catch(error => {
-                console.error("Ошибка при выполнении запроса:", error);
-                alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-            });
-        }
-    }
 
     document.getElementById("backButton").addEventListener("click", function () {
         window.location.href = `adminProjectAndAccPage.html?id=${urlParams.get("id")}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${adminProjectId}`;
