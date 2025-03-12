@@ -18,6 +18,7 @@ import java.util.Optional;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final LogService logService;
 
     @Transactional(readOnly = true)
     public Project findById(int id) {
@@ -52,6 +53,8 @@ public class ProjectService {
 
     @Transactional
     public Project checkAndCreate(String name) {
+        logService.addLog("Проект " + name + " был создан");
+
         Optional<Project> optionalProject = projectRepository.findByName(name);
         if (optionalProject.isPresent()) {
             log.error("Project with name {} already exists", name);
@@ -87,5 +90,7 @@ public class ProjectService {
         project.setApproved(true);
 
         projectRepository.save(project);
+
+        logService.addLog("Проект " + project.getName() + " был подтвержден менеджером");
     }
 }

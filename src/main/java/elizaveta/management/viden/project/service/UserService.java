@@ -20,9 +20,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final LogService logService;
 
     @Transactional
     public User checkAndCreate(Project project, Role role, String email, String password, String firstName, String lastName) {
+        logService.addLog("Пользователь " + email + " был создан");
+
         Optional<User> optionalUser = userRepository.findByLogin(email);
         if (optionalUser.isPresent()) {
             log.error("User with email {} already exists", email);
@@ -66,6 +69,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User checkAccount(String email, String password) {
+        logService.addLog("Пользователь " + email + " вошел в аккаунт");
+
         User user = findByEmail(email);
 
         if (!user.getPassword().equals(password)) {

@@ -6,6 +6,7 @@ import elizaveta.management.viden.project.entity.ProjectCriteria;
 import elizaveta.management.viden.project.entity.ProjectCriteria.ProjectCriteriaId;
 import elizaveta.management.viden.project.entity.User;
 import elizaveta.management.viden.project.rep.CriteriaRepository;
+import elizaveta.management.viden.project.rep.LogRepository;
 import elizaveta.management.viden.project.rep.ProjectCriteriaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class CriteriaService {
 
     private final CriteriaRepository criteriaRepository;
     private final ProjectCriteriaRepository projectCriteriaRepository;
+    private final LogService logService;
 
     @Transactional
     public List<Criteria> getAllSystemCriteries() {
@@ -32,6 +34,8 @@ public class CriteriaService {
 
     @Transactional
     public void addProjectCriteria(Project project, Criteria criteria, User user, String status, String description, LocalDateTime deadline) {
+        logService.addLog("Критерий " + criteria.getName() + " был добавлен в проект " + project.getName());
+
         ProjectCriteria projectCriteria = new ProjectCriteria();
         projectCriteria.setCriteria(criteria);
         projectCriteria.setProject(project);
