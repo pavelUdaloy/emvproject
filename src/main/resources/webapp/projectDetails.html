@@ -177,7 +177,7 @@
 </header>
 <h2>Детали проекта</h2>
 <p>Идентификатор проекта: <span id="projectId"></span></p>
-<p>Название проекта: <span id="projectName"></span></p>
+<p>Название проекта: <span id="targetProjectName"></span></p>
 
 <p class="center-text">
     <button id="backButton">Вернуться к странице админа</button>
@@ -197,29 +197,10 @@
         </tr>
         </thead>
         <tbody id="usersTable">
-        <!-- Здесь будут отображены пользователи -->
         </tbody>
     </table>
     <p id="noUsersMessage" style="display: none;">Пользователей нет</p>
 </div>
-
-<h3>Информация о проекте</h3>
-<table>
-    <thead>
-    <tr>
-        <th>Этап</th>
-        <th>Статус</th>
-        <th>Описание</th>
-    </tr>
-    </thead>
-    <tbody id="projectInfoTable">
-    <!-- Здесь будут отображены данные -->
-    </tbody>
-</table>
-
-<p class="center-text">
-    <button id="saveChangesButton">Сохранить изменения</button>
-</p>
 
 <h3>Комментарии</h3>
 <div id="notesContainer">
@@ -355,153 +336,12 @@
 
     window.addEventListener("load", async function () {
         document.getElementById("projectId").innerText = projectId;
+        document.getElementById("targetProjectName").innerText = urlParams.get("targetProjectName");
 
-        // Загрузка пользователей по проекту при загрузке страницы
         loadUsers();
 
-        // Выполнение GET запроса для информации о проекте
-        try {
-            const projectResponse = await fetch(`http://localhost:8090/projects/${projectId}`);
-            if (projectResponse.ok) {
-                const projectData = await projectResponse.json();
-                document.getElementById("projectName").innerText = projectData.name;
-                const tableBody = document.getElementById("projectInfoTable");
-
-                // Преобразование данных в строки таблицы
-                const createEditableRow = (field, stage, status, description) => {
-                    const row = document.createElement("tr");
-
-                    const stageCell = document.createElement("td");
-                    stageCell.innerText = stage;
-
-                    const statusCell = document.createElement("td");
-                    const statusSelect = document.createElement("select");
-                    statusSelect.className = "editable";
-                    ["N/A", "In Progress", "Done", "Error"].forEach(optionValue => {
-                        const option = document.createElement("option");
-                        option.value = optionValue;
-                        option.innerText = optionValue;
-                        if (optionValue === status) {
-                            option.selected = true;
-                        }
-                        statusSelect.appendChild(option);
-                    });
-                    statusSelect.dataset.field = field + "Status";
-                    statusCell.appendChild(statusSelect);
-
-                    const descriptionCell = document.createElement("td");
-                    const descriptionInput = document.createElement("input");
-                    descriptionInput.className = "editable";
-                    descriptionInput.type = "text";
-                    descriptionInput.value = description;
-                    descriptionInput.dataset.field = field + "Description";
-                    descriptionCell.appendChild(descriptionInput);
-
-                    row.appendChild(stageCell);
-                    row.appendChild(statusCell);
-                    row.appendChild(descriptionCell);
-
-                    tableBody.appendChild(row);
-                };
-                createEditableRow("correctCodeImplementation", "Описание кода", projectData.correctCodeImplementationStatus, projectData.correctCodeImplementationDescription);
-                createEditableRow("correctMobileSiteTracking", "Описание мобильного трекинга", projectData.correctMobileSiteTrackingStatus, projectData.correctMobileSiteTrackingDescription);
-                createEditableRow("codeSingularity", "Описание сингулярности кода", projectData.codeSingularityStatus, projectData.codeSingularityDescription);
-                createEditableRow("correctSinglePageApplicationTracking", "Описание одностраничного приложения", projectData.correctSinglePageApplicationTrackingStatus, projectData.correctSinglePageApplicationTrackingDescription);
-                createEditableRow("crossDomainTrackingConfiguration", "Описание конфигурации трекинга через домены", projectData.crossDomainTrackingConfigurationStatus, projectData.crossDomainTrackingConfigurationDescription);
-                createEditableRow("selfReferrals", "Описание саморефералов", projectData.selfReferralsStatus, projectData.selfReferralsDescription);
-                createEditableRow("paymentProcessReferrals", "Описание процесса рефералов оплаты", projectData.paymentProcessReferralsStatus, projectData.paymentProcessReferralsDescription);
-                createEditableRow("utmTagging", "Описание UTM тегирования", projectData.utmTaggingStatus, projectData.utmTaggingDescription);
-                createEditableRow("pages404ErrorTracking", "Описание трекинга 404 ошибок", projectData.pages404ErrorTrackingStatus, projectData.pages404ErrorTrackingDescription);
-                createEditableRow("mainDomainInListUnwantedReferrals", "Описание нежелательных рефералов основного домена", projectData.mainDomainInListUnwantedReferralsStatus, projectData.mainDomainInListUnwantedReferralsDescription);
-                createEditableRow("sessionTimeout", "Описание времени ожидания сессии", projectData.sessionTimeoutStatus, projectData.sessionTimeoutDescription);
-                createEditableRow("lookbackWindow", "Описание окна обратного просмотра", projectData.lookbackWindowStatus, projectData.lookbackWindowDescription);
-                createEditableRow("userAndEventDataRetention", "Описание хранения данных пользователей и событий", projectData.userAndEventDataRetentionStatus, projectData.userAndEventDataRetentionDescription);
-                createEditableRow("ecommerceDataAccuracy", "Описание точности данных электронной коммерции", projectData.ecommerceDataAccuracyStatus, projectData.ecommerceDataAccuracyDescription);
-                createEditableRow("trafficToNotSetLandingPage", "Описание трафика на ненастроенную целевую страницу", projectData.trafficToNotSetLandingPageStatus, projectData.trafficToNotSetLandingPageDescription);
-                createEditableRow("currency", "Описание валюты", projectData.currencyStatus, projectData.currencyDescription);
-                createEditableRow("defineInternalTraffic", "Описание внутреннего трафика", projectData.defineInternalTrafficStatus, projectData.defineInternalTrafficDescription);
-                createEditableRow("industryCategory", "Описание категории отрасли", projectData.industryCategoryStatus, projectData.industryCategoryDescription);
-                createEditableRow("reportingTimeZone", "Описание часового пояса отчетности", projectData.reportingTimeZoneStatus, projectData.reportingTimeZoneDescription);
-                createEditableRow("eventTracking", "Описание трекинга событий", projectData.eventTrackingStatus, projectData.eventTrackingDescription);
-                createEditableRow("conversionTracking", "Описание трекинга конверсий", projectData.conversionTrackingStatus, projectData.conversionTrackingDescription);
-                createEditableRow("standardPurchaseEcommerceTrackingImplementation", "Описание стандартного трекинга покупок в электронной коммерции", projectData.standardPurchaseEcommerceTrackingImplementationStatus, projectData.standardPurchaseEcommerceTrackingImplementationDescription);
-                createEditableRow("enhancedMeasurement", "Описание расширенного измерения", projectData.enhancedMeasurementStatus, projectData.enhancedMeasurementDescription);
-                createEditableRow("userIdTrackingImplementation", "Описание трекинга идентификаторов пользователей", projectData.userIdTrackingImplementationStatus, projectData.userIdTrackingImplementationDescription);
-                createEditableRow("enhancedEcommerceTracking", "Описание улучшенного трекинга электронной коммерции", projectData.enhancedEcommerceTrackingStatus, projectData.enhancedEcommerceTrackingDescription);
-                createEditableRow("customDimensionsAndMetricsTracking", "Описание трекинга пользовательских измерений и метрик", projectData.customDimensionsAndMetricsTrackingStatus, projectData.customDimensionsAndMetricsTrackingDescription);
-                createEditableRow("granularLocationAndDeviceDataCollection", "Описание сбора данных о местоположении и устройстве", projectData.granularLocationAndDeviceDataCollectionStatus, projectData.granularLocationAndDeviceDataCollectionDescription);
-                createEditableRow("advancedSettingsToAllowForAdsPersonalization", "Описание расширенных настроек для персонализации рекламы", projectData.advancedSettingsToAllowForAdsPersonalizationStatus, projectData.advancedSettingsToAllowForAdsPersonalizationDescription);
-                createEditableRow("propertyName", "Описание имени собственности", projectData.propertyNameStatus, projectData.propertyNameDescription);
-                createEditableRow("streamName", "Описание имени потока", projectData.streamNameStatus, projectData.streamNameDescription);
-                createEditableRow("eventTrackingTaxonomy", "Описание таксономии трекинга событий", projectData.eventTrackingTaxonomyStatus, projectData.eventTrackingTaxonomyDescription);
-                createEditableRow("googleBigqueryLinking", "Описание связывания с Google BigQuery", projectData.googleBigqueryLinkingStatus, projectData.googleBigqueryLinkingDescription);
-                createEditableRow("library", "Описание библиотеки", projectData.libraryStatus, projectData.libraryDescription);
-                createEditableRow("googleAdsLinking", "Описание связывания с Google Ads", projectData.googleAdsLinkingStatus, projectData.googleAdsLinkingDescription);
-                createEditableRow("googleSearchConsoleLinking", "Описание связывания с Google Search Console", projectData.googleSearchConsoleLinkingStatus, projectData.googleSearchConsoleLinkingDescription);
-                createEditableRow("googleMerchantCenterLinking", "Описание связывания с Google Merchant Center", projectData.googleMerchantCenterLinkingStatus, projectData.googleMerchantCenterLinkingDescription);
-                createEditableRow("displayAndVideo360Linking", "Описание связывания с Display and Video 360", projectData.displayAndVideo360LinkingStatus, projectData.displayAndVideo360LinkingDescription);
-                createEditableRow("dataImport", "Описание импорта данных", projectData.dataImportStatus, projectData.dataImportDescription);
-                createEditableRow("adManagerLinking", "Описание связывания с Ad Manager", projectData.adManagerLinkingStatus, projectData.adManagerLinkingDescription);
-                createEditableRow("searchAds360Linking", "Описание связывания с Search Ads 360", projectData.searchAds360LinkingStatus, projectData.searchAds360LinkingDescription);
-                createEditableRow("googleSignalsDataCollection", "Описание сбора данных Google Signals", projectData.googleSignalsDataCollectionStatus, projectData.googleSignalsDataCollectionDescription);
-                createEditableRow("reportingAttributionModel", "Описание модели атрибуции отчетов", projectData.reportingAttributionModelStatus, projectData.reportingAttributionModelDescription);
-                createEditableRow("reportingAttributionIdentity", "Описание идентичности атрибуции отчетов", projectData.reportingAttributionIdentityStatus, projectData.reportingAttributionIdentityDescription);
-                createEditableRow("serverSideTrackingImplementation", "Описание реализации серверного трекинга", projectData.serverSideTrackingImplementationStatus, projectData.serverSideTrackingImplementationDescription);
-                createEditableRow("consentMode", "Описание режима согласия", projectData.consentModeStatus, projectData.consentModeDescription);
-                createEditableRow("piiDataNotCollection", "Описание не сбора персональных данных", projectData.piiDataNotCollectionStatus, projectData.piiDataNotCollectionDescription);
-                // Обработчик для сохранения изменений
-                document.getElementById("saveChangesButton").addEventListener("click", async function () {
-                    const updatedProjectData = {};
-                    document.querySelectorAll(".editable").forEach(input => {
-                        updatedProjectData[input.dataset.field] = input.value;
-                    });
-
-                    try {
-                        const response = await fetch(`http://localhost:8090/projects/${projectId}`, {
-                            method: "PUT",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(updatedProjectData)
-                        });
-
-                        if (response.ok) {
-                            loadProjectData(); // Обновляем данные проекта
-                        } else {
-                            alert("Ошибка сохранения изменений: " + response.status);
-                        }
-                    } catch (error) {
-                        console.error("Ошибка при выполнении запроса:", error);
-                        alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-                    }
-                });
-
-                async function loadProjectData() {
-                    try {
-                        const response = await fetch(`http://localhost:8090/projects/${projectId}`);
-                        if (response.ok) {
-                            const projectData = await response.json();
-                            document.getElementById("projectName").innerText = projectData.name;
-                            // Здесь вы можете обновить таблицу с новыми данными
-                        } else {
-                            alert("Ошибка обновления данных проекта: " + response.status);
-                        }
-                    } catch (error) {
-                        console.error("Ошибка при выполнении запроса:", error);
-                        alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-                    }
-                }
-            } else {
-                alert("Ошибка получения данных проекта: " + projectResponse.status);
-            }
-        } catch (error) {
-            console.error("Ошибка при выполнении запроса:", error);
-            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-        }
-
-        // Инициализируем загрузку комментариев
         loadNotes();
-        // Обработчик для добавления комментария
+
         document.getElementById("addCommentButton").addEventListener("click", async function () {
             const message = document.getElementById("commentMessage").value;
             const rootNoteId = null; // Для первого комментария в ветке
@@ -568,5 +408,3 @@
         window.location.href = `adminProjectAndAccPage.html?id=${urlParams.get("id")}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${adminProjectId}`;
     });
 </script>
-</body>
-</html>

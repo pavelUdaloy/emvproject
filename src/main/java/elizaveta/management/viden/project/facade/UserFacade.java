@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,6 +31,20 @@ public class UserFacade {
     public List<GetUserResponse> getByProjectId(int projectId) {
         return userService.findAll().stream()
                 .filter(user -> user.getProject().getId() == projectId)
+                .map(u -> GetUserResponse.builder()
+                        .id(u.getId())
+                        .email(u.getEmail())
+                        .firstName(u.getFirstName())
+                        .lastName(u.getLastName())
+                        .projectName(u.getProject().getName())
+                        .roleName(u.getRole().getName())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<GetUserResponse> getAllAnalysts() {
+        return userService.findAll().stream()
+                .filter(user -> Objects.equals(user.getRole().getName(), "VIDEN_ANALYST"))
                 .map(u -> GetUserResponse.builder()
                         .id(u.getId())
                         .email(u.getEmail())

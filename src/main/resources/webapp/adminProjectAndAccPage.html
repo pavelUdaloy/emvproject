@@ -171,7 +171,7 @@
                         item.className = "item";
                         item.innerHTML = `
                         <span>${project.name}</span>
-                        <button class="project-button" onclick="viewProject(${project.id})">Просмотреть</button>
+                        <button class="project-button" onclick="viewProject(${project.id}, '${project.name}')">Просмотреть</button>
                     `;
                         container.appendChild(item);
                     });
@@ -204,8 +204,8 @@
         }
     }
 
-    function viewProject(projectId) {
-        window.location.href = `projectDetails.html?projectId=${projectId}&id=${urlParams.get("id")}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${urlParams.get("adminProjectId")}`;
+    function viewProject(projectId, projectName) {
+        window.location.href = `projectDetails.html?projectId=${projectId}&id=${urlParams.get("id")}&email=${urlParams.get("email")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&targetProjectName=${projectName}&projectName=${urlParams.get("projectName")}&adminProjectId=${urlParams.get("adminProjectId")}`;
     }
 
     async function confirmOrder(orderId) {

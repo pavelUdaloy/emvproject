@@ -22,6 +22,11 @@ public class UserController {
         return userFacade.getAll();
     }
 
+    @GetMapping("/analysts")
+    public List<GetUserResponse> getAllAnalysts() {
+        return userFacade.getAllAnalysts();
+    }
+
     @GetMapping("/{projectId}")
     public List<GetUserResponse> getByProjectId(@PathVariable("projectId") int projectId) {
         return userFacade.getByProjectId(projectId);

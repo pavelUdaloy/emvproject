@@ -43,6 +43,10 @@ public class ProjectCriteria {
     private Project project;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User analyst;
+
+    @ManyToOne
     @MapsId("criteriaId")
     @JoinColumn(name = "criteria_id", nullable = false)
     private Criteria criteria;
