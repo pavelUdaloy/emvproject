@@ -7,12 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreateUserRequest {
+public class CreateAnalystRequest {
 
     private String email;
     private String password;
     private String firstName;
     private String lastName;
-    private int projectId;
-    private int roleId;
 }

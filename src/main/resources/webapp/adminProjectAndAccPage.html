@@ -83,6 +83,14 @@
             transition: background-color 0.3s;
         }
 
+        .button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
         .project-button {
             background-color: #002b80;
             color: white;
@@ -106,6 +114,15 @@
             margin-top: 30px;
         }
 
+        .add-button {
+            background-color: #ff8c00;
+            color: white;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
         .logout-button {
             background-color: #002b80;
             color: white;
@@ -118,6 +135,34 @@
 
         .logout-button:hover {
             background-color: #0044cc;
+        }
+
+        .form-container {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+        }
+
+        .form-container h4 {
+            margin: 0 0 10px;
+            color: #002b80;
+        }
+
+        .form-container input {
+            display: block;
+            width: calc(100% - 20px);
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .cancel-button {
+            background-color: #ccc;
+            color: black;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -136,6 +181,23 @@
         <p><strong>Имя:</strong> <span id="firstName"></span></p>
         <p><strong>Фамилия:</strong> <span id="lastName"></span></p>
         <p><strong>Название проекта:</strong> <span id="projectName"></span></p>
+    </div>
+
+    <div class="section">
+        <h3>Список аналитиков</h3>
+        <div id="analystsContainer" class="list"></div>
+
+        <button class="button add-button" onclick="toggleAnalystForm()">Добавить аналитика</button>
+
+        <div id="analystForm" class="form-container" style="display: none;">
+            <h4>Добавление аналитика</h4>
+            <input type="email" id="analystEmail" placeholder="Email" required>
+            <input type="password" id="analystPassword" placeholder="Пароль" required>
+            <input type="text" id="analystFirstName" placeholder="Имя" required>
+            <input type="text" id="analystLastName" placeholder="Фамилия" required>
+            <button class="button confirm-button" onclick="submitAnalyst()">Сохранить</button>
+            <button class="button cancel-button" onclick="toggleAnalystForm()">Отмена</button>
+        </div>
     </div>
 
     <div class="section">
@@ -204,6 +266,26 @@
         }
     }
 
+    async function loadAnalysts() {
+        try {
+            const response = await fetch("http://localhost:8090/users/analysts");
+            if (response.ok) {
+                const analysts = await response.json();
+                const container = document.getElementById("analystsContainer");
+                container.innerHTML = "";
+
+                analysts.forEach(analyst => {
+                    const item = document.createElement("div");
+                    item.className = "item";
+                    item.innerHTML = `<span>${analyst.firstName} ${analyst.lastName} (${analyst.email})</span>`;
+                    container.appendChild(item);
+                });
+            }
+        } catch (error) {
+            console.error("Ошибка при загрузке аналитиков:", error);
+        }
+    }
+
     function viewProject(projectId, projectName) {
         window.location.href = `projectDetails.html?projectId=${projectId}&id=${urlParams.get("id")}&email=${urlParams.get("email")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&targetProjectName=${projectName}&projectName=${urlParams.get("projectName")}&adminProjectId=${urlParams.get("adminProjectId")}`;
     }
@@ -220,6 +302,40 @@
         }
     }
 
+    function toggleAnalystForm() {
+        const form = document.getElementById("analystForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+
+    async function submitAnalyst() {
+        const email = document.getElementById("analystEmail").value;
+        const password = document.getElementById("analystPassword").value;
+        const firstName = document.getElementById("analystFirstName").value;
+        const lastName = document.getElementById("analystLastName").value;
+
+        if (!email || !password || !firstName || !lastName) {
+            alert("Заполните все поля!");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8090/users/analyst", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({email, password, firstName, lastName})
+            });
+
+            if (response.ok) {
+                loadAnalysts();
+                toggleAnalystForm();
+            } else {
+                alert("Ошибка при добавлении аналитика.");
+            }
+        } catch (error) {
+            console.error("Ошибка:", error);
+        }
+    }
+
     document.getElementById("logoutButton").addEventListener("click", function () {
         window.location.href = "start.html";
     });
@@ -232,6 +348,7 @@
         document.getElementById("projectName").innerText = urlParams.get("projectName");
         loadProjects();
         loadOrders();
+        loadAnalysts();
     });
 </script>
 

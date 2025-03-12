@@ -30,6 +30,16 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
+    public Project findByName(String name) {
+        Optional<Project> project = projectRepository.findByName(name);
+        if (project.isEmpty()) {
+            log.error("Cannot find project with name = {}", name);
+            throw new UsernameNotFoundException("Cannot find project with name = " + name);
+        }
+        return project.get();
+    }
+
+    @Transactional(readOnly = true)
     public List<Project> findAllApproved() {
         return projectRepository.findAllApproved();
     }

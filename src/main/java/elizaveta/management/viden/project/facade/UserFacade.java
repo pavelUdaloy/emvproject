@@ -1,6 +1,11 @@
 package elizaveta.management.viden.project.facade;
 
+import elizaveta.management.viden.project.entity.Project;
+import elizaveta.management.viden.project.entity.Role;
+import elizaveta.management.viden.project.http.dto.CreateAnalystRequest;
 import elizaveta.management.viden.project.http.dto.GetUserResponse;
+import elizaveta.management.viden.project.service.ProjectService;
+import elizaveta.management.viden.project.service.RoleService;
 import elizaveta.management.viden.project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,6 +19,8 @@ import java.util.stream.Collectors;
 public class UserFacade {
 
     private final UserService userService;
+    private final ProjectService projectService;
+    private final RoleService roleService;
 
     public List<GetUserResponse> getAll() {
         return userService.findAll().stream()
@@ -54,5 +61,13 @@ public class UserFacade {
                         .roleName(u.getRole().getName())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public void create(CreateAnalystRequest createUserRequest) {
+        Project project = projectService.findByName("VIDEN");
+        Role role = roleService.findByName("VIDEN_ANALYST");
+
+        userService.checkAndCreate(project, role, createUserRequest.getEmail(), createUserRequest.getPassword(),
+                createUserRequest.getFirstName(), createUserRequest.getLastName());
     }
 }
