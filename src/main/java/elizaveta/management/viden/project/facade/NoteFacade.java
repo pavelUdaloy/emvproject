@@ -1,12 +1,10 @@
 package elizaveta.management.viden.project.facade;
 
 import elizaveta.management.viden.project.entity.Note;
-import elizaveta.management.viden.project.entity.Project;
 import elizaveta.management.viden.project.http.dto.CreateNoteRequest;
 import elizaveta.management.viden.project.http.dto.CreateNoteResponse;
 import elizaveta.management.viden.project.http.dto.GetNoteResponse;
 import elizaveta.management.viden.project.service.NoteService;
-import elizaveta.management.viden.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

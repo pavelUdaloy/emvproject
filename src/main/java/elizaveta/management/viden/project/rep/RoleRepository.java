@@ -1,6 +1,5 @@
 package elizaveta.management.viden.project.rep;
 
-import elizaveta.management.viden.project.entity.Project;
 import elizaveta.management.viden.project.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

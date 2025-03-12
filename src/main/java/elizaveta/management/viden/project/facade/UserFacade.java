@@ -1,13 +1,6 @@
 package elizaveta.management.viden.project.facade;
 
-import elizaveta.management.viden.project.entity.Project;
-import elizaveta.management.viden.project.entity.Role;
-import elizaveta.management.viden.project.entity.User;
-import elizaveta.management.viden.project.http.dto.CreateUserRequest;
-import elizaveta.management.viden.project.http.dto.CreateUserResponse;
 import elizaveta.management.viden.project.http.dto.GetUserResponse;
-import elizaveta.management.viden.project.service.ProjectService;
-import elizaveta.management.viden.project.service.RoleService;
 import elizaveta.management.viden.project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

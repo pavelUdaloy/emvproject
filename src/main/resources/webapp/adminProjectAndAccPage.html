@@ -210,7 +210,7 @@
 
     async function confirmOrder(orderId) {
         try {
-            const response = await fetch(`http://localhost:8090/orders/${orderId}`, { method: "PUT" });
+            const response = await fetch(`http://localhost:8090/orders/${orderId}`, {method: "PUT"});
             if (response.ok) {
                 loadProjects();
                 loadOrders();
@@ -220,11 +220,11 @@
         }
     }
 
-    document.getElementById("logoutButton").addEventListener("click", function() {
+    document.getElementById("logoutButton").addEventListener("click", function () {
         window.location.href = "start.html";
     });
 
-    window.addEventListener("load", function() {
+    window.addEventListener("load", function () {
         document.getElementById("id").innerText = urlParams.get("id");
         document.getElementById("email").innerText = urlParams.get("email");
         document.getElementById("firstName").innerText = urlParams.get("firstName");
