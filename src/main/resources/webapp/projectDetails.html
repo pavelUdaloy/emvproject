@@ -194,7 +194,6 @@
             <th>Имя</th>
             <th>Фамилия</th>
             <th>Название проекта</th>
-            <th>Действия</th>
         </tr>
         </thead>
         <tbody id="usersTable">
@@ -203,16 +202,6 @@
     </table>
     <p id="noUsersMessage" style="display: none;">Пользователей нет</p>
 </div>
-
-<h3>Добавить пользователя</h3>
-<form id="createUserForm">
-    <input type="email" id="userEmail" placeholder="Email" required>
-    <input type="password" id="userPassword" placeholder="Пароль" required>
-    <input type="text" id="userTitle" placeholder="Должность">
-    <input type="text" id="userFirstName" placeholder="Имя">
-    <input type="text" id="userLastName" placeholder="Фамилия">
-    <button type="button" id="addUserButton">Добавить пользователя</button>
-</form>
 
 <h3>Информация о проекте</h3>
 <table>
@@ -348,7 +337,6 @@
                                 <td>${user.firstName}</td>
                                 <td>${user.lastName}</td>
                                 <td>${user.projectName}</td>
-                                <td><button onclick="deleteUser(${user.id})">Удалить</button></td>
                             `;
                         usersTableBody.appendChild(row);
                     });
@@ -573,69 +561,6 @@
             });
         }
     }
-
-    async function deleteUser(userId) {
-        try {
-            const response = await fetch(`http://localhost:8090/users/${userId}`, {
-                method: "DELETE"
-            });
-
-            if (response.ok) {
-                loadUsers(); // Обновляем список пользователей
-            } else {
-                alert("Ошибка удаления пользователя: " + response.status);
-            }
-        } catch (error) {
-            console.error("Ошибка при выполнении запроса:", error);
-            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-        }
-    }
-
-    document.getElementById("addUserButton").addEventListener("click", async function () {
-        const email = document.getElementById("userEmail").value;
-        const password = document.getElementById("userPassword").value;
-        const title = document.getElementById("userTitle").value;
-        const firstName = document.getElementById("userFirstName").value;
-        const lastName = document.getElementById("userLastName").value;
-
-        if (email && password) {
-            const requestBody = {
-                email: email,
-                password: password,
-                title: title,
-                firstName: firstName,
-                lastName: lastName,
-                projectId: projectId
-            };
-
-            try {
-                const response = await fetch("http://localhost:8090/users", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (response.ok) {
-                    // Очистка полей ввода после успешного добавления пользователя
-                    document.getElementById("userEmail").value = "";
-                    document.getElementById("userPassword").value = "";
-                    document.getElementById("userTitle").value = "";
-                    document.getElementById("userFirstName").value = "";
-                    document.getElementById("userLastName").value = "";
-                    loadUsers(); // Обновляем список пользователей
-                } else {
-                    alert("Ошибка добавления пользователя: " + response.status);
-                }
-            } catch (error) {
-                console.error("Ошибка при выполнении запроса:", error);
-                alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
-            }
-        } else {
-            alert("Пожалуйста, заполните обязательные поля: Email и Password.");
-        }
-    });
 
     document.getElementById("backButton").addEventListener("click", function () {
         window.location.href = `adminProjectAndAccPage.html?id=${urlParams.get("id")}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${adminProjectId}`;
