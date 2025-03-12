@@ -1,8 +1,6 @@
 package elizaveta.management.viden.project.facade;
 
 import elizaveta.management.viden.project.entity.Project;
-import elizaveta.management.viden.project.http.dto.CreateProjectRequest;
-import elizaveta.management.viden.project.http.dto.CreateProjectResponse;
 import elizaveta.management.viden.project.http.dto.EditProjectRequest;
 import elizaveta.management.viden.project.http.dto.EditProjectResponse;
 import elizaveta.management.viden.project.http.dto.GetProjectResponse;
@@ -20,15 +18,6 @@ import java.util.stream.Collectors;
 public class ProjectFacade {
 
     private final ProjectService projectService;
-
-    public CreateProjectResponse create(CreateProjectRequest createProjectRequest) {
-        Project project = projectService.checkAndCreate(createProjectRequest.getName());
-
-        return CreateProjectResponse.builder()
-                .id(project.getId())
-                .name(project.getName())
-                .build();
-    }
 
     public List<GetProjectResponse> getAll() {
         return projectService.findAllApproved().stream()
