@@ -20,24 +20,6 @@ import java.util.stream.Collectors;
 public class UserFacade {
 
     private final UserService userService;
-    private final ProjectService projectService;
-    private final RoleService roleService;
-
-    public CreateUserResponse create(CreateUserRequest createUserRequest) {
-        Project project = projectService.findById(createUserRequest.getProjectId());
-        Role role = roleService.findById(createUserRequest.getRoleId());
-
-        User user = userService.checkAndCreate(project, role, createUserRequest.getEmail(), createUserRequest.getPassword(),
-                createUserRequest.getFirstName(), createUserRequest.getLastName());
-
-        return CreateUserResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .build();
-    }
 
     public List<GetUserResponse> getAll() {
         return userService.findAll().stream()
@@ -50,10 +32,6 @@ public class UserFacade {
                         .roleName(u.getRole().getName())
                         .build())
                 .collect(Collectors.toList());
-    }
-
-    public void delete(int id) {
-        userService.delete(id);
     }
 
     public List<GetUserResponse> getByProjectId(int projectId) {

@@ -80,10 +80,4 @@ public class UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
-
-    @Transactional
-    public void delete(int id) {
-        User user = findById(id);
-        userRepository.delete(user);
-    }
 }

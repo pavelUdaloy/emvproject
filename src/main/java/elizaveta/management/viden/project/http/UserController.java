@@ -23,19 +23,9 @@ public class UserController {
 
     private final UserFacade userFacade;
 
-    @PostMapping
-    public CreateUserResponse create(@RequestBody CreateUserRequest createUserRequest) {
-        return userFacade.create(createUserRequest);
-    }
-
     @GetMapping
     public List<GetUserResponse> getAll() {
         return userFacade.getAll();
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") int id) {
-        userFacade.delete(id);
     }
 
     @GetMapping("/{projectId}")
