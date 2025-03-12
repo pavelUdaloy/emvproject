@@ -209,10 +209,17 @@
         <h3>Список заказов</h3>
         <div id="ordersContainer" class="list"></div>
     </div>
+
+    <div class="section">
+        <h3>История событий</h3>
+        <div id="logsContainer" class="list"></div>
+    </div>
 </div>
 
 <div class="logout-section">
     <button class="logout-button" id="logoutButton">Выйти</button>
+</div>
+<div class="logout-section">
 </div>
 
 <script>
@@ -286,6 +293,34 @@
         }
     }
 
+    async function loadLogs() {
+        try {
+            const response = await fetch("http://localhost:8090/logs");
+            if (response.ok) {
+                const logs = await response.json();
+                const container = document.getElementById("logsContainer");
+                container.innerHTML = "";
+
+                logs.sort((a, b) => new Date(b.actionAt) - new Date(a.actionAt));
+
+                logs.forEach(log => {
+                    const eventDate = new Date(log.actionAt);
+                    const formattedDate = eventDate.toLocaleString('ru-RU');
+
+                    const item = document.createElement("div");
+                    item.className = "item";
+                    item.innerHTML = `
+                    <span>${formattedDate} - ${log.description}</span>
+                `;
+                    container.appendChild(item);
+                });
+            }
+        } catch (error) {
+            console.error("Ошибка при загрузке истории событий:", error);
+        }
+    }
+
+
     function viewProject(projectId, projectName) {
         window.location.href = `projectDetails.html?projectId=${projectId}&id=${urlParams.get("id")}&email=${urlParams.get("email")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&targetProjectName=${projectName}&projectName=${urlParams.get("projectName")}&adminProjectId=${urlParams.get("adminProjectId")}`;
     }
@@ -349,6 +384,7 @@
         loadProjects();
         loadOrders();
         loadAnalysts();
+        loadLogs();
     });
 </script>
 
