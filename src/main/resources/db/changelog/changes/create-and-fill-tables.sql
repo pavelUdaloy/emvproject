@@ -45,6 +45,8 @@ VALUES ('dzianis.zakharych@viden.com', '1234', N'Денис', N'Захарич',
         (SELECT id FROM roles WHERE name = 'VIDEN_ADMIN'), (SELECT id FROM projects WHERE name = 'VIDEN')),
        ('elizaveta.tsypenkova@viden.com', '1234', N'Елизавета', N'Цыпенкова',
         (SELECT id FROM roles WHERE name = 'VIDEN_ANALYST'), (SELECT id FROM projects WHERE name = 'VIDEN')),
+       ('pavel.pavel@viden.com', '1234', N'Павел', N'Павел',
+        (SELECT id FROM roles WHERE name = 'VIDEN_ANALYST'), (SELECT id FROM projects WHERE name = 'VIDEN')),
        ('michael.jackson@google.com', '1234', N'Майкл', N'Джексон',
         (SELECT id FROM roles WHERE name = 'CLIENT'), (SELECT id FROM projects WHERE name = 'GOOGLE'));
 
@@ -128,7 +130,7 @@ CREATE TABLE project_criteries
     criteria_id INT NOT NULL,
     user_id     INT NOT NULL,
     status      NVARCHAR(100),
-    description TEXT,
+    description NVARCHAR(max),
     deadline    DATETIME2,
     PRIMARY KEY (project_id, criteria_id),
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,

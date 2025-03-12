@@ -168,6 +168,67 @@
             transform: scale(1.05);
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        select, textarea, input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #002b80;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0044cc;
+        }
+
     </style>
 </head>
 <body>
@@ -202,6 +263,29 @@
     <p id="noUsersMessage" style="display: none;">Пользователей нет</p>
 </div>
 
+<h3>Аналитические критерии</h3>
+<div id="criteriesContainer">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Статус</th>
+            <th>Срок</th>
+            <th>Ответственный аналитик</th>
+        </tr>
+        </thead>
+        <tbody id="criteriesTable">
+        </tbody>
+    </table>
+    <p id="noCriteriesMessage" style="display: none;">Критериев нет</p>
+</div>
+
+<p class="center-text">
+    <button id="addCriteriaButton">Добавить критерий</button>
+</p>
+
 <h3>Комментарии</h3>
 <div id="notesContainer">
     <!-- Здесь будут отображены комментарии -->
@@ -213,10 +297,131 @@
     <br>
     <button type="button" id="addCommentButton">Прокомментировать</button>
 </form>
+
+<div id="criteriaModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Добавить новый критерий</h3>
+        <form id="criteriaForm">
+            <label for="criteriaId">Системный критерий:</label>
+            <select id="criteriaId"></select>
+
+            <label for="userId">Ответственный аналитик:</label>
+            <select id="userId"></select>
+
+            <label for="status">Статус:</label>
+            <select id="status">
+                <option value="готово к выполнению">Готово к выполнению</option>
+                <option value="в работе">В работе</option>
+                <option value="выполнен">Выполнен</option>
+                <option value="ошибка">Ошибка</option>
+                <option value="в анализе">В анализе</option>
+            </select>
+
+            <label for="description">Описание:</label>
+            <textarea id="description" rows="3"></textarea>
+
+            <label for="deadline">Срок выполнения:</label>
+            <input type="datetime-local" id="deadline">
+
+            <button type="button" id="submitCriteria">Добавить</button>
+        </form>
+    </div>
+</div>
+
 </body>
 </html>
 
 <script>
+    document.getElementById("addCriteriaButton").addEventListener("click", openCriteriaModal);
+
+    const modal = document.getElementById("criteriaModal");
+    const closeModal = document.querySelector(".close");
+
+    closeModal.addEventListener("click", () => { modal.style.display = "none"; });
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) { modal.style.display = "none"; }
+    });
+
+    async function openCriteriaModal() {
+        modal.style.display = "block";
+        await loadSystemCriteries();
+        await loadAnalysts();
+    }
+
+    async function loadSystemCriteries() {
+        const response = await fetch(`http://localhost:8090/projects/${projectId}/criteries/system`);
+        if (response.ok) {
+            const systemCriteries = await response.json();
+            const criteriaSelect = document.getElementById("criteriaId");
+            criteriaSelect.innerHTML = "";
+
+            systemCriteries.forEach(criteria => {
+                const option = document.createElement("option");
+                option.value = criteria.id;
+                option.textContent = criteria.name;
+                criteriaSelect.appendChild(option);
+            });
+        } else {
+            alert("Ошибка загрузки системных критериев");
+        }
+    }
+
+    async function loadAnalysts() {
+        const response = await fetch("http://localhost:8090/users/analysts");
+        if (response.ok) {
+            const analysts = await response.json();
+            const analystSelect = document.getElementById("userId");
+            analystSelect.innerHTML = "";
+
+            analysts.forEach(analyst => {
+                const option = document.createElement("option");
+                option.value = analyst.id;
+                option.textContent = `${analyst.firstName} ${analyst.lastName} (${analyst.email})`;
+                analystSelect.appendChild(option);
+            });
+        } else {
+            alert("Ошибка загрузки аналитиков");
+        }
+    }
+
+    document.getElementById("submitCriteria").addEventListener("click", async function () {
+        const criteriaId = document.getElementById("criteriaId").value;
+        const userId = document.getElementById("userId").value;
+        const status = document.getElementById("status").value;
+        const description = document.getElementById("description").value;
+        const deadline = document.getElementById("deadline").value;
+
+        if (!criteriaId || !userId || !status || !description || !deadline) {
+            alert("Пожалуйста, заполните все поля");
+            return;
+        }
+
+        const requestBody = {
+            criteriaId: parseInt(criteriaId),
+            userId: parseInt(userId),
+            status: status,
+            description: description,
+            deadline: deadline + ":00" // ISO формат требует секунд
+        };
+
+        try {
+            const response = await fetch(`http://localhost:8090/projects/${projectId}/criteries`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (response.ok) {
+                modal.style.display = "none";
+                loadCriteries(); // Обновляем список критериев
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка. Проверьте консоль для подробностей.");
+        }
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     let adminProjectId = urlParams.get("adminProjectId");
     let projectId = urlParams.get("projectId");
@@ -334,6 +539,41 @@
         }
     }
 
+    async function loadCriteries() {
+        try {
+            const criteriesResponse = await fetch(`http://localhost:8090/projects/${projectId}/criteries`);
+            if (criteriesResponse.ok) {
+                const criteriesData = await criteriesResponse.json();
+                const criteriesTableBody = document.getElementById("criteriesTable");
+
+                criteriesTableBody.innerHTML = ""; // Очищаем таблицу перед загрузкой новых данных
+
+                if (criteriesData.length === 0) {
+                    document.getElementById("noCriteriesMessage").style.display = "block";
+                } else {
+                    criteriesData.forEach(criteria => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                        <td>${criteria.criteriaId}</td>
+                        <td>${criteria.criteriaName}</td>
+                        <td>${criteria.description || 'Нет описания'}</td>
+                        <td>${criteria.status}</td>
+                        <td>${criteria.deadline ? new Date(criteria.deadline).toLocaleString() : 'Нет срока'}</td>
+                        <td>${criteria.userEmail}</td>
+                    `;
+                        criteriesTableBody.appendChild(row);
+                    });
+                    document.getElementById("noCriteriesMessage").style.display = "none";
+                }
+            } else {
+                alert("Ошибка получения аналитических критериев: " + criteriesResponse.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+        }
+    }
+
     window.addEventListener("load", async function () {
         document.getElementById("projectId").innerText = projectId;
         document.getElementById("targetProjectName").innerText = urlParams.get("targetProjectName");
@@ -341,6 +581,8 @@
         loadUsers();
 
         loadNotes();
+
+        loadCriteries();
 
         document.getElementById("addCommentButton").addEventListener("click", async function () {
             const message = document.getElementById("commentMessage").value;
