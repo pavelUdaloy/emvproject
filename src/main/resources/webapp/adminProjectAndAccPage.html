@@ -241,6 +241,7 @@
                         item.innerHTML = `
                         <span>${project.name}</span>
                         <button class="project-button" onclick="viewProject(${project.id}, '${project.name}')">Просмотреть</button>
+                        <button class="cancel-button" onclick="deleteProject(${project.id})">Удалить</button>
                     `;
                         container.appendChild(item);
                     });
@@ -290,6 +291,22 @@
             }
         } catch (error) {
             console.error("Ошибка при загрузке аналитиков:", error);
+        }
+    }
+
+    async function deleteProject(projectId) {
+        try {
+            const response = await fetch(`http://localhost:8090/projects/${projectId}`, {
+                method: "DELETE"
+            });
+
+            if (response.ok) {
+                loadProjects(); // Обновляем список после удаления
+            } else {
+                alert("Ошибка при удалении проекта.");
+            }
+        } catch (error) {
+            console.error("Ошибка при удалении проекта:", error);
         }
     }
 
