@@ -2,6 +2,7 @@ package elizaveta.management.viden.project.service;
 
 import elizaveta.management.viden.project.entity.Note;
 import elizaveta.management.viden.project.entity.Project;
+import elizaveta.management.viden.project.entity.ProjectCriteria;
 import elizaveta.management.viden.project.entity.User;
 import elizaveta.management.viden.project.rep.NoteRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +22,17 @@ import java.util.Optional;
 public class NoteService {
 
     private final UserService userService;
-    private final ProjectService projectService;
+    private final CriteriaService criteriaService;
     private final NoteRepository noteRepository;
 
     @Transactional
-    public Note checkAndCreate(int projectId, int userId, String message, Integer rootNoteId) {
+    public Note checkAndCreate(int projectId, int criteriaId, int userId, String message, Integer rootNoteId) {
         User user = userService.findById(userId);
-        Project project = projectService.findById(projectId);
+        ProjectCriteria projectCriteria = criteriaService.findById(projectId, criteriaId);
 
         Note note = new Note();
         note.setUser(user);
-        note.setProject(project);
+        note.setProjectCriteria(projectCriteria);
         note.setMessage(message);
         note.setSendedAt(LocalDateTime.now(ZoneOffset.of("+03:00")));
         note.setRootNote(findById(rootNoteId));
@@ -39,7 +40,7 @@ public class NoteService {
         try {
             return noteRepository.save(note);
         } catch (Exception e) {
-            log.error("Error per saving new note to db, message = {}, userId = {}, projectId = {}", message, userId, project.getId());
+            log.error("Error per saving new note to db, message = {}, userId = {}, projectId = {}, criteriaId = {}", message, userId, projectId, criteriaId);
             throw new RuntimeException("Error per saving new note to db");
         }
     }
@@ -56,8 +57,8 @@ public class NoteService {
 
     @Nullable
     @Transactional(readOnly = true)
-    public List<Note> getAllByProjectId(int projectId) {
-        Project project = projectService.findById(projectId);
-        return noteRepository.findAllByProjectIsAndRootNoteIsNull(project);
+    public List<Note> getAllByProjectIdAndCriteriaId(int projectId, int criteriaId) {
+        ProjectCriteria projectCriteria = criteriaService.findById(projectId, criteriaId);
+        return noteRepository.findAllByProjectCriteriaAndRootNoteIsNull(projectCriteria);
     }
 }

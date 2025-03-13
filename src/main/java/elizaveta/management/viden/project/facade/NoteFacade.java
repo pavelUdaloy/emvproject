@@ -19,7 +19,7 @@ public class NoteFacade {
     private final NoteService noteService;
 
     public CreateNoteResponse create(CreateNoteRequest createNoteRequest) {
-        Note note = noteService.checkAndCreate(createNoteRequest.getProjectId(), createNoteRequest.getUserId(), createNoteRequest.getMessage(), createNoteRequest.getRootNoteId());
+        Note note = noteService.checkAndCreate(createNoteRequest.getProjectId(), createNoteRequest.getCriteriaId(), createNoteRequest.getUserId(), createNoteRequest.getMessage(), createNoteRequest.getRootNoteId());
 
         return CreateNoteResponse.builder()
                 .id(note.getId())
@@ -28,8 +28,8 @@ public class NoteFacade {
                 .build();
     }
 
-    public List<GetNoteResponse> getAllByProjectId(int projectId) {
-        List<Note> notes = noteService.getAllByProjectId(projectId);
+    public List<GetNoteResponse> getAllByProjectIdAndCriteriaId(int projectId, int criteriaId) {
+        List<Note> notes = noteService.getAllByProjectIdAndCriteriaId(projectId, criteriaId);
         List<GetNoteResponse> responses = new ArrayList<>();
         for (Note note : notes) {
             responses.add(convertToResponse(note));
@@ -38,7 +38,7 @@ public class NoteFacade {
     }
 
     private GetNoteResponse convertToResponse(Note note) {
-        GetNoteResponse response = GetNoteResponse.builder()
+        return GetNoteResponse.builder()
                 .id(note.getId())
                 .message(note.getMessage())
                 .sendedAt(note.getSendedAt())
@@ -47,6 +47,5 @@ public class NoteFacade {
                         .map(this::convertToResponse)
                         .collect(Collectors.toList()))
                 .build();
-        return response;
     }
 }

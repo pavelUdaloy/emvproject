@@ -11,6 +11,7 @@ public class CreateNoteRequest {
 
     private String message;
     private int projectId;
+    private int criteriaId;
     private int userId;
     private Integer rootNoteId;
 }

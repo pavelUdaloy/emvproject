@@ -26,8 +26,8 @@ public class NoteController {
         return noteFacade.create(createNoteRequest);
     }
 
-    @GetMapping("/{projectId}")
-    public List<GetNoteResponse> getAllByProjectId(@PathVariable("projectId") int projectId) {
-        return noteFacade.getAllByProjectId(projectId);
+    @GetMapping("/{projectId}/{criteriaId}")
+    public List<GetNoteResponse> getAllByProjectIdAndCriteriaId(@PathVariable("projectId") int projectId, @PathVariable("criteriaId") int criteriaId) {
+        return noteFacade.getAllByProjectIdAndCriteriaId(projectId, criteriaId);
     }
 }

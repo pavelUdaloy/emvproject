@@ -1,14 +1,6 @@
 package elizaveta.management.viden.project.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,8 +28,11 @@ public class Note {
     private LocalDateTime sendedAt;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+    @JoinColumns({
+            @JoinColumn(name = "project_id", referencedColumnName = "project_id", nullable = false),
+            @JoinColumn(name = "criteria_id", referencedColumnName = "criteria_id", nullable = false)
+    })
+    private ProjectCriteria projectCriteria;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -47,6 +42,6 @@ public class Note {
     @JoinColumn(name = "root_note_id")
     private Note rootNote;
 
-    @OneToMany(mappedBy = "rootNote")
+    @OneToMany(mappedBy = "rootNote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Note> childNotes;
 }

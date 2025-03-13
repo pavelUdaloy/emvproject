@@ -75,4 +75,15 @@ public class CriteriaService {
         projectCriteria.setStatus(status);
         projectCriteriaRepository.save(projectCriteria);
     }
+
+    @Transactional(readOnly = true)
+    public ProjectCriteria findById(int projectId, int criteriaId) {
+        ProjectCriteriaId id = new ProjectCriteriaId(projectId, criteriaId);
+        Optional<ProjectCriteria> projectCriteria = projectCriteriaRepository.findById(id);
+        if (projectCriteria.isEmpty()) {
+            log.error("Cannot find projectCriteria with id = {}", id);
+            throw new UsernameNotFoundException("Cannot find projectCriteria with id = " + id);
+        }
+        return projectCriteria.get();
+    }
 }

@@ -36,8 +36,5 @@ public class Project {
     private List<User> users;
 
     @OneToMany(mappedBy = "project")
-    private List<Note> notes;
-
-    @OneToMany(mappedBy = "project")
     private List<ProjectCriteria> projectCriteries;
 }
