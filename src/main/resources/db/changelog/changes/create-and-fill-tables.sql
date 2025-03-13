@@ -7,7 +7,7 @@ CREATE SEQUENCE criteries_SEQ START WITH 1 INCREMENT BY 1;
 
 CREATE TABLE roles
 (
-    id   INT           NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    id   INT            NOT NULL IDENTITY (1,1) PRIMARY KEY,
     name NVARCHAR(1000) NOT NULL UNIQUE
 );
 
@@ -18,9 +18,9 @@ VALUES ('VIDEN_ADMIN'),
 
 CREATE TABLE projects
 (
-    id       INT           NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    id       INT            NOT NULL IDENTITY (1,1) PRIMARY KEY,
     name     NVARCHAR(1000) NOT NULL UNIQUE,
-    approved BIT           NOT NULL DEFAULT 0
+    approved BIT            NOT NULL DEFAULT 0
 );
 
 INSERT INTO projects (name, approved)
@@ -29,13 +29,13 @@ VALUES ('VIDEN', 1),
 
 CREATE TABLE users
 (
-    id         INT           NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    id         INT            NOT NULL IDENTITY (1,1) PRIMARY KEY,
     email      NVARCHAR(1000) NOT NULL UNIQUE,
     password   NVARCHAR(1000) NOT NULL,
     first_name NVARCHAR(1000) NOT NULL,
     last_name  NVARCHAR(1000) NOT NULL,
-    project_id INT           NOT NULL,
-    role_id    INT           NOT NULL,
+    project_id INT            NOT NULL,
+    role_id    INT            NOT NULL,
     FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
     FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
@@ -52,14 +52,14 @@ VALUES ('dzianis.zakharych@viden.com', '1234', N'Денис', N'Захарич',
 
 CREATE TABLE logs
 (
-    id        INT           NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    id        INT            NOT NULL IDENTITY (1,1) PRIMARY KEY,
     type      NVARCHAR(1000) NOT NULL,
-    action_at DATETIME2     NOT NULL
+    action_at DATETIME2      NOT NULL
 );
 
 CREATE TABLE criteries
 (
-    id   INT           NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    id   INT            NOT NULL IDENTITY (1,1) PRIMARY KEY,
     name NVARCHAR(1000) NOT NULL UNIQUE
 );
 
@@ -127,13 +127,13 @@ CREATE TABLE project_criteries
 
 CREATE TABLE notes
 (
-    id           INT       NOT NULL IDENTITY (1,1) PRIMARY KEY,
-    message      TEXT      NOT NULL,
-    project_id   INT       NOT NULL,
-    criteria_id  INT       NOT NULL,
-    root_note_id INT       NULL,
-    user_id      INT       NOT NULL,
-    sended_at    DATETIME2 NOT NULL,
+    id           INT            NOT NULL IDENTITY (1,1) PRIMARY KEY,
+    message      NVARCHAR(1000) NOT NULL,
+    project_id   INT            NOT NULL,
+    criteria_id  INT            NOT NULL,
+    root_note_id INT            NULL,
+    user_id      INT            NOT NULL,
+    sended_at    DATETIME2      NOT NULL,
     FOREIGN KEY (project_id, criteria_id) REFERENCES project_criteries (project_id, criteria_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION,
     FOREIGN KEY (root_note_id) REFERENCES notes (id) ON DELETE NO ACTION
