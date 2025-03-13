@@ -213,9 +213,9 @@
                 if (result.roleName === 'VIDEN_ADMIN') {
                     window.location.href = `adminProjectAndAccPage.html?id=${result.id}&email=${result.email}&firstName=${result.firstName}&lastName=${result.lastName}&projectName=${result.projectName}&adminProjectId=${result.projectId}`;
                 } else if (result.roleName === 'VIDEN_ANALYST') {
-                    window.location.href = `adminAnalystProjectAndAccPage.html?id=${result.id}&email=${result.email}&title=${result.title}&firstName=${result.firstName}&lastName=${result.lastName}&projectName=${result.projectName}&adminProjectId=${result.projectId}`;
+                    window.location.href = `adminAnalystProjectAndAccPage.html?id=${result.id}&email=${result.email}&firstName=${result.firstName}&lastName=${result.lastName}&projectName=${result.projectName}&adminProjectId=${result.projectId}`;
                 } else {
-                    window.location.href = `notAdminProjectAndAccPage.html?id=${result.id}&email=${result.email}&title=${result.title}&firstName=${result.firstName}&lastName=${result.lastName}&projectName=${result.projectName}&projectId=${result.projectId}`;
+                    window.location.href = `notAdminProjectAndAccPage.html?id=${result.id}&email=${result.email}&firstName=${result.firstName}&lastName=${result.lastName}&projectName=${result.projectName}&adminProjectId=${result.projectId}`;
                 }
             } else {
                 errorMessage.textContent = "Неверные учетные данные. Пожалуйста, попробуйте еще раз.";
