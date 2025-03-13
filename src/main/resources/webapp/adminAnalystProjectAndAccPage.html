@@ -217,6 +217,7 @@
                 <th>Статус</th>
                 <th>Срок</th>
                 <th>Ответственный аналитик</th>
+                <th>Название проекта</th>
             </tr>
             </thead>
             <tbody id="criteriesTable">
@@ -260,13 +261,25 @@
                     criteriesData.forEach(criteria => {
                         const row = document.createElement("tr");
                         row.innerHTML = `
-                        <td>${criteria.criteriaId}</td>
-                        <td>${criteria.criteriaName}</td>
-                        <td>${criteria.description || 'Нет описания'}</td>
-                        <td>${criteria.status}</td>
-                        <td>${criteria.deadline ? new Date(criteria.deadline).toLocaleString() : 'Нет срока'}</td>
-                        <td>${criteria.userEmail}</td>
-                    `;
+                            <td>${criteria.criteriaId}</td>
+                            <td>${criteria.criteriaName}</td>
+                            <td>${criteria.description || 'Нет описания'}</td>
+                            <td>
+                                <select id="status-${criteria.criteriaId}">
+                                    <option value="готово к выполнению" ${criteria.status === "готово к выполнению" ? "selected" : ""}>Готово к выполнению</option>
+                                    <option value="в работе" ${criteria.status === "в работе" ? "selected" : ""}>В работе</option>
+                                    <option value="выполнен" ${criteria.status === "выполнен" ? "selected" : ""}>Выполнен</option>
+                                    <option value="ошибка" ${criteria.status === "ошибка" ? "selected" : ""}>Ошибка</option>
+                                    <option value="в анализе" ${criteria.status === "в анализе" ? "selected" : ""}>В анализе</option>
+                                </select>
+                            </td>
+                            <td>${criteria.deadline ? new Date(criteria.deadline).toLocaleString() : 'Нет срока'}</td>
+                            <td>${criteria.userEmail}</td>
+                            <td>${criteria.projectName}</td>
+                            <td>
+                                <button class="confirm-button" onclick="updateCriteriaStatus('${criteria.criteriaId}', '${criteria.projectId}')">Обновить</button>
+                            </td>
+                        `;
                         criteriesTableBody.appendChild(row);
                     });
                     document.getElementById("noCriteriesMessage").style.display = "none";
@@ -304,6 +317,33 @@
             }
         } catch (error) {
             console.error("Ошибка при загрузке истории событий:", error);
+        }
+    }
+
+    async function updateCriteriaStatus(criteriaId, projectId) {
+        const status = document.getElementById(`status-${criteriaId}`).value;
+
+        const requestBody = {
+            status: status
+        };
+
+        try {
+            const response = await fetch(`http://localhost:8090/projects/${projectId}/criteries/${criteriaId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (response.ok) {
+                loadCriteries();
+            } else {
+                alert("Ошибка обновления статуса: " + response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при обновлении статуса:", error);
+            alert("Произошла ошибка при обновлении статуса.");
         }
     }
 

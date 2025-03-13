@@ -10,6 +10,7 @@ import elizaveta.management.viden.project.http.dto.EditProjectResponse;
 import elizaveta.management.viden.project.http.dto.GetCriteriaResponse;
 import elizaveta.management.viden.project.http.dto.GetProjectResponse;
 import elizaveta.management.viden.project.http.dto.GetSystemCriteriaResponse;
+import elizaveta.management.viden.project.http.dto.UpdateCriteriaRequest;
 import elizaveta.management.viden.project.service.CriteriaService;
 import elizaveta.management.viden.project.service.ProjectService;
 import elizaveta.management.viden.project.service.UserService;
@@ -66,6 +67,7 @@ public class CriteriaFacade {
         return projectCriteries.stream()
                 .map(criteria -> GetCriteriaResponse.builder()
                         .projectId(criteria.getProject().getId())
+                        .projectName(criteria.getProject().getName())
                         .criteriaId(criteria.getCriteria().getId())
                         .criteriaName(criteria.getCriteria().getName())
                         .userEmail(criteria.getAnalyst().getEmail())
@@ -74,5 +76,9 @@ public class CriteriaFacade {
                         .deadline(criteria.getDeadline())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public void updateCriteria(int projectId, int criteriaId, UpdateCriteriaRequest request) {
+        criteriaService.updateCriteria(projectId, criteriaId, request.getStatus());
     }
 }

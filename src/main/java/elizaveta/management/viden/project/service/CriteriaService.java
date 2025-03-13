@@ -67,4 +67,12 @@ public class CriteriaService {
     public List<ProjectCriteria> getAllByAnalystId(int analystId) {
         return projectCriteriaRepository.findByAnalystId(analystId);
     }
+
+    @Transactional
+    public void updateCriteria(int projectId, int criteriaId, String status) {
+        ProjectCriteriaId id = new ProjectCriteriaId(projectId, criteriaId);
+        ProjectCriteria projectCriteria = projectCriteriaRepository.findById(id).get();
+        projectCriteria.setStatus(status);
+        projectCriteriaRepository.save(projectCriteria);
+    }
 }

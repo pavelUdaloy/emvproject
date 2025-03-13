@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class GetCriteriaResponse {
 
     private int projectId;
+    private String projectName;
     private int criteriaId;
     private String criteriaName;
     private String userEmail;

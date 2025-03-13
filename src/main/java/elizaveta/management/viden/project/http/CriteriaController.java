@@ -9,6 +9,7 @@ import elizaveta.management.viden.project.http.dto.EditProjectResponse;
 import elizaveta.management.viden.project.http.dto.GetCriteriaResponse;
 import elizaveta.management.viden.project.http.dto.GetProjectResponse;
 import elizaveta.management.viden.project.http.dto.GetSystemCriteriaResponse;
+import elizaveta.management.viden.project.http.dto.UpdateCriteriaRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,11 @@ public class CriteriaController {
     @PostMapping
     public void addCriteria(@PathVariable("projectId") int projectId, @RequestBody CreateCriteriaRequest createCriteriaRequest) {
         criteriaFacade.addCriteria(projectId, createCriteriaRequest);
+    }
+
+    @PutMapping("/{criteriaId}")
+    public void updateCriteria(@PathVariable("projectId") int projectId, @PathVariable("criteriaId") int criteriaId, @RequestBody UpdateCriteriaRequest request) {
+        criteriaFacade.updateCriteria(projectId, criteriaId, request);
     }
 
     @GetMapping("/system")

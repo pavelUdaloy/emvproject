@@ -4,16 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreateCriteriaRequest {
+public class UpdateCriteriaRequest {
 
-    private int criteriaId;
-    private int userId;
     private String status;
-    private String description;
-    private LocalDateTime deadline;
 }
