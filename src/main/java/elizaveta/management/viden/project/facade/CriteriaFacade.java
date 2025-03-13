@@ -60,4 +60,19 @@ public class CriteriaFacade {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    public List<GetCriteriaResponse> getAllByAnalystId(int analystId) {
+        List<ProjectCriteria> projectCriteries = criteriaService.getAllByAnalystId(analystId);
+        return projectCriteries.stream()
+                .map(criteria -> GetCriteriaResponse.builder()
+                        .projectId(criteria.getProject().getId())
+                        .criteriaId(criteria.getCriteria().getId())
+                        .criteriaName(criteria.getCriteria().getName())
+                        .userEmail(criteria.getAnalyst().getEmail())
+                        .description(criteria.getDescription())
+                        .status(criteria.getStatus())
+                        .deadline(criteria.getDeadline())
+                        .build())
+                .collect(Collectors.toList());
+    }
 }

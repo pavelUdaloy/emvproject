@@ -33,6 +33,12 @@ public class CriteriaController {
         return criteriaFacade.getAllByProjectId(projectId);
     }
 
+    @GetMapping("/by-analyst/{analystId}")
+    public List<GetCriteriaResponse> getAllByAnalystId(@PathVariable("projectId") int projectId,
+                                                       @PathVariable("analystId") int analystId) {
+        return criteriaFacade.getAllByAnalystId(analystId);
+    }
+
     @PostMapping
     public void addCriteria(@PathVariable("projectId") int projectId, @RequestBody CreateCriteriaRequest createCriteriaRequest) {
         criteriaFacade.addCriteria(projectId, createCriteriaRequest);

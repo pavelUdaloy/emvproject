@@ -13,4 +13,7 @@ public interface ProjectCriteriaRepository extends JpaRepository<ProjectCriteria
 
     @Query("SELECT pc FROM ProjectCriteria pc WHERE pc.project.id = :projectId")
     List<ProjectCriteria> findByProjectId(int projectId);
+
+    @Query("SELECT pc FROM ProjectCriteria pc WHERE pc.analyst.id = :analystId")
+    List<ProjectCriteria> findByAnalystId(int analystId);
 }

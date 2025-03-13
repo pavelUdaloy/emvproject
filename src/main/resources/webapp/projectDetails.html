@@ -402,7 +402,7 @@
 
             if (response.ok) {
                 modal.style.display = "none";
-                loadCriteries(); // Обновляем список критериев
+                loadCriteries();
             }
         } catch (error) {
             console.error("Ошибка при выполнении запроса:", error);
@@ -415,7 +415,6 @@
     let projectId = urlParams.get("projectId");
     let adminUserId = urlParams.get("adminId");
 
-    // Функция для загрузки пользователей по проекту
     async function loadUsers() {
         try {
             const usersResponse = await fetch(`http://localhost:8090/users/${projectId}`);

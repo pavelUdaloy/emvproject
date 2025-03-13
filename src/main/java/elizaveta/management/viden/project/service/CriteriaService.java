@@ -62,4 +62,9 @@ public class CriteriaService {
     public List<ProjectCriteria> getAllByProjectId(int projectId) {
         return projectCriteriaRepository.findByProjectId(projectId);
     }
+
+    @Transactional(readOnly = true)
+    public List<ProjectCriteria> getAllByAnalystId(int analystId) {
+        return projectCriteriaRepository.findByAnalystId(analystId);
+    }
 }
