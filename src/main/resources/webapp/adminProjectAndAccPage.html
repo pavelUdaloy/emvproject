@@ -212,6 +212,16 @@
 
     <div class="section">
         <h3>История событий</h3>
+        <div>
+            <label for="startDate">Дата начала:</label>
+            <input type="datetime-local" id="startDate">
+
+            <label for="endDate">Дата окончания:</label>
+            <input type="datetime-local" id="endDate">
+
+            <button class="button" onclick="applyDateFilter()">Применить фильтр</button>
+        </div>
+
         <div id="logsContainer" class="list"></div>
     </div>
 </div>
@@ -310,9 +320,21 @@
         }
     }
 
-    async function loadLogs() {
+    async function loadLogs(startDate = null, endDate = null) {
         try {
-            const response = await fetch("http://localhost:8090/logs");
+            let headers = new Headers();
+
+            // Если фильтры активны, добавляем их в заголовки
+            if (startDate && endDate) {
+                headers.append("startDate", startDate);
+                headers.append("endDate", endDate);
+            }
+
+            const response = await fetch("http://localhost:8090/logs", {
+                method: "GET",
+                headers: headers
+            });
+
             if (response.ok) {
                 const logs = await response.json();
                 const container = document.getElementById("logsContainer");
@@ -327,8 +349,8 @@
                     const item = document.createElement("div");
                     item.className = "item";
                     item.innerHTML = `
-                    <span>${formattedDate} - ${log.description}</span>
-                `;
+                <span>${formattedDate} - ${log.description}</span>
+            `;
                     container.appendChild(item);
                 });
             }
@@ -337,6 +359,16 @@
         }
     }
 
+    function applyDateFilter() {
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
+
+        if (startDate && endDate) {
+            loadLogs(startDate, endDate);
+        } else {
+            loadLogs();
+        }
+    }
 
     function viewProject(projectId, projectName) {
         window.location.href = `projectDetails.html?projectId=${projectId}&id=${urlParams.get("id")}&email=${urlParams.get("email")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&targetProjectName=${projectName}&projectName=${urlParams.get("projectName")}&adminProjectId=${urlParams.get("adminProjectId")}`;

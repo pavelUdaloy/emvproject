@@ -35,4 +35,9 @@ public class LogService {
     public List<Log> findAll() {
         return logRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public List<Log> findAll(LocalDateTime startDate, LocalDateTime endDate) {
+        return logRepository.findAllBetween(startDate, endDate);
+    }
 }
