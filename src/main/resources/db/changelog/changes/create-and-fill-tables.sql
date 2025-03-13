@@ -43,10 +43,13 @@ CREATE TABLE users
 INSERT INTO users (email, password, first_name, last_name, role_id, project_id)
 VALUES ('dzianis.zakharych@viden.com', '1234', N'Денис', N'Захарич',
         (SELECT id FROM roles WHERE name = 'VIDEN_ADMIN'), (SELECT id FROM projects WHERE name = 'VIDEN')),
+
        ('elizaveta.tsypenkova@viden.com', '1234', N'Елизавета', N'Цыпенкова',
         (SELECT id FROM roles WHERE name = 'VIDEN_ANALYST'), (SELECT id FROM projects WHERE name = 'VIDEN')),
+
        ('pavel.pavel@viden.com', '1234', N'Павел', N'Павел',
         (SELECT id FROM roles WHERE name = 'VIDEN_ANALYST'), (SELECT id FROM projects WHERE name = 'VIDEN')),
+
        ('michael.jackson@google.com', '1234', N'Майкл', N'Джексон',
         (SELECT id FROM roles WHERE name = 'CLIENT'), (SELECT id FROM projects WHERE name = 'GOOGLE'));
 
