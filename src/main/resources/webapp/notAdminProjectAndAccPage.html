@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANALYST</title>
+    <title>CLIENT</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -224,6 +224,8 @@
         </table>
         <p id="noCriteriesMessage" style="display: none;">Критериев нет</p>
     </div>
+
+    <button class="button" id="exportCSVButton">Выгрузить в CSV</button>
 </div>
 
 <div class="logout-section">
@@ -405,6 +407,47 @@
             alert("Произошла ошибка при обновлении статуса.");
         }
     }
+
+    // Функция для выгрузки в CSV
+    function exportToCSV() {
+        const table = document.getElementById('criteriesTable');
+        const rows = table.rows;
+
+        let csvContent = 'Название,Описание,Статус,Срок,Ответственный аналитик\n'; // Заголовки
+
+        // Проходим по строкам таблицы и собираем данные
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].cells;
+
+            const deadline = cells[4].innerText;
+            const formattedDeadline = `"${deadline.replace(/,/g, '\,')}"`;
+
+            const rowData = [
+                cells[1].innerText,  // Название
+                cells[2].innerText,  // Описание
+                cells[3].innerText,  // Статус
+                formattedDeadline,  // Срок
+                cells[5].innerText   // Ответственный аналитик
+            ].join(',');
+
+            csvContent += rowData + '\n';
+        }
+
+        // Создаем ссылку для скачивания CSV
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        if (link.download !== undefined) {  // Совместимость с браузерами
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'criteries.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+
+    // Добавляем обработчик на кнопку выгрузки
+    document.getElementById("exportCSVButton").addEventListener("click", exportToCSV);
 
     document.getElementById("logoutButton").addEventListener("click", function () {
         window.location.href = "start.html";
