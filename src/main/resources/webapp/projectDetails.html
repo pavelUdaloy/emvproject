@@ -374,6 +374,20 @@
     }
 
     document.getElementById("submitCriteria").addEventListener("click", async function () {
+        const deadlineInput = document.getElementById("deadline").value;
+        const selectedDate = new Date(deadlineInput);
+        const now = new Date();
+
+        if (!deadlineInput) {
+            alert("Пожалуйста, укажите срок выполнения.");
+            return;
+        }
+
+        if (selectedDate < now) {
+            alert("Срок выполнения не может быть в прошлом.");
+            return;
+        }
+
         const criteriaId = document.getElementById("criteriaId").value;
         const userId = document.getElementById("userId").value;
         const status = document.getElementById("status").value;
