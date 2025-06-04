@@ -29,6 +29,7 @@ dependencies {
 	implementation 'com.microsoft.sqlserver:mssql-jdbc:11.2.1.jre17'
 	implementation 'org.liquibase:liquibase-core'
 	implementation "org.apache.commons:commons-lang3"
+	implementation 'net.bytebuddy:byte-buddy:1.14.10' // todo
 
 	compileOnly "org.projectlombok:lombok"
 	annotationProcessor "org.projectlombok:lombok"
