@@ -161,6 +161,21 @@
             color: #002b80;
         }
 
+        #criteriesContainer {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .comments-container {
+            max-height: 150px; /* можно подкорректировать высоту */
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 5px;
+            background-color: #fafafa;
+            border-radius: 4px;
+        }
+
         .form-container input {
             display: block;
             width: calc(100% - 20px);
@@ -366,7 +381,7 @@
                                 <button class="confirm-button" onclick="updateCriteriaStatus('${criteria.criteriaId}', '${criteria.projectId}')">Обновить</button>
                             </td>
                             <td>
-                                <div id="comments-${criteria.criteriaId}"></div>
+                                <div id="comments-${criteria.criteriaId}" class="comments-container"></div>
                             </td>
                         `;
                         criteriesTableBody.appendChild(row);
