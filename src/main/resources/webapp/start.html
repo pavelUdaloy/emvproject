@@ -100,7 +100,6 @@
             font-size: 14px;
         }
 
-        /* Стили для модального окна */
         .modal {
             display: none;
             position: fixed;
@@ -228,7 +227,6 @@
     });
 
     document.addEventListener("DOMContentLoaded", function () {
-        // Убеждаемся, что модальное окно скрыто при загрузке
         document.getElementById("successModal").style.display = "none";
     });
 
@@ -248,7 +246,6 @@
             });
 
             if (response.ok) {
-                // Показываем модальное окно после успешного ответа
                 document.getElementById("successModal").style.display = "flex";
             } else {
                 alert("Ошибка при подаче заявки.");

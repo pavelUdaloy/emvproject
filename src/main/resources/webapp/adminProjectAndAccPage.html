@@ -166,9 +166,9 @@
         }
 
         #logsContainer {
-            max-height: 300px; /* фиксированная высота */
-            overflow-y: auto;  /* вертикальный скролл при переполнении */
-            border: 1px solid #ccc; /* чтобы было видно границы */
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
             padding: 10px;
             background-color: #f4f6f8;
             border-radius: 5px;
@@ -320,7 +320,7 @@
             });
 
             if (response.ok) {
-                loadProjects(); // Обновляем список после удаления
+                loadProjects();
             } else {
                 alert("Ошибка при удалении проекта.");
             }
@@ -333,7 +333,6 @@
         try {
             let headers = new Headers();
 
-            // Если фильтры активны, добавляем их в заголовки
             if (startDate && endDate) {
                 headers.append("startDate", startDate);
                 headers.append("endDate", endDate);

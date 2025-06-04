@@ -390,7 +390,7 @@
             userId: parseInt(userId),
             status: status,
             description: description,
-            deadline: deadline + ":00" // ISO формат требует секунд
+            deadline: deadline + ":00"
         };
 
         try {
@@ -422,7 +422,7 @@
                 const usersData = await usersResponse.json();
                 const usersTableBody = document.getElementById("usersTable");
 
-                usersTableBody.innerHTML = ""; // Очищаем таблицу перед загрузкой новых данных
+                usersTableBody.innerHTML = "";
                 if (usersData.length === 0) {
                     document.getElementById("noUsersMessage").style.display = "block";
                 } else {
@@ -456,7 +456,7 @@
                 const criteriesData = await criteriesResponse.json();
                 const criteriesTableBody = document.getElementById("criteriesTable");
 
-                criteriesTableBody.innerHTML = ""; // Очищаем таблицу перед загрузкой новых данных
+                criteriesTableBody.innerHTML = "";
 
                 if (criteriesData.length === 0) {
                     document.getElementById("noCriteriesMessage").style.display = "block";

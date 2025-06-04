@@ -408,14 +408,12 @@
         }
     }
 
-    // Функция для выгрузки в CSV
     function exportToCSV() {
         const table = document.getElementById('criteriesTable');
         const rows = table.rows;
 
         let csvContent = 'Название,Описание,Статус,Срок,Ответственный аналитик\n'; // Заголовки
 
-        // Проходим по строкам таблицы и собираем данные
         for (let i = 0; i < rows.length; i++) {
             const cells = rows[i].cells;
 
@@ -423,20 +421,19 @@
             const formattedDeadline = `"${deadline.replace(/,/g, '\,')}"`;
 
             const rowData = [
-                cells[1].innerText,  // Название
-                cells[2].innerText,  // Описание
-                cells[3].innerText,  // Статус
-                formattedDeadline,  // Срок
-                cells[5].innerText   // Ответственный аналитик
+                cells[1].innerText,
+                cells[2].innerText,
+                cells[3].innerText,
+                formattedDeadline,
+                cells[5].innerText
             ].join(',');
 
             csvContent += rowData + '\n';
         }
 
-        // Создаем ссылку для скачивания CSV
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
-        if (link.download !== undefined) {  // Совместимость с браузерами
+        if (link.download !== undefined) {
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
             link.setAttribute('download', 'criteries.csv');
@@ -446,7 +443,6 @@
         }
     }
 
-    // Добавляем обработчик на кнопку выгрузки
     document.getElementById("exportCSVButton").addEventListener("click", exportToCSV);
 
     document.getElementById("logoutButton").addEventListener("click", function () {
