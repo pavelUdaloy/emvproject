@@ -164,6 +164,15 @@
             color: black;
             margin-left: 10px;
         }
+
+        #logsContainer {
+            max-height: 300px; /* фиксированная высота */
+            overflow-y: auto;  /* вертикальный скролл при переполнении */
+            border: 1px solid #ccc; /* чтобы было видно границы */
+            padding: 10px;
+            background-color: #f4f6f8;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
