@@ -83,6 +83,22 @@
             transition: background-color 0.3s;
         }
 
+        #criteriesContainer {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .comments-container {
+            max-height: 150px; /* можно подкорректировать высоту */
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 5px;
+            background-color: #fafafa;
+            border-radius: 4px;
+        }
+
+
         .button {
             padding: 8px 15px;
             border: none;
@@ -338,7 +354,7 @@
                             <td>${criteria.deadline ? new Date(criteria.deadline).toLocaleString() : 'Нет срока'}</td>
                             <td>${criteria.userEmail}</td>
                             <td>
-                                <div id="comments-${criteria.criteriaId}"></div>
+                                <div id="comments-${criteria.criteriaId}" class="comments-container"></div>
                             </td>
                         `;
                         criteriesTableBody.appendChild(row);
