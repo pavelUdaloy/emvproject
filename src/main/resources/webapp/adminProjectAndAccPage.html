@@ -200,6 +200,10 @@
 
     <div class="section">
         <h3>Список аналитиков</h3>
+        <div style="margin-bottom: 10px;">
+            <button class="button" onclick="sortAnalysts('asc')">Сортировать A → Я</button>
+            <button class="button" onclick="sortAnalysts('desc')">Сортировать Я → A</button>
+        </div>
         <div id="analystsContainer" class="list"></div>
 
         <button class="button add-button" onclick="toggleAnalystForm()">Добавить аналитика</button>
@@ -299,24 +303,40 @@
         }
     }
 
+    let analystsList = [];
+
     async function loadAnalysts() {
         try {
             const response = await fetch("http://localhost:8090/users/analysts");
             if (response.ok) {
-                const analysts = await response.json();
-                const container = document.getElementById("analystsContainer");
-                container.innerHTML = "";
-
-                analysts.forEach(analyst => {
-                    const item = document.createElement("div");
-                    item.className = "item";
-                    item.innerHTML = `<span>${analyst.firstName} ${analyst.lastName} (${analyst.email})</span>`;
-                    container.appendChild(item);
-                });
+                analystsList = await response.json();
+                renderAnalysts(analystsList);
             }
         } catch (error) {
             console.error("Ошибка при загрузке аналитиков:", error);
         }
+    }
+
+    function renderAnalysts(list) {
+        const container = document.getElementById("analystsContainer");
+        container.innerHTML = "";
+
+        list.forEach(analyst => {
+            const item = document.createElement("div");
+            item.className = "item";
+            item.innerHTML = `<span>${analyst.firstName} ${analyst.lastName} (${analyst.email})</span>`;
+            container.appendChild(item);
+        });
+    }
+
+    function sortAnalysts(order) {
+        const sorted = [...analystsList].sort((a, b) => {
+            const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
+            const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
+            return order === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+        });
+
+        renderAnalysts(sorted);
     }
 
     async function deleteProject(projectId) {
