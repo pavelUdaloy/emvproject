@@ -203,7 +203,6 @@
 <div class="main-container">
     <div class="section">
         <h3>Информация о пользователе</h3>
-        <p><strong>ID:</strong> <span id="id"></span></p>
         <p><strong>Электронная почта:</strong> <span id="email"></span></p>
         <p><strong>Имя:</strong> <span id="firstName"></span></p>
         <p><strong>Фамилия:</strong> <span id="lastName"></span></p>
@@ -303,10 +302,42 @@
                 orders.forEach(order => {
                     const item = document.createElement("div");
                     item.className = "item";
-                    item.innerHTML = `
-                        <span>${order.name}</span>
-                        <button class="confirm-button" onclick="confirmOrder(${order.id})">Подтвердить</button>
-                    `;
+                    item.style.flexDirection = "column";
+                    item.style.alignItems = "flex-start";
+
+                    const topLine = document.createElement("div");
+                    topLine.style.width = "100%";
+                    topLine.style.display = "flex";
+                    topLine.style.justifyContent = "space-between";
+                    topLine.style.cursor = "pointer";
+
+                    const nameSpan = document.createElement("span");
+                    nameSpan.textContent = order.name;
+                    nameSpan.style.fontWeight = "bold";
+
+                    const confirmBtn = document.createElement("button");
+                    confirmBtn.className = "confirm-button";
+                    confirmBtn.textContent = "Подтвердить";
+                    confirmBtn.onclick = () => confirmOrder(order.id);
+
+                    topLine.appendChild(nameSpan);
+                    topLine.appendChild(confirmBtn);
+
+                    const detailsDiv = document.createElement("div");
+                    detailsDiv.style.display = "none";
+                    detailsDiv.style.marginTop = "10px";
+                    detailsDiv.innerHTML = `
+                    <div><strong>Email владельца:</strong> ${order.ownerEmail}</div>
+                    <div><strong>Имя владельца:</strong> ${order.ownerFirstName}</div>
+                    <div><strong>Фамилия владельца:</strong> ${order.ownerLastName}</div>
+                `;
+
+                    topLine.addEventListener("click", () => {
+                        detailsDiv.style.display = detailsDiv.style.display === "none" ? "block" : "none";
+                    });
+
+                    item.appendChild(topLine);
+                    item.appendChild(detailsDiv);
                     container.appendChild(item);
                 });
             }
@@ -336,15 +367,33 @@
         list.forEach(analyst => {
             const item = document.createElement("div");
             item.className = "item";
-            item.innerHTML = `<span>${analyst.firstName} ${analyst.lastName} (${analyst.email})</span>`;
+            item.style.flexDirection = "column";
+            item.style.alignItems = "flex-start";
+
+            const nameLine = document.createElement("span");
+            nameLine.textContent = `${analyst.lastName} ${analyst.firstName}`;
+            nameLine.style.cursor = "pointer";
+            nameLine.style.fontWeight = "bold";
+
+            const emailLine = document.createElement("div");
+            emailLine.textContent = `Email: ${analyst.email}`;
+            emailLine.style.display = "none";
+            emailLine.style.marginTop = "5px";
+
+            nameLine.addEventListener("click", () => {
+                emailLine.style.display = emailLine.style.display === "none" ? "block" : "none";
+            });
+
+            item.appendChild(nameLine);
+            item.appendChild(emailLine);
             container.appendChild(item);
         });
     }
 
     function sortAnalysts(order) {
         const sorted = [...analystsList].sort((a, b) => {
-            const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
-            const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
+            const nameA = `${a.lastName} ${a.firstName}`.toLowerCase();
+            const nameB = `${b.lastName} ${b.firstName}`.toLowerCase();
             return order === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
         });
 
@@ -471,7 +520,6 @@
     });
 
     window.addEventListener("load", function () {
-        document.getElementById("id").innerText = urlParams.get("id");
         document.getElementById("email").innerText = urlParams.get("email");
         document.getElementById("firstName").innerText = urlParams.get("firstName");
         document.getElementById("lastName").innerText = urlParams.get("lastName");

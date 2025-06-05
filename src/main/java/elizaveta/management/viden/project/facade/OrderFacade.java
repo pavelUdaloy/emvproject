@@ -37,6 +37,9 @@ public class OrderFacade {
                 .map(project -> GetOrderResponse.builder()
                         .id(project.getId())
                         .name(project.getName())
+                        .ownerEmail(project.getUsers().get(0).getEmail())
+                        .ownerFirstName(project.getUsers().get(0).getFirstName())
+                        .ownerLastName(project.getUsers().get(0).getLastName())
                         .build())
                 .collect(Collectors.toList());
     }

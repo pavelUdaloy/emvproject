@@ -15,4 +15,7 @@ public class GetOrderResponse {
 
     private Integer id;
     private String name;
+    private String ownerEmail;
+    private String ownerFirstName;
+    private String ownerLastName;
 }
