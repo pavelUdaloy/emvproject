@@ -236,9 +236,7 @@
     <h1>Панель управления проектами</h1>
     <p>Здесь вы можете управлять проектами и пользователями</p>
 </header>
-<h2>Детали проекта</h2>
-<p>Идентификатор проекта: <span id="projectId"></span></p>
-<p>Название проекта: <span id="targetProjectName"></span></p>
+<h2><p>Название проекта: <span id="targetProjectName"></span></p></h2>
 
 <p class="center-text">
     <button id="backButton">Вернуться к странице админа</button>
@@ -249,7 +247,6 @@
     <table>
         <thead>
         <tr>
-            <th>ID</th>
             <th>Email</th>
             <th>Должность</th>
             <th>Имя</th>
@@ -268,7 +265,7 @@
     <table>
         <thead>
         <tr>
-            <th>ID</th>
+            <th>Номер</th>
             <th>Название</th>
             <th>Описание</th>
             <th>Статус</th>
@@ -384,7 +381,7 @@
         }
 
         if (selectedDate < now) {
-            alert("Срок выполнения не может быть в прошлом.");
+            alert("Введите корректную дату.");
             return;
         }
 
@@ -443,7 +440,6 @@
                     usersData.forEach(user => {
                         const row = document.createElement("tr");
                         row.innerHTML = `
-                                <td>${user.id}</td>
                                 <td>${user.email}</td>
                                 <td>${user.title}</td>
                                 <td>${user.firstName}</td>
@@ -499,7 +495,6 @@
     }
 
     window.addEventListener("load", async function () {
-        document.getElementById("projectId").innerText = projectId;
         document.getElementById("targetProjectName").innerText = urlParams.get("targetProjectName");
 
         loadUsers();

@@ -45,6 +45,7 @@ public class UserFacade {
                         .lastName(u.getLastName())
                         .projectName(u.getProject().getName())
                         .roleName(u.getRole().getName())
+                        .title(u.getRole().getName())
                         .build())
                 .collect(Collectors.toList());
     }
