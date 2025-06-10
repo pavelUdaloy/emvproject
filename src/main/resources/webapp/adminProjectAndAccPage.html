@@ -232,6 +232,9 @@
 
     <div class="section">
         <h3>Список проектов</h3>
+
+        <input type="text" id="projectSearchInput" placeholder="Поиск по названию проекта..." style="width: 95%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc;">
+
         <div id="projectsContainer" class="list"></div>
     </div>
 
@@ -270,25 +273,28 @@
             const response = await fetch("http://localhost:8090/projects");
             if (response.ok) {
                 const projects = await response.json();
-                const container = document.getElementById("projectsContainer");
-                container.innerHTML = "";
-
-                projects
-                    .filter(project => project.name !== "VIDEN")
-                    .forEach(project => {
-                        const item = document.createElement("div");
-                        item.className = "item";
-                        item.innerHTML = `
-                        <span>${project.name}</span>
-                        <button class="project-button" onclick="viewProject(${project.id}, '${project.name}')">Просмотреть</button>
-                        <button class="cancel-button" onclick="deleteProject(${project.id})">Удалить</button>
-                    `;
-                        container.appendChild(item);
-                    });
+                allProjects = projects.filter(project => project.name !== "VIDEN");
+                renderProjects(allProjects);
             }
         } catch (error) {
             console.error("Ошибка при загрузке проектов:", error);
         }
+    }
+
+    function renderProjects(projects) {
+        const container = document.getElementById("projectsContainer");
+        container.innerHTML = "";
+
+        projects.forEach(project => {
+            const item = document.createElement("div");
+            item.className = "item";
+            item.innerHTML = `
+            <span>${project.name}</span>
+            <button class="project-button" onclick="viewProject(${project.id}, '${project.name}')">Просмотреть</button>
+            <button class="cancel-button" onclick="deleteProject(${project.id})">Удалить</button>
+        `;
+            container.appendChild(item);
+        });
     }
 
     async function loadOrders() {
@@ -347,6 +353,7 @@
     }
 
     let analystsList = [];
+    let allProjects = [];
 
     async function loadAnalysts() {
         try {
@@ -517,6 +524,14 @@
 
     document.getElementById("logoutButton").addEventListener("click", function () {
         window.location.href = "start.html";
+    });
+
+    document.getElementById("projectSearchInput").addEventListener("input", function () {
+        const query = this.value.toLowerCase();
+        const filtered = allProjects.filter(project =>
+            project.name.toLowerCase().includes(query)
+        );
+        renderProjects(filtered);
     });
 
     window.addEventListener("load", function () {
