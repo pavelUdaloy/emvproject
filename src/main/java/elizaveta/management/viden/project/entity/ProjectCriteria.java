@@ -33,6 +33,9 @@ public class ProjectCriteria {
     @Column
     private String status;
 
+    @Column(name = "finished_at")
+    private LocalDateTime finishedAt;
+
     @Column
     private String offer;
 

@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: you
+      changes:
+        - addColumn:
+            tableName: projects
+            columns:
+              - column:
+                  name: created_at
+                  type: DATETIME2
+        - addColumn:
+            tableName: projects
+            columns:
+              - column:
+                  name: approved_at
+                  type: DATETIME2
+        - addColumn:
+            tableName: projects
+            columns:
+              - column:
+                  name: finished_at
+                  type: DATETIME2
+        - addColumn:
+            tableName: project_criteries
+            columns:
+              - column:
+                  name: finished_at
+                  type: DATETIME2
+
+  - changeSet:
+      id: 2
+      author: you
+      changes:
+        - sql:
+            sql: |
+              UPDATE projects
+              SET
+                  created_at = GETDATE(),
+                  approved_at = DATEADD(HOUR, 1, GETDATE())

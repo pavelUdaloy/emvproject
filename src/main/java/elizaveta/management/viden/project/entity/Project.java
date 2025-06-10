@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -31,6 +32,15 @@ public class Project {
 
     @Column(nullable = false)
     private boolean approved;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "approved_at")
+    private LocalDateTime approvedAt;
+
+    @Column(name = "finished_at")
+    private LocalDateTime finishedAt;
 
     @OneToMany(mappedBy = "project")
     private List<User> users;

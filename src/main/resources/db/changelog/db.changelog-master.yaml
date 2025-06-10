@@ -7,3 +7,5 @@ databaseChangeLog:
       file: classpath:/db/changelog/changes/create-delete-trigger-for-users.sql
   - include:
       file: classpath:/db/changelog/changes/add-column-offer-to-criteria.sql
+  - include:
+      file: classpath:/db/changelog/changes/add-data-column-to-projects.yaml
