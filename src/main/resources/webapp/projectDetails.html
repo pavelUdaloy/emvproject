@@ -305,6 +305,10 @@
     </div>
 </div>
 
+<p class="center-text">
+    <button id="finishProjectButton">Завершить проект</button>
+</p>
+
 </body>
 </html>
 
@@ -498,5 +502,26 @@
 
     document.getElementById("backButton").addEventListener("click", function () {
         window.location.href = `adminProjectAndAccPage.html?id=${urlParams.get("id")}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${adminProjectId}`;
+    });
+
+    document.getElementById("finishProjectButton").addEventListener("click", async function () {
+        if (!confirm("Вы уверены, что хотите завершить проект? Это действие нельзя отменить.")) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8090/projects/${projectId}`, {
+                method: "PATCH"
+            });
+
+            if (response.ok) {
+                alert("Проект успешно завершён!");
+            } else {
+                alert("Ошибка завершения проекта. Код: " + response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при завершении проекта:", error);
+            alert("Произошла ошибка при завершении проекта. Проверьте консоль.");
+        }
     });
 </script>

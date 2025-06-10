@@ -7,6 +7,7 @@ import elizaveta.management.viden.project.http.dto.GetProjectResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +24,8 @@ public class ProjectController {
     private final ProjectFacade projectFacade;
 
     @GetMapping
-    public List<GetProjectResponse> findAllApproved() {
-        return projectFacade.findAllApproved();
+    public List<GetProjectResponse> findAllApprovedNotFinished() {
+        return projectFacade.findAllApprovedNotFinished();
     }
 
     @GetMapping("/all/all")
@@ -40,6 +41,11 @@ public class ProjectController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") int id) {
         projectFacade.delete(id);
+    }
+
+    @PatchMapping("/{id}")
+    public void finish(@PathVariable("id") int id) {
+        projectFacade.finish(id);
     }
 
     @PutMapping("/{id}")

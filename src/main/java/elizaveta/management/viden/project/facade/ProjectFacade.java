@@ -19,8 +19,8 @@ public class ProjectFacade {
 
     private final ProjectService projectService;
 
-    public List<GetProjectResponse> findAllApproved() {
-        return projectService.findAllApproved().stream()
+    public List<GetProjectResponse> findAllApprovedNotFinished() {
+        return projectService.findAllApprovedNotFinished().stream()
                 .map(project -> GetProjectResponse.builder()
                         .id(project.getId())
                         .name(project.getName())
@@ -62,5 +62,9 @@ public class ProjectFacade {
                         .usersCount(project.getUsers().size())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public void finish(int id) {
+        projectService.finish(id);
     }
 }

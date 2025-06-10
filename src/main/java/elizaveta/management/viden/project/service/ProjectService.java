@@ -43,8 +43,8 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public List<Project> findAllApproved() {
-        return projectRepository.findAllApproved();
+    public List<Project> findAllApprovedNotFinished() {
+        return projectRepository.findAllApprovedNotFinished();
     }
 
     @Transactional(readOnly = true)
@@ -101,5 +101,16 @@ public class ProjectService {
         projectRepository.save(project);
 
         logService.addLog("Проект " + project.getName() + " был подтвержден менеджером");
+    }
+
+    @Transactional
+    public void finish(int id) {
+        Project project = findById(id);
+
+        project.setFinishedAt(LocalDateTime.now(ZoneOffset.of("+03:00")));
+
+        projectRepository.save(project);
+
+        logService.addLog("Проект " + project.getName() + " был завершен менеджером");
     }
 }
