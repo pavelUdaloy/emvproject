@@ -19,7 +19,7 @@ public class ProjectFacade {
 
     private final ProjectService projectService;
 
-    public List<GetProjectResponse> getAll() {
+    public List<GetProjectResponse> findAllApproved() {
         return projectService.findAllApproved().stream()
                 .map(project -> GetProjectResponse.builder()
                         .id(project.getId())
@@ -49,5 +49,18 @@ public class ProjectFacade {
                 .name(project.getName())
                 .usersCount(project.getUsers().size())
                 .build();
+    }
+
+    public List<GetProjectResponse> findAll() {
+        return projectService.findAll().stream()
+                .map(project -> GetProjectResponse.builder()
+                        .id(project.getId())
+                        .name(project.getName())
+                        .createdAt(project.getCreatedAt())
+                        .approvedAt(project.getApprovedAt())
+                        .finishedAt(project.getFinishedAt())
+                        .usersCount(project.getUsers().size())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

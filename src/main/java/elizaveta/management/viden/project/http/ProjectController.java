@@ -23,8 +23,13 @@ public class ProjectController {
     private final ProjectFacade projectFacade;
 
     @GetMapping
-    public List<GetProjectResponse> getAll() {
-        return projectFacade.getAll();
+    public List<GetProjectResponse> findAllApproved() {
+        return projectFacade.findAllApproved();
+    }
+
+    @GetMapping("/all/all")
+    public List<GetProjectResponse> findAll() {
+        return projectFacade.findAll();
     }
 
     @GetMapping("/{id}")

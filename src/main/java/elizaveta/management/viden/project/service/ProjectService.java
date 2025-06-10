@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +47,11 @@ public class ProjectService {
         return projectRepository.findAllApproved();
     }
 
+    @Transactional(readOnly = true)
+    public List<Project> findAll() {
+        return projectRepository.findAll();
+    }
+
     @Transactional
     public void delete(int id) {
         Project project = findById(id);
@@ -64,6 +71,7 @@ public class ProjectService {
         Project project = new Project();
         project.setName(name);
         project.setApproved(false);
+        project.setCreatedAt(LocalDateTime.now(ZoneOffset.of("+03:00")));
 
         return projectRepository.save(project);
     }
@@ -88,6 +96,7 @@ public class ProjectService {
     public void approve(int projectId) {
         Project project = findById(projectId);
         project.setApproved(true);
+        project.setApprovedAt(LocalDateTime.now(ZoneOffset.of("+03:00")));
 
         projectRepository.save(project);
 

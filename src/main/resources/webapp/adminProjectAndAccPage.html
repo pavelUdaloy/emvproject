@@ -191,6 +191,29 @@
             overflow-y: auto;
             background-color: #f4f6f8;
         }
+
+        .export-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .export-button:hover {
+            background-color: #218838;
+        }
+
+        .order-details {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .order-item.open .order-details {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -263,6 +286,19 @@
         </div>
 
         <div id="logsContainer" class="list"></div>
+    </div>
+
+    <div class="section">
+        <h3>Выгрузка отчетов по заказам</h3>
+        <div style="margin-bottom: 15px;">
+            <label for="reportStartDate">Дата от:</label>
+            <input type="datetime-local" id="reportStartDate">
+
+            <label for="reportEndDate">Дата до:</label>
+            <input type="datetime-local" id="reportEndDate">
+
+            <button class="button confirm-button" onclick="exportToCSV()">Выгрузить в CSV</button>
+        </div>
     </div>
 </div>
 
@@ -489,6 +525,101 @@
         }
     }
 
+    let allProjectsForReport = []; // Будем хранить все проекты для отчетов
+
+    function normalizeDate(dateString) {
+        // Просто создаем Date объект из строки без дополнительных преобразований
+        return new Date(dateString);
+    }
+
+    async function exportToCSV() {
+        const startDateInput = document.getElementById('reportStartDate').value;
+        const endDateInput = document.getElementById('reportEndDate').value;
+
+        try {
+            if (allProjectsForReport.length === 0) {
+                await loadProjectsForReport();
+            }
+
+            let filteredProjects = [...allProjectsForReport];
+
+            const startDate = new Date(startDateInput);
+            const endDate = new Date(endDateInput);
+            filteredProjects = filteredProjects.filter(project => {
+                const projectDate = new Date(project.createdAt);
+                return projectDate >= startDate && projectDate <= endDate;
+            });
+
+            console.log('Filtered projects dates:',
+                filteredProjects.map(p => ({id: p.id, date: new Date(p.createdAt)})));
+            console.log('Start date:', new Date(startDateInput));
+            console.log('End date:', new Date(endDateInput));
+            console.log(filteredProjects.map(p => p.createdAt));
+
+            if (filteredProjects.length === 0) {
+                alert('Нет данных для выгрузки в выбранном диапазоне дат');
+                return;
+            }
+
+            const csvContent = convertToCSV(filteredProjects);
+            downloadCSV(csvContent, `projects_report_${new Date().toISOString().slice(0, 10)}.csv`);
+
+        } catch (error) {
+            console.error('Ошибка при выгрузке отчета:', error);
+            alert('Произошла ошибка при выгрузке отчета');
+        }
+    }
+
+    async function loadProjectsForReport() {
+        try {
+            const response = await fetch('http://localhost:8090/projects/all/all');
+            if (!response.ok) {
+                throw new Error('Ошибка при получении данных');
+            }
+            allProjectsForReport = await response.json();
+        } catch (error) {
+            console.error('Ошибка при загрузке проектов для отчета:', error);
+            throw error;
+        }
+    }
+
+    function convertToCSV(projects) {
+        const headers = ['ID', 'Название', 'Дата создания', 'Дата подтверждения', 'Дата завершения', 'Количество пользователей'];
+
+        const rows = projects.map(project => [
+            project.id,
+            `"${project.name}"`, // Оборачиваем в кавычки на случай, если название содержит запятые
+            formatDate(project.createdAt),
+            formatDate(project.approvedAt),
+            formatDate(project.finishedAt),
+            project.usersCount
+        ]);
+
+        return [headers, ...rows]
+            .map(row => row.join(','))
+            .join('\n');
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleString('ru-RU');
+    }
+
+    function downloadCSV(content, filename) {
+        const blob = new Blob(["\uFEFF" + content], {type: 'text/csv;charset=utf-8;'});
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     function toggleAnalystForm() {
         const form = document.getElementById("analystForm");
         form.style.display = form.style.display === "none" ? "block" : "none";
@@ -544,6 +675,16 @@
         loadOrders();
         loadAnalysts();
         loadLogs();
+
+        const now = new Date();
+        const monthAgo = new Date();
+        monthAgo.setMonth(now.getMonth() - 1);
+
+        document.getElementById('reportStartDate').value = monthAgo.toISOString().slice(0, 16);
+        document.getElementById('reportEndDate').value = now.toISOString().slice(0, 16);
+
+        // Предзагрузка данных для отчетов
+        loadProjectsForReport().catch(e => console.error('Не удалось загрузить данные для отчетов:', e));
     });
 </script>
 
