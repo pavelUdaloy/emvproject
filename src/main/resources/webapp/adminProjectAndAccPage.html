@@ -214,6 +214,20 @@
         .order-item.open .order-details {
             display: block;
         }
+
+        .completed-project {
+            background-color: #e8f5e9;
+        }
+
+        .completed-project:hover {
+            background-color: #c8e6c9;
+        }
+
+        #completedProjectsContainer {
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #f4f6f8;
+        }
     </style>
 </head>
 <body>
@@ -265,6 +279,11 @@
     <div class="section">
         <h3>Список заказов</h3>
         <div id="ordersContainer" class="list"></div>
+    </div>
+
+    <div class="section">
+        <h3>Список завершенных проектов</h3>
+        <div id="completedProjectsContainer" class="list"></div>
     </div>
 
     <div class="logout-section">
@@ -387,6 +406,52 @@
         } catch (error) {
             console.error("Ошибка при загрузке заказов:", error);
         }
+    }
+
+    async function loadCompletedProjects() {
+        try {
+            const response = await fetch("http://localhost:8090/projects/all/all");
+            if (response.ok) {
+                const allProjects = await response.json();
+                // Фильтруем проекты, оставляя только завершенные (finishedAt не null)
+                const completedProjects = allProjects.filter(project => project.finishedAt);
+                renderCompletedProjects(completedProjects);
+            }
+        } catch (error) {
+            console.error("Ошибка при загрузке завершенных проектов:", error);
+        }
+    }
+
+    // Функция для отображения завершенных проектов
+    function renderCompletedProjects(projects) {
+        const container = document.getElementById("completedProjectsContainer");
+        container.innerHTML = "";
+
+        if (projects.length === 0) {
+            container.innerHTML = "<p>Нет завершенных проектов</p>";
+            return;
+        }
+
+        // Сортируем проекты по дате завершения (новые сверху)
+        projects.sort((a, b) => new Date(b.finishedAt) - new Date(a.finishedAt));
+
+        projects.forEach(project => {
+            const item = document.createElement("div");
+            item.className = "item completed-project";
+
+            const formattedDate = project.finishedAt ?
+                new Date(project.finishedAt) :
+                "Не завершен";
+
+            item.innerHTML = `
+                    <div style="flex: 1;">
+                        <strong>${project.name}</strong>
+                        <div>Завершен: ${formattedDate}</div>
+                    </div>
+                    <button class="project-button" onclick="viewProject(${project.id}, '${project.name}')">Просмотреть</button>
+                `;
+            container.appendChild(item);
+        });
     }
 
     let analystsList = [];
@@ -675,6 +740,7 @@
         loadOrders();
         loadAnalysts();
         loadLogs();
+        loadCompletedProjects();
 
         const now = new Date();
         const monthAgo = new Date();
