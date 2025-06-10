@@ -68,10 +68,11 @@ public class CriteriaService {
     }
 
     @Transactional
-    public void updateCriteria(int projectId, int criteriaId, String status) {
+    public void updateCriteria(int projectId, int criteriaId, String status, String offer) {
         ProjectCriteriaId id = new ProjectCriteriaId(projectId, criteriaId);
         ProjectCriteria projectCriteria = projectCriteriaRepository.findById(id).get();
         projectCriteria.setStatus(status);
+        projectCriteria.setOffer(offer);
         projectCriteriaRepository.save(projectCriteria);
     }
 

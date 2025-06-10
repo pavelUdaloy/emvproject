@@ -34,6 +34,9 @@ public class ProjectCriteria {
     private String status;
 
     @Column
+    private String offer;
+
+    @Column
     private String description;
 
     @Column

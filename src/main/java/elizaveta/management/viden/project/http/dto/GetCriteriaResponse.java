@@ -22,5 +22,6 @@ public class GetCriteriaResponse {
     private String userEmail;
     private String description;
     private String status;
+    private String offer;
     private LocalDateTime deadline;
 }

@@ -67,6 +67,7 @@ public class CriteriaFacade {
                         .projectName(criteria.getProject().getName())
                         .criteriaId(criteria.getCriteria().getId())
                         .criteriaName(criteria.getCriteria().getName())
+                        .offer(criteria.getOffer())
                         .userEmail(criteria.getAnalyst().getEmail())
                         .description(criteria.getDescription())
                         .status(criteria.getStatus())
@@ -76,6 +77,6 @@ public class CriteriaFacade {
     }
 
     public void updateCriteria(int projectId, int criteriaId, UpdateCriteriaRequest request) {
-        criteriaService.updateCriteria(projectId, criteriaId, request.getStatus());
+        criteriaService.updateCriteria(projectId, criteriaId, request.getStatus(), request.getOffer());
     }
 }
