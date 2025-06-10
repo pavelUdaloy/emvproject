@@ -6,7 +6,6 @@ import elizaveta.management.viden.project.entity.ProjectCriteria;
 import elizaveta.management.viden.project.entity.ProjectCriteria.ProjectCriteriaId;
 import elizaveta.management.viden.project.entity.User;
 import elizaveta.management.viden.project.rep.CriteriaRepository;
-import elizaveta.management.viden.project.rep.LogRepository;
 import elizaveta.management.viden.project.rep.ProjectCriteriaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

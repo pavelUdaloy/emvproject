@@ -1,7 +1,6 @@
 package elizaveta.management.viden.project.service;
 
 import elizaveta.management.viden.project.entity.Note;
-import elizaveta.management.viden.project.entity.Project;
 import elizaveta.management.viden.project.entity.ProjectCriteria;
 import elizaveta.management.viden.project.entity.User;
 import elizaveta.management.viden.project.rep.NoteRepository;

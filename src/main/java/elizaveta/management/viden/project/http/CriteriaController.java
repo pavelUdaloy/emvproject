@@ -1,17 +1,11 @@
 package elizaveta.management.viden.project.http;
 
 import elizaveta.management.viden.project.facade.CriteriaFacade;
-import elizaveta.management.viden.project.facade.ProjectFacade;
 import elizaveta.management.viden.project.http.dto.CreateCriteriaRequest;
-import elizaveta.management.viden.project.http.dto.CreateOrderRequest;
-import elizaveta.management.viden.project.http.dto.EditProjectRequest;
-import elizaveta.management.viden.project.http.dto.EditProjectResponse;
 import elizaveta.management.viden.project.http.dto.GetCriteriaResponse;
-import elizaveta.management.viden.project.http.dto.GetProjectResponse;
 import elizaveta.management.viden.project.http.dto.GetSystemCriteriaResponse;
 import elizaveta.management.viden.project.http.dto.UpdateCriteriaRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
