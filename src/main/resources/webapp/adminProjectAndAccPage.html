@@ -715,7 +715,7 @@
     }
 
     function convertToCSV(projects) {
-        const headers = ['ID', 'Название', 'Дата создания', 'Дата подтверждения', 'Дата завершения', 'Количество пользователей'];
+        const headers = ['ID', 'Название', 'Дата создания', 'Дата подтверждения', 'Дата завершения', 'Количество пользователей', 'Почта Клиента'];
 
         const rows = projects.map(project => [
             project.id,
@@ -723,7 +723,8 @@
             formatDate(project.createdAt),
             formatDate(project.approvedAt),
             formatDate(project.finishedAt),
-            project.usersCount
+            project.usersCount,
+            project.clientEmail
         ]);
 
         return [headers, ...rows]

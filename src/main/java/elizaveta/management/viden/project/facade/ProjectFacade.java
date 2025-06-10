@@ -56,6 +56,7 @@ public class ProjectFacade {
                 .map(project -> GetProjectResponse.builder()
                         .id(project.getId())
                         .name(project.getName())
+                        .clientEmail(project.getUsers().get(0).getEmail())
                         .createdAt(project.getCreatedAt())
                         .approvedAt(project.getApprovedAt())
                         .finishedAt(project.getFinishedAt())

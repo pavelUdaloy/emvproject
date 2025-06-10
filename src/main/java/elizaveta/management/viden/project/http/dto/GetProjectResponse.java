@@ -18,6 +18,7 @@ public class GetProjectResponse {
 
     private Integer id;
     private String name;
+    private String clientEmail;
     private LocalDateTime createdAt;
     private LocalDateTime approvedAt;
     private LocalDateTime finishedAt;
