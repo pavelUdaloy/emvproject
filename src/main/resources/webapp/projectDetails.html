@@ -294,15 +294,6 @@
             <label for="userId">Ответственный аналитик:</label>
             <select id="userId"></select>
 
-            <label for="status">Статус:</label>
-            <select id="status">
-                <option value="готово к выполнению">Готово к выполнению</option>
-                <option value="в работе">В работе</option>
-                <option value="выполнен">Выполнен</option>
-                <option value="ошибка">Ошибка</option>
-                <option value="в анализе">В анализе</option>
-            </select>
-
             <label for="description">Описание:</label>
             <textarea id="description" rows="3"></textarea>
 
@@ -387,7 +378,7 @@
 
         const criteriaId = document.getElementById("criteriaId").value;
         const userId = document.getElementById("userId").value;
-        const status = document.getElementById("status").value;
+        const status = "готово к выполнению";
         const description = document.getElementById("description").value;
         const deadline = document.getElementById("deadline").value;
 
