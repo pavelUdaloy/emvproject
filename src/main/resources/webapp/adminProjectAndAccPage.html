@@ -345,6 +345,19 @@
             <button class="button confirm-button" onclick="exportAnalyticsToCSV()">Выгрузить в CSV</button>
         </div>
     </div>
+
+    <div class="section">
+        <h3>Выгрузка отчетов по клиентам</h3>
+        <div style="margin-bottom: 15px;">
+            <label for="clientsStartDate">Дата от:</label>
+            <input type="datetime-local" id="clientsStartDate">
+
+            <label for="clientsEndDate">Дата до:</label>
+            <input type="datetime-local" id="clientsEndDate">
+
+            <button class="button confirm-button" onclick="exportClientsToCSV()">Выгрузить в CSV</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -880,6 +893,53 @@
         }
     }
 
+    async function exportClientsToCSV() {
+        const startDateInput = document.getElementById('clientsStartDate').value;
+        const endDateInput = document.getElementById('clientsEndDate').value;
+
+        try {
+            if (allProjectsForReport.length === 0) {
+                await loadProjectsForReport();
+            }
+
+            let filteredProjects = [...allProjectsForReport];
+
+            const startDate = new Date(startDateInput);
+            const endDate = new Date(endDateInput);
+            filteredProjects = filteredProjects.filter(project => {
+                const projectDate = new Date(project.createdAt);
+                return projectDate >= startDate && projectDate <= endDate;
+            });
+
+            if (filteredProjects.length === 0) {
+                alert('Нет данных для выгрузки в выбранном диапазоне дат');
+                return;
+            }
+
+            const csvContent = convertClientsToCSV(filteredProjects);
+            downloadCSV(csvContent, `clients_report_${new Date().toISOString().slice(0, 10)}.csv`);
+
+        } catch (error) {
+            console.error('Ошибка при выгрузке отчета:', error);
+            alert('Произошла ошибка при выгрузке отчета');
+        }
+    }
+
+    function convertClientsToCSV(projects) {
+        const headers = ['Почта Клиента', 'Название', 'Дата создания', 'Дата завершения'];
+
+        const rows = projects.map(project => [
+            project.clientEmail || '',
+            `"${project.name}"`,
+            formatDate(project.createdAt),
+            formatDate(project.finishedAt)
+        ]);
+
+        return [headers, ...rows]
+            .map(row => row.join(','))
+            .join('\n');
+    }
+
     document.getElementById("logoutButton").addEventListener("click", function () {
         window.location.href = "start.html";
     });
@@ -913,6 +973,8 @@
         document.getElementById('completedEndDate').value = now.toISOString().slice(0, 16);
         document.getElementById('analyticsStartDate').value = monthAgo.toISOString().slice(0, 16);
         document.getElementById('analyticsEndDate').value = now.toISOString().slice(0, 16);
+        document.getElementById('clientsStartDate').value = monthAgo.toISOString().slice(0, 16);
+        document.getElementById('clientsEndDate').value = now.toISOString().slice(0, 16);
 
         // Предзагрузка данных для отчетов
         loadProjectsForReport().catch(e => console.error('Не удалось загрузить данные для отчетов:', e));
