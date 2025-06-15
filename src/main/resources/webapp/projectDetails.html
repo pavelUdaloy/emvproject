@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: #002b80;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        h2, h3 {
+            color: #002b80;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #002b80;
+            color: #fff;
+        }
+
+        button {
+            background-color: #002b80;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 10px 0;
+        }
+
+        button:hover {
+            background-color: #0044cc;
+        }
+
+        form {
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input, textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        input:focus, textarea:focus {
+            border-color: #002b80;
+            box-shadow: 0 0 5px rgba(0, 43, 128, 0.5);
+        }
+
+        .note {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 15px auto;
+            border-radius: 10px;
+            background-color: #fff;
+            width: 90%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nested-note {
+            margin-left: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .reply-form {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .reply-form textarea {
+            margin-right: 10px;
+        }
+
+        #noUsersMessage {
+            text-align: center;
+            font-size: 18px;
+            color: #888;
+        }
+
+        #notesContainer {
+            width: 90%;
+            margin: auto;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        button, textarea {
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        select, textarea, input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #002b80;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0044cc;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <h1>Панель управления проектами</h1>
+    <p>Здесь вы можете управлять проектами и пользователями</p>
+</header>
+<h2><p>Название проекта: <span id="targetProjectName"></span></p></h2>
+
+<p class="center-text">
+    <button id="backButton">Вернуться к странице админа</button>
+</p>
+
+<h3>Пользователи проекта</h3>
+<div id="usersContainer">
+    <table>
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th>Должность</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Название проекта</th>
+        </tr>
+        </thead>
+        <tbody id="usersTable">
+        </tbody>
+    </table>
+    <p id="noUsersMessage" style="display: none;">Пользователей нет</p>
+</div>
+
+<h3>Аналитические критерии</h3>
+<div id="criteriesContainer">
+    <table>
+        <thead>
+        <tr>
+            <th>Номер</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Статус</th>
+            <th>Срок</th>
+            <th>Ответственный аналитик</th>
+        </tr>
+        </thead>
+        <tbody id="criteriesTable">
+        </tbody>
+    </table>
+    <p id="noCriteriesMessage" style="display: none;">Критериев нет</p>
+</div>
+
+<p class="center-text">
+    <button id="addCriteriaButton">Добавить критерий</button>
+</p>
+
+<div id="criteriaModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Добавить новый критерий</h3>
+        <form id="criteriaForm">
+            <label for="criteriaId">Системный критерий:</label>
+            <select id="criteriaId"></select>
+
+            <label for="userId">Ответственный аналитик:</label>
+            <select id="userId"></select>
+
+            <label for="description">Описание:</label>
+            <textarea id="description" rows="3"></textarea>
+
+            <label for="deadline">Срок выполнения:</label>
+            <input type="datetime-local" id="deadline">
+
+            <button type="button" id="submitCriteria">Добавить</button>
+        </form>
+    </div>
+</div>
+
+<p class="center-text">
+    <button id="finishProjectButton">Завершить проект</button>
+</p>
+
+</body>
+</html>
+
+<script>
+    document.getElementById("addCriteriaButton").addEventListener("click", openCriteriaModal);
+
+    const modal = document.getElementById("criteriaModal");
+    const closeModal = document.querySelector(".close");
+
+    closeModal.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    async function openCriteriaModal() {
+        modal.style.display = "block";
+        await loadSystemCriteries();
+        await loadAnalysts();
+    }
+
+    async function loadSystemCriteries() {
+        const response = await fetch(`http://localhost:8090/projects/${projectId}/criteries/system`);
+        if (response.ok) {
+            const systemCriteries = await response.json();
+            const criteriaSelect = document.getElementById("criteriaId");
+            criteriaSelect.innerHTML = "";
+
+            systemCriteries.forEach(criteria => {
+                const option = document.createElement("option");
+                option.value = criteria.id;
+                option.textContent = criteria.name;
+                criteriaSelect.appendChild(option);
+            });
+        } else {
+            alert("Ошибка загрузки системных критериев");
+        }
+    }
+
+    async function loadAnalysts() {
+        const response = await fetch("http://localhost:8090/users/analysts");
+        if (response.ok) {
+            const analysts = await response.json();
+            const analystSelect = document.getElementById("userId");
+            analystSelect.innerHTML = "";
+
+            analysts.forEach(analyst => {
+                const option = document.createElement("option");
+                option.value = analyst.id;
+                option.textContent = `${analyst.firstName} ${analyst.lastName} (${analyst.email})`;
+                analystSelect.appendChild(option);
+            });
+        } else {
+            alert("Ошибка загрузки аналитиков");
+        }
+    }
+
+    document.getElementById("submitCriteria").addEventListener("click", async function () {
+        const deadlineInput = document.getElementById("deadline").value;
+        const selectedDate = new Date(deadlineInput);
+        const now = new Date();
+
+        if (!deadlineInput) {
+            alert("Пожалуйста, укажите срок выполнения.");
+            return;
+        }
+
+        if (selectedDate < now) {
+            alert("Введите корректную дату.");
+            return;
+        }
+
+        const criteriaId = document.getElementById("criteriaId").value;
+        const userId = document.getElementById("userId").value;
+        const status = "готово к выполнению";
+        const description = document.getElementById("description").value;
+        const deadline = document.getElementById("deadline").value;
+
+        if (!criteriaId || !userId || !status || !description || !deadline) {
+            alert("Пожалуйста, заполните все поля");
+            return;
+        }
+
+        const requestBody = {
+            criteriaId: parseInt(criteriaId),
+            userId: parseInt(userId),
+            status: status,
+            description: description,
+            deadline: deadline + ":00"
+        };
+
+        try {
+            const response = await fetch(`http://localhost:8090/projects/${projectId}/criteries`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(requestBody)
+            });
+
+            if (response.ok) {
+                modal.style.display = "none";
+                loadCriteries();
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка. Проверьте консоль для подробностей.");
+        }
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let adminProjectId = urlParams.get("adminProjectId");
+    let projectId = urlParams.get("projectId");
+    let adminUserId = urlParams.get("adminId");
+
+    async function loadUsers() {
+        try {
+            const usersResponse = await fetch(`http://localhost:8090/users/${projectId}`);
+            if (usersResponse.ok) {
+                const usersData = await usersResponse.json();
+                const usersTableBody = document.getElementById("usersTable");
+
+                usersTableBody.innerHTML = "";
+                if (usersData.length === 0) {
+                    document.getElementById("noUsersMessage").style.display = "block";
+                } else {
+                    usersData.forEach(user => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                                <td>${user.email}</td>
+                                <td>${user.title}</td>
+                                <td>${user.firstName}</td>
+                                <td>${user.lastName}</td>
+                                <td>${user.projectName}</td>
+                            `;
+                        usersTableBody.appendChild(row);
+                    });
+                    document.getElementById("noUsersMessage").style.display = "none";
+                }
+            } else {
+                alert("Ошибка получения списка пользователей: " + usersResponse.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+        }
+    }
+
+    async function loadCriteries() {
+        try {
+            const criteriesResponse = await fetch(`http://localhost:8090/projects/${projectId}/criteries`);
+            if (criteriesResponse.ok) {
+                const criteriesData = await criteriesResponse.json();
+                const criteriesTableBody = document.getElementById("criteriesTable");
+
+                criteriesTableBody.innerHTML = "";
+
+                if (criteriesData.length === 0) {
+                    document.getElementById("noCriteriesMessage").style.display = "block";
+                } else {
+                    criteriesData.forEach(criteria => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                        <td>${criteria.criteriaId}</td>
+                        <td>${criteria.criteriaName}</td>
+                        <td>${criteria.description || 'Нет описания'}</td>
+                        <td>${criteria.status}</td>
+                        <td>${criteria.deadline ? new Date(criteria.deadline).toLocaleString() : 'Нет срока'}</td>
+                        <td>${criteria.userEmail}</td>
+                    `;
+                        criteriesTableBody.appendChild(row);
+                    });
+                    document.getElementById("noCriteriesMessage").style.display = "none";
+                }
+            } else {
+                alert("Ошибка получения аналитических критериев: " + criteriesResponse.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Произошла ошибка при выполнении запроса. Проверьте консоль для подробностей.");
+        }
+    }
+
+    window.addEventListener("load", async function () {
+        document.getElementById("targetProjectName").innerText = urlParams.get("targetProjectName");
+
+        loadUsers();
+        loadCriteries();
+    });
+
+    document.getElementById("backButton").addEventListener("click", function () {
+        window.location.href = `adminProjectAndAccPage.html?id=${urlParams.get("id")}&email=${urlParams.get("email")}&title=${urlParams.get("title")}&firstName=${urlParams.get("firstName")}&lastName=${urlParams.get("lastName")}&projectName=${urlParams.get("projectName")}&adminProjectId=${adminProjectId}`;
+    });
+
+    document.getElementById("finishProjectButton").addEventListener("click", async function () {
+        if (!confirm("Вы уверены, что хотите завершить проект? Это действие нельзя отменить.")) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8090/projects/${projectId}`, {
+                method: "PATCH"
+            });
+
+            if (response.ok) {
+                alert("Проект успешно завершён!");
+            } else {
+                alert("Ошибка завершения проекта. Код: " + response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при завершении проекта:", error);
+            alert("Произошла ошибка при завершении проекта. Проверьте консоль.");
+        }
+    });
+</script>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+            position: relative;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-container:hover {
+            border-color: #002b80;
+            box-shadow: 0 6px 15px rgba(0, 43, 128, 0.3);
+        }
+
+        h2 {
+            color: #002b80;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #002b80;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #002b80;
+            box-shadow: 0 0 5px rgba(0, 43, 128, 0.5);
+        }
+
+        button {
+            width: 100%;
+            background-color: #002b80;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        button:hover {
+            background-color: #0044cc;
+        }
+
+        .apply-button {
+            background-color: #f5a623;
+        }
+
+        .apply-button:hover {
+            background-color: #e6951d;
+        }
+
+        .or-text {
+            color: #888;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .close-button {
+            margin-top: 10px;
+            background-color: #002b80;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .close-button:hover {
+            background-color: #0044cc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Вход</h2>
+    <form id="loginForm">
+        <label for="email">Электронная почта:</label>
+        <input type="email" id="email" name="email" placeholder="Введите вашу почту" required>
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" placeholder="Введите ваш пароль" required>
+
+        <button type="submit">Войти</button>
+        <div class="error-message" id="errorMessage" style="display: none;">Неверные учетные данные. Пожалуйста,
+            попробуйте еще раз.
+        </div>
+    </form>
+
+    <div class="or-text">или</div>
+
+    <h2>Подать заявку</h2>
+    <form id="orderForm">
+        <label for="orderEmail">Электронная почта:</label>
+        <input type="email" id="orderEmail" name="email" placeholder="Введите вашу почту" required>
+
+        <label for="orderPassword">Пароль:</label>
+        <input type="password" id="orderPassword" name="password" placeholder="Введите ваш пароль" required>
+
+        <label for="firstName">Имя:</label>
+        <input type="text" id="firstName" name="firstName" placeholder="Введите ваше имя" required>
+
+        <label for="lastName">Фамилия:</label>
+        <input type="text" id="lastName" name="lastName" placeholder="Введите вашу фамилию" required>
+
+        <label for="projectName">Название проекта:</label>
+        <input type="text" id="projectName" name="projectName" placeholder="Введите название проекта" required>
+
+        <button type="submit" class="apply-button">Подать заявку</button>
+    </form>
+</div>
+
+<!-- Модальное окно -->
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <p>Ваша заявка в обработке. После принятия заявки менеджером ваш аккаунт и проект будет создан.</p>
+        <button class="close-button" onclick="closeModal()">Закрыть</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const errorMessage = document.getElementById("errorMessage");
+
+        try {
+            const response = await fetch("http://localhost:8090/auth/login", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({email, password})
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+
+                if (!result.projectApproved) {
+                    errorMessage.textContent = "Ваш запрос еще не рассмотрел менеджер. Попробуйте позже.";
+                    errorMessage.style.display = "block";
+                    return;
+                }
+
+                if (result.roleName === 'VIDEN_ADMIN') {
+                    window.location.href = `adminProjectAndAccPage.html?id=${result.id}&email=${result.email}&firstName=${result.firstName}&lastName=${result.lastName}&projectName=${result.projectName}&adminProjectId=${result.projectId}`;
+                } else if (result.roleName === 'VIDEN_ANALYST') {
+                    window.location.href = `adminAnalystProjectAndAccPage.html?id=${result.id}&email=${result.email}&firstName=${result.firstName}&lastName=${result.lastName}&projectName=${result.projectName}&adminProjectId=${result.projectId}`;
+                } else {
+                    window.location.href = `notAdminProjectAndAccPage.html?id=${result.id}&email=${result.email}&firstName=${result.firstName}&lastName=${result.lastName}&projectName=${result.projectName}&adminProjectId=${result.projectId}`;
+                }
+            } else {
+                errorMessage.textContent = "Неверные учетные данные. Пожалуйста, попробуйте еще раз.";
+                errorMessage.style.display = "block";
+            }
+        } catch (error) {
+            console.error("Ошибка запроса:", error);
+            alert("Произошла ошибка. Попробуйте позже.");
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("successModal").style.display = "none";
+    });
+
+    document.getElementById("orderForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const email = document.getElementById("orderEmail").value;
+        const password = document.getElementById("orderPassword").value;
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const projectName = document.getElementById("projectName").value;
+
+        try {
+            const response = await fetch("http://localhost:8090/orders", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({email, password, firstName, lastName, projectName})
+            });
+
+            if (response.ok) {
+                document.getElementById("successModal").style.display = "flex";
+            } else {
+                alert("Ошибка при подаче заявки.");
+            }
+        } catch (error) {
+            console.error("Ошибка:", error);
+        }
+    });
+
+    function closeModal() {
+        document.getElementById("successModal").style.display = "none";
+    }
+</script>
+
+</body>
+</html>

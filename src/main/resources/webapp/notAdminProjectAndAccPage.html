@@ -1,1 +1,478 @@
-\
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIENT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #002b80;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        .section h3 {
+            color: #002b80;
+            margin-bottom: 15px;
+        }
+
+        .list {
+            margin-top: 15px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: transform 0.2s;
+        }
+
+        .item:hover {
+            transform: translateY(-5px);
+            background-color: #dfe6e9;
+        }
+
+        .item button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #criteriesContainer {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .comments-container {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 5px;
+            background-color: #fafafa;
+            border-radius: 4px;
+        }
+
+
+        .button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .project-button {
+            background-color: #002b80;
+            color: white;
+        }
+
+        .project-button:hover {
+            background-color: #0044cc;
+        }
+
+        .confirm-button {
+            background-color: #008000;
+            color: white;
+        }
+
+        .confirm-button:hover {
+            background-color: #006400;
+        }
+
+        .logout-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .add-button {
+            background-color: #ff8c00;
+            color: white;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logout-button {
+            background-color: #002b80;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: #0044cc;
+        }
+
+        .form-container {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+        }
+
+        .form-container h4 {
+            margin: 0 0 10px;
+            color: #002b80;
+        }
+
+        .form-container input {
+            display: block;
+            width: calc(100% - 20px);
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .cancel-button {
+            background-color: #ccc;
+            color: black;
+            margin-left: 10px;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #002b80;
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Панель Пользователя</h1>
+    <p>Управление аналитикой критериев</p>
+</header>
+
+<div class="main-container">
+    <div class="section">
+        <h3>Информация о пользователе</h3>
+        <p><strong>Электронная почта:</strong> <span id="email"></span></p>
+        <p><strong>Имя:</strong> <span id="firstName"></span></p>
+        <p><strong>Фамилия:</strong> <span id="lastName"></span></p>
+        <p><strong>Название проекта:</strong> <span id="projectName"></span></p>
+    </div>
+
+    <h3>Аналитические критерии</h3>
+    <div id="criteriesContainer">
+        <table>
+            <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Статус</th>
+                <th>Срок</th>
+                <th>Ответственный аналитик</th>
+                <th>Комментарии</th>
+            </tr>
+            </thead>
+            <tbody id="criteriesTable"></tbody>
+        </table>
+        <p id="noCriteriesMessage" style="display: none;">Критериев нет</p>
+    </div>
+
+    <button class="button" id="exportCSVButton">Выгрузить в CSV</button>
+</div>
+
+<div class="logout-section">
+    <button class="logout-button" id="logoutButton">Выйти</button>
+</div>
+<div class="logout-section">
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    let projectId = urlParams.get("projectId");
+    let adminProjectId = urlParams.get("adminProjectId");
+    let id = urlParams.get("id");
+
+    async function loadComments(projectId, criteriaId, container) {
+        try {
+            const response = await fetch(`http://localhost:8090/notes/${projectId}/${criteriaId}`);
+            if (response.ok) {
+                const comments = await response.json();
+                container.innerHTML = "";
+                if (comments.length === 0) {
+                    container.innerHTML = `<button onclick="showCommentForm(${projectId}, ${criteriaId}, null)">Добавить комментарий</button>`;
+                } else {
+                    renderComments(projectId, comments, container, criteriaId);
+                }
+            } else {
+                console.error("Ошибка загрузки комментариев:", response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при загрузке комментариев:", error);
+        }
+    }
+
+    function renderComments(projectId, comments, container, criteriaId) {
+        comments.forEach(comment => {
+            const commentDiv = document.createElement("div");
+            commentDiv.style.marginLeft = "20px";
+            commentDiv.innerHTML = `
+                <p><strong>${comment.userEmail}:</strong> ${comment.message} <small>(${new Date(comment.sendedAt).toLocaleString()})</small></p>
+                <button onclick="showCommentForm(${projectId}, ${criteriaId}, ${comment.id})">Ответить</button>
+                <div id="replies-${comment.id}"></div>
+            `;
+            container.appendChild(commentDiv);
+            if (comment.notes.length > 0) {
+                renderComments(projectId, comment.notes, commentDiv.querySelector(`#replies-${comment.id}`), criteriaId);
+            }
+        });
+    }
+
+    function showCommentForm(projectId, criteriaId, parentCommentId) {
+        const formId = `commentForm-${criteriaId}-${parentCommentId || "root"}`;
+        if (document.getElementById(formId)) return;
+
+        const form = document.createElement("div");
+        form.id = formId;
+        form.innerHTML = `
+            <input type="text" id="commentInput-${criteriaId}-${parentCommentId || "root"}" placeholder="Введите комментарий">
+            <button onclick="addComment(${projectId}, ${criteriaId}, ${parentCommentId})">Отправить</button>
+        `;
+        document.getElementById(`comments-${criteriaId}`).appendChild(form);
+    }
+
+    async function addComment(projectId, criteriaId, parentCommentId) {
+        const input = document.getElementById(`commentInput-${criteriaId}-${parentCommentId || "root"}`);
+        if (!input.value.trim()) return;
+
+        const requestBody = {
+            message: input.value.trim(),
+            projectId: projectId,
+            criteriaId: criteriaId,
+            userId: id,
+            rootNoteId: parentCommentId
+        };
+
+        try {
+            const response = await fetch("http://localhost:8090/notes", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(requestBody)
+            });
+
+            if (response.ok) {
+                loadComments(projectId, criteriaId, document.getElementById(`comments-${criteriaId}`));
+            } else {
+                console.error("Ошибка добавления комментария:", response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при добавлении комментария:", error);
+        }
+    }
+
+    async function loadCriteries() {
+        try {
+            const criteriesResponse = await fetch(`http://localhost:8090/projects/${adminProjectId}/criteries`);
+            if (criteriesResponse.ok) {
+                const criteriesData = await criteriesResponse.json();
+                const criteriesTableBody = document.getElementById("criteriesTable");
+
+                criteriesTableBody.innerHTML = "";
+                if (criteriesData.length === 0) {
+                    document.getElementById("noCriteriesMessage").style.display = "block";
+                } else {
+                    criteriesData.forEach(criteria => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${criteria.criteriaId}</td>
+                            <td>${criteria.criteriaName}</td>
+                            <td>${criteria.description || 'Нет описания'}</td>
+                            <td>${criteria.status}</td>
+                            <td>${criteria.deadline ? new Date(criteria.deadline).toLocaleString() : 'Нет срока'}</td>
+                            <td>${criteria.userEmail}</td>
+                            <td>
+                                <div id="comments-${criteria.criteriaId}" class="comments-container"></div>
+                            </td>
+                        `;
+                        criteriesTableBody.appendChild(row);
+                        loadComments(criteria.projectId, criteria.criteriaId, document.getElementById(`comments-${criteria.criteriaId}`));
+                    });
+                    document.getElementById("noCriteriesMessage").style.display = "none";
+                }
+            } else {
+                console.error("Ошибка получения аналитических критериев:", criteriesResponse.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+        }
+    }
+
+    async function loadLogs() {
+        try {
+            const response = await fetch("http://localhost:8090/logs");
+            if (response.ok) {
+                const logs = await response.json();
+                const container = document.getElementById("logsContainer");
+                container.innerHTML = "";
+
+                logs.sort((a, b) => new Date(b.actionAt) - new Date(a.actionAt));
+
+                logs.forEach(log => {
+                    const eventDate = new Date(log.actionAt);
+                    const formattedDate = eventDate.toLocaleString('ru-RU');
+
+                    const item = document.createElement("div");
+                    item.className = "item";
+                    item.innerHTML = `
+                    <span>${formattedDate} - ${log.description}</span>
+                `;
+                    container.appendChild(item);
+                });
+            }
+        } catch (error) {
+            console.error("Ошибка при загрузке истории событий:", error);
+        }
+    }
+
+    async function updateCriteriaStatus(criteriaId, projectId) {
+        const status = document.getElementById(`status-${criteriaId}`).value;
+
+        const requestBody = {
+            status: status
+        };
+
+        try {
+            const response = await fetch(`http://localhost:8090/projects/${projectId}/criteries/${criteriaId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (response.ok) {
+                loadCriteries();
+            } else {
+                alert("Ошибка обновления статуса: " + response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при обновлении статуса:", error);
+            alert("Произошла ошибка при обновлении статуса.");
+        }
+    }
+
+    function exportToCSV() {
+        const table = document.getElementById('criteriesTable');
+        const rows = table.rows;
+
+        let csvContent = 'Название,Описание,Статус,Срок,Ответственный аналитик\n'; // Заголовки
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].cells;
+
+            const deadline = cells[4].innerText;
+            const formattedDeadline = `"${deadline.replace(/,/g, '\,')}"`;
+
+            const rowData = [
+                cells[1].innerText,
+                cells[2].innerText,
+                cells[3].innerText,
+                formattedDeadline,
+                cells[5].innerText
+            ].join(',');
+
+            csvContent += rowData + '\n';
+        }
+
+        const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
+        const link = document.createElement('a');
+        if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'criteries.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+
+    document.getElementById("exportCSVButton").addEventListener("click", exportToCSV);
+
+    document.getElementById("logoutButton").addEventListener("click", function () {
+        window.location.href = "start.html";
+    });
+
+    window.addEventListener("load", function () {
+        document.getElementById("email").innerText = urlParams.get("email");
+        document.getElementById("firstName").innerText = urlParams.get("firstName");
+        document.getElementById("lastName").innerText = urlParams.get("lastName");
+        document.getElementById("projectName").innerText = urlParams.get("projectName");
+        loadCriteries();
+        loadLogs();
+    });
+</script>
+
+</body>
+</html>
