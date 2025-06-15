@@ -72,11 +72,28 @@ public class CriteriaFacade {
                         .description(criteria.getDescription())
                         .status(criteria.getStatus())
                         .deadline(criteria.getDeadline())
+                        .finishedAt(criteria.getFinishedAt())
                         .build())
                 .collect(Collectors.toList());
     }
 
     public void updateCriteria(int projectId, int criteriaId, UpdateCriteriaRequest request) {
         criteriaService.updateCriteria(projectId, criteriaId, request.getStatus(), request.getOffer());
+    }
+
+    public List<GetCriteriaResponse> getAllDoneCriteries() {
+        List<ProjectCriteria> projectCriteries = criteriaService.getAllDoneCriteries();
+        return projectCriteries.stream()
+                .map(criteria -> GetCriteriaResponse.builder()
+                        .projectId(criteria.getProject().getId())
+                        .criteriaId(criteria.getCriteria().getId())
+                        .criteriaName(criteria.getCriteria().getName())
+                        .userEmail(criteria.getAnalyst().getLastName() + " " + criteria.getAnalyst().getFirstName())
+                        .description(criteria.getDescription())
+                        .status(criteria.getStatus())
+                        .deadline(criteria.getDeadline())
+                        .finishedAt(criteria.getFinishedAt())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

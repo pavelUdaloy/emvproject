@@ -28,6 +28,11 @@ public class CriteriaController {
         return criteriaFacade.getAllByProjectId(projectId);
     }
 
+    @GetMapping("/done")
+    public List<GetCriteriaResponse> getAllDoneCriteries(@PathVariable("projectId") int projectId) {
+        return criteriaFacade.getAllDoneCriteries();
+    }
+
     @GetMapping("/by-analyst/{analystId}")
     public List<GetCriteriaResponse> getAllByAnalystId(@PathVariable("projectId") int projectId,
                                                        @PathVariable("analystId") int analystId) {
@@ -45,7 +50,7 @@ public class CriteriaController {
     }
 
     @GetMapping("/system")
-    public List<GetSystemCriteriaResponse> getAllSystemCriteries(@PathVariable String projectId) {
+    public List<GetSystemCriteriaResponse> getAllSystemCriteries(@PathVariable("projectId") int projectId) {
         return criteriaFacade.getAllSystemCriteries();
     }
 }

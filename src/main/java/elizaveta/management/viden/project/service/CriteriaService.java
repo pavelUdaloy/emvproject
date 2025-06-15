@@ -14,8 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -72,6 +75,11 @@ public class CriteriaService {
         ProjectCriteriaId id = new ProjectCriteriaId(projectId, criteriaId);
         ProjectCriteria projectCriteria = projectCriteriaRepository.findById(id).get();
         projectCriteria.setStatus(status);
+
+        if (Objects.equals(status, "выполнен")) {
+            projectCriteria.setFinishedAt(LocalDateTime.now(ZoneOffset.of("+03:00")));
+        }
+
         projectCriteria.setOffer(offer);
         projectCriteriaRepository.save(projectCriteria);
     }
@@ -85,5 +93,12 @@ public class CriteriaService {
             throw new UsernameNotFoundException("Cannot find projectCriteria with id = " + id);
         }
         return projectCriteria.get();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProjectCriteria> getAllDoneCriteries() {
+        return projectCriteriaRepository.findAll().stream()
+                .filter(projectCriteria -> Objects.equals(projectCriteria.getStatus(), "выполнен"))
+                .collect(Collectors.toList());
     }
 }

@@ -332,6 +332,19 @@
             <button class="button confirm-button" onclick="exportCompletedToCSV()">Выгрузить в CSV</button>
         </div>
     </div>
+
+    <div class="section">
+        <h3>Выгрузка отчетов по аналитикам</h3>
+        <div style="margin-bottom: 15px;">
+            <label for="analyticsStartDate">Дата от:</label>
+            <input type="datetime-local" id="analyticsStartDate">
+
+            <label for="analyticsEndDate">Дата до:</label>
+            <input type="datetime-local" id="analyticsEndDate">
+
+            <button class="button confirm-button" onclick="exportAnalyticsToCSV()">Выгрузить в CSV</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -757,6 +770,87 @@
         form.style.display = form.style.display === "none" ? "block" : "none";
     }
 
+    async function exportAnalyticsToCSV() {
+        const startDateInput = document.getElementById('analyticsStartDate').value;
+        const endDateInput = document.getElementById('analyticsEndDate').value;
+
+        try {
+            // Загружаем всех аналитиков
+            const analystsResponse = await fetch("http://localhost:8090/users/analysts");
+            if (!analystsResponse.ok) {
+                throw new Error('Ошибка при получении списка аналитиков');
+            }
+            const analysts = await analystsResponse.json();
+
+            // Собираем данные по каждому аналитику
+            let allCriteria = [];
+
+            try {
+                const criteriaResponse = await fetch(`http://localhost:8090/projects/0/criteries/done`);
+                if (criteriaResponse.ok) {
+                    const criteria = await criteriaResponse.json();
+                    allCriteria = allCriteria.concat(criteria);
+                }
+            } catch (error) {
+                console.error(`Ошибка при загрузке критериев для аналитика ${analyst.email}:`, error);
+            }
+
+            // Фильтруем по дате завершения
+            const startDate = new Date(startDateInput);
+            const endDate = new Date(endDateInput);
+
+            const filteredCriteria = allCriteria.filter(criteria => {
+                if (!criteria.finishedAt) return false;
+                const finishDate = new Date(criteria.finishedAt);
+                return finishDate >= startDate && finishDate <= endDate;
+            });
+
+            if (filteredCriteria.length === 0) {
+                alert('Нет данных для выгрузки в выбранном диапазоне дат');
+                return;
+            }
+
+            const csvContent = convertAnalyticsToCSV(filteredCriteria);
+            downloadCSV(csvContent, `analytics_report_${new Date().toISOString().slice(0, 10)}.csv`);
+
+        } catch (error) {
+            console.error('Ошибка при выгрузке отчета:', error);
+            alert('Произошла ошибка при выгрузке отчета');
+        }
+    }
+
+    function convertAnalyticsToCSV(criteriaList) {
+        const headers = [
+            'ID проекта',
+            'Название проекта',
+            'ID критерия',
+            'Название критерия',
+            'Email пользователя',
+            'Дата завершения',
+            'Описание',
+            'Статус',
+            'Предложение',
+            'Дедлайн'
+        ];
+
+        const rows = criteriaList.map(criteria => [
+            criteria.projectId,
+            `"${criteria.projectName}"`,
+            criteria.criteriaId,
+            `"${criteria.criteriaName}"`,
+            criteria.userEmail,
+            formatDate(criteria.finishedAt),
+            `"${criteria.description || ''}"`,
+            criteria.status,
+            `"${criteria.offer || ''}"`,
+            formatDate(criteria.deadline)
+        ]);
+
+        return [headers, ...rows]
+            .map(row => row.join(','))
+            .join('\n');
+    }
+
     async function submitAnalyst() {
         const email = document.getElementById("analystEmail").value;
         const password = document.getElementById("analystPassword").value;
@@ -817,6 +911,8 @@
         document.getElementById('reportEndDate').value = now.toISOString().slice(0, 16);
         document.getElementById('completedStartDate').value = monthAgo.toISOString().slice(0, 16);
         document.getElementById('completedEndDate').value = now.toISOString().slice(0, 16);
+        document.getElementById('analyticsStartDate').value = monthAgo.toISOString().slice(0, 16);
+        document.getElementById('analyticsEndDate').value = now.toISOString().slice(0, 16);
 
         // Предзагрузка данных для отчетов
         loadProjectsForReport().catch(e => console.error('Не удалось загрузить данные для отчетов:', e));

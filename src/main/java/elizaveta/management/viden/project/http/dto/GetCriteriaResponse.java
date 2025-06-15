@@ -20,6 +20,7 @@ public class GetCriteriaResponse {
     private int criteriaId;
     private String criteriaName;
     private String userEmail;
+    private LocalDateTime finishedAt;
     private String description;
     private String status;
     private String offer;
