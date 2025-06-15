@@ -228,6 +228,12 @@
             overflow-y: auto;
             background-color: #f4f6f8;
         }
+
+        table, th, td {
+            border: 1px solid #ccc;
+            padding: 5px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -315,6 +321,8 @@
 
             <label for="reportEndDate">Дата до:</label>
             <input type="datetime-local" id="reportEndDate">
+            <button onclick="previewProjectsReport()">Сформировать</button>
+            <div id="projectsPreviewContainer"></div>
 
             <button class="button confirm-button" onclick="exportToCSV()">Выгрузить в CSV</button>
         </div>
@@ -328,6 +336,8 @@
 
             <label for="completedEndDate">Дата до:</label>
             <input type="datetime-local" id="completedEndDate">
+            <button onclick="generateCompletedPreview()">Сформировать</button>
+            <div id="completedPreviewContainer" style="margin-top: 10px;"></div>
 
             <button class="button confirm-button" onclick="exportCompletedToCSV()">Выгрузить в CSV</button>
         </div>
@@ -342,6 +352,9 @@
             <label for="analyticsEndDate">Дата до:</label>
             <input type="datetime-local" id="analyticsEndDate">
 
+            <button onclick="previewAnalyticsReport()">Сформировать</button>
+            <div id="analyticsPreviewContainer"></div>
+
             <button class="button confirm-button" onclick="exportAnalyticsToCSV()">Выгрузить в CSV</button>
         </div>
     </div>
@@ -355,13 +368,212 @@
             <label for="clientsEndDate">Дата до:</label>
             <input type="datetime-local" id="clientsEndDate">
 
+            <button onclick="previewClientsReport()">Сформировать</button>
+            <div id="clientsPreviewContainer"></div>
+
             <button class="button confirm-button" onclick="exportClientsToCSV()">Выгрузить в CSV</button>
         </div>
     </div>
 </div>
 
 <script>
+    let allProjectsForReport = [];
+    let previewedCompletedProjects = [];
     const urlParams = new URLSearchParams(window.location.search);
+
+    function generateCompletedPreview() {
+        const startDateInput = document.getElementById('completedStartDate').value;
+        const endDateInput = document.getElementById('completedEndDate').value;
+
+        fetch("http://localhost:8090/projects/all/all")
+            .then(res => res.json())
+            .then(data => {
+                const completed = data.filter(p => p.finishedAt);
+                const start = new Date(startDateInput);
+                const end = new Date(endDateInput);
+
+                previewedCompletedProjects = completed.filter(p => {
+                    const date = new Date(p.finishedAt);
+                    return date >= start && date <= end;
+                });
+
+                renderCompletedPreview(previewedCompletedProjects);
+            })
+            .catch(err => {
+                console.error("Ошибка при формировании отчета:", err);
+                alert("Не удалось сформировать отчет");
+            });
+    }
+
+    function previewClientsReport() {
+        const startDate = new Date(document.getElementById('clientsStartDate').value);
+        const endDate = new Date(document.getElementById('clientsEndDate').value);
+
+        loadProjectsForReport().then(() => {
+            const filtered = allProjectsForReport.filter(p => {
+                const d = new Date(p.createdAt);
+                return d >= startDate && d <= endDate;
+            });
+
+            const previewData = filtered.map(p => ({
+                'Почта клиента': p.clientEmail,
+                'Название проекта': p.name,
+                'Дата создания': formatDate(p.createdAt),
+                'Дата завершения': formatDate(p.finishedAt)
+            }));
+
+            renderPreviewTable(previewData, 'clientsPreviewContainer');
+        }).catch(err => {
+            console.error('Ошибка при предпросмотре:', err);
+            alert('Ошибка при формировании предпросмотра');
+        });
+    }
+
+    function previewAnalyticsReport() {
+        const startDate = new Date(document.getElementById('analyticsStartDate').value);
+        const endDate = new Date(document.getElementById('analyticsEndDate').value);
+
+        fetch("http://localhost:8090/projects/0/criteries/done")
+            .then(res => res.json())
+            .then(data => {
+                const filtered = data.filter(c => {
+                    if (!c.finishedAt) return false;
+                    const d = new Date(c.finishedAt);
+                    return d >= startDate && d <= endDate;
+                });
+
+                const previewData = filtered.map(c => ({
+                    'Название критерия': c.criteriaName,
+                    'Email пользователя': c.userEmail,
+                    'Дата завершения': formatDate(c.finishedAt),
+                    'Описание': c.description || '',
+                    'Статус': c.status,
+                    'Предложение': c.offer || '',
+                    'Дедлайн': formatDate(c.deadline)
+                }));
+
+                renderPreviewTable(previewData, 'analyticsPreviewContainer');
+            })
+            .catch(err => {
+                console.error('Ошибка при формировании предпросмотра:', err);
+                alert('Ошибка при формировании предпросмотра');
+            });
+    }
+
+    function renderCompletedPreview(projects) {
+        const container = document.getElementById('completedPreviewContainer');
+        if (projects.length === 0) {
+            container.innerHTML = "<em>Нет данных для отображения</em>";
+            return;
+        }
+
+        const table = document.createElement("table");
+        table.border = "1";
+        table.style.borderCollapse = "collapse";
+        table.style.width = "100%";
+
+        const header = document.createElement("tr");
+        ['Название', 'Дата создания', 'Дата завершения', 'Пользователи'].forEach(h => {
+            const th = document.createElement("th");
+            th.textContent = h;
+            header.appendChild(th);
+        });
+        table.appendChild(header);
+
+        projects.forEach(p => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+            <td>${p.name}</td>
+            <td>${formatDate(p.createdAt)}</td>
+            <td>${formatDate(p.finishedAt)}</td>
+            <td>${p.usersCount}</td>
+        `;
+            table.appendChild(row);
+        });
+
+        container.innerHTML = "";
+        container.appendChild(table);
+    }
+
+    function previewProjectsReport() {
+        const startDate = new Date(document.getElementById('reportStartDate').value);
+        const endDate = new Date(document.getElementById('reportEndDate').value);
+
+        loadProjectsForReport().then(() => {
+            const filtered = allProjectsForReport.filter(p => {
+                const d = new Date(p.createdAt);
+                return d >= startDate && d <= endDate;
+            });
+
+            const previewData = filtered.map(p => ({
+                'Название': p.name,
+                'Дата создания': formatDate(p.createdAt),
+                'Дата подтверждения': formatDate(p.approvedAt),
+                'Дата завершения': formatDate(p.finishedAt),
+                'Количество пользователей': p.usersCount,
+                'Почта клиента': p.clientEmail
+            }));
+
+            renderPreviewTable(previewData, 'projectsPreviewContainer');
+        }).catch(err => {
+            console.error('Ошибка при предпросмотре:', err);
+            alert('Ошибка при формировании предпросмотра');
+        });
+    }
+
+    function renderPreviewTable(data, containerId) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+            container.innerText = 'Нет данных для отображения';
+            return;
+        }
+
+        // Обёртка для горизонтального скролла
+        const scrollWrapper = document.createElement('div');
+        scrollWrapper.style.overflowX = 'auto';
+        scrollWrapper.style.maxWidth = '100%';
+
+        const table = document.createElement('table');
+        table.style.borderCollapse = 'collapse';
+        table.style.width = '100%';
+        table.style.minWidth = '600px'; // Чтобы была ширина для скролла при необходимости
+        table.style.marginTop = '10px';
+
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        Object.keys(data[0]).forEach(key => {
+            const th = document.createElement('th');
+            th.innerText = key;
+            th.style.border = '1px solid #ccc';
+            th.style.padding = '4px';
+            th.style.backgroundColor = '#f2f2f2';
+            th.style.whiteSpace = 'nowrap';
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+
+        const tbody = document.createElement('tbody');
+        data.forEach(row => {
+            const tr = document.createElement('tr');
+            Object.values(row).forEach(value => {
+                const td = document.createElement('td');
+                td.innerText = value;
+                td.style.border = '1px solid #ccc';
+                td.style.padding = '4px';
+                td.style.whiteSpace = 'nowrap';
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        scrollWrapper.appendChild(table);
+        container.appendChild(scrollWrapper);
+    }
+
 
     async function loadProjects() {
         try {
@@ -681,8 +893,6 @@
             console.error("Ошибка при подтверждении заказа:", error);
         }
     }
-
-    let allProjectsForReport = []; // Будем хранить все проекты для отчетов
 
     function normalizeDate(dateString) {
         // Просто создаем Date объект из строки без дополнительных преобразований
