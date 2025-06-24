@@ -597,8 +597,10 @@
             item.className = "item";
             item.innerHTML = `
             <span>${project.name}</span>
+            <div>
             <button class="project-button" onclick="viewProject(${project.id}, '${project.name}')">Просмотреть</button>
-            <button class="cancel-button" onclick="deleteProject(${project.id})">Удалить</button>
+            <button class="delete-button" onclick="deleteProject(${project.id})">Удалить</button>
+            </div>
         `;
             container.appendChild(item);
         });
@@ -664,7 +666,6 @@
             const response = await fetch("http://localhost:8090/projects/all/all");
             if (response.ok) {
                 const allProjects = await response.json();
-                // Фильтруем проекты, оставляя только завершенные (finishedAt не null)
                 const completedProjects = allProjects.filter(project => project.finishedAt);
                 renderCompletedProjects(completedProjects);
             }
@@ -673,7 +674,6 @@
         }
     }
 
-    // Функция для отображения завершенных проектов
     function renderCompletedProjects(projects) {
         const container = document.getElementById("completedProjectsContainer");
         container.innerHTML = "";
@@ -683,7 +683,6 @@
             return;
         }
 
-        // Сортируем проекты по дате завершения (новые сверху)
         projects.sort((a, b) => new Date(b.finishedAt) - new Date(a.finishedAt));
 
         projects.forEach(project => {
@@ -691,7 +690,7 @@
             item.className = "item completed-project";
 
             const formattedDate = project.finishedAt ?
-                new Date(project.finishedAt) :
+                new Date(project.finishedAt).toLocaleString('ru-RU') :
                 "Не завершен";
 
             item.innerHTML = `
@@ -699,11 +698,53 @@
                         <strong>${project.name}</strong>
                         <div>Завершен: ${formattedDate}</div>
                     </div>
-                    <button class="project-button" onclick="viewProject(${project.id}, '${project.name}')">Просмотреть</button>
+                    <div>
+                        <button class="project-button" onclick="viewProject(${project.id}, '${project.name}')">Просмотреть</button>
+                        <button class="delete-button" onclick="deleteCompletedProject(${project.id})">Удалить</button>
+                    </div>
                 `;
             container.appendChild(item);
         });
     }
+
+    async function deleteCompletedProject(projectId) {
+        if (!confirm("Вы уверены, что хотите удалить этот завершенный проект?")) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8090/projects/${projectId}`, {
+                method: "DELETE"
+            });
+
+            if (response.ok) {
+                loadCompletedProjects();
+            } else {
+                alert("Ошибка при удалении проекта: " + response.status);
+            }
+        } catch (error) {
+            console.error("Ошибка при удалении проекта:", error);
+            alert("Произошла ошибка при удалении проекта");
+        }
+    }
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+            .delete-button {
+                background-color: #ff4444;
+                color: white;
+                margin-left: 10px;
+                padding: 8px 15px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .delete-button:hover {
+                background-color: #cc0000;
+            }
+        `;
+    document.head.appendChild(style);
 
     let analystsList = [];
     let allProjects = [];
