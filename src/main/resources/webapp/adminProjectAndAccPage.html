@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADMIN</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,6 +31,20 @@
         header p {
             margin: 5px 0;
             font-size: 16px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-text {
+            flex-grow: 1;
+            text-align: center;
         }
 
         .main-container {
@@ -107,11 +123,6 @@
 
         .confirm-button:hover {
             background-color: #006400;
-        }
-
-        .logout-section {
-            text-align: center;
-            margin-top: 30px;
         }
 
         .add-button {
@@ -195,15 +206,19 @@
         .export-button {
             background-color: #28a745;
             color: white;
-            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 24px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, background-color 0.3s;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
         }
 
         .export-button:hover {
             background-color: #218838;
+            transform: scale(1.05);
         }
 
         .order-details {
@@ -275,10 +290,8 @@
 
     <div class="section">
         <h3>Список проектов</h3>
-
         <input type="text" id="projectSearchInput" placeholder="Поиск по названию проекта..."
                style="width: 95%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc;">
-
         <div id="projectsContainer" class="list"></div>
     </div>
 
@@ -291,7 +304,6 @@
         <h3>Список завершенных проектов</h3>
         <input type="text" id="completedProjectsSearchInput" placeholder="Поиск по названию завершенного проекта..."
                style="width: 95%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc;">
-
         <div id="completedProjectsContainer" class="list"></div>
     </div>
 
@@ -306,13 +318,10 @@
         <div>
             <label for="startDate">Дата начала:</label>
             <input type="datetime-local" id="startDate">
-
             <label for="endDate">Дата окончания:</label>
             <input type="datetime-local" id="endDate">
-
             <button class="button" onclick="applyDateFilter()">Применить фильтр</button>
         </div>
-
         <div id="logsContainer" class="list"></div>
     </div>
 
@@ -321,13 +330,11 @@
         <div style="margin-bottom: 15px;">
             <label for="reportStartDate">Дата от:</label>
             <input type="datetime-local" id="reportStartDate">
-
             <label for="reportEndDate">Дата до:</label>
             <input type="datetime-local" id="reportEndDate">
             <button onclick="previewProjectsReport()">Сформировать</button>
             <div id="projectsPreviewContainer"></div>
-
-            <button class="button confirm-button" onclick="exportToCSV()">Выгрузить в CSV</button>
+            <button class="export-button" onclick="exportProjectsToExcel()">⬇️ Выгрузить в Excel</button>
         </div>
     </div>
 
@@ -336,13 +343,11 @@
         <div style="margin-bottom: 15px;">
             <label for="completedStartDate">Дата от:</label>
             <input type="datetime-local" id="completedStartDate">
-
             <label for="completedEndDate">Дата до:</label>
             <input type="datetime-local" id="completedEndDate">
             <button onclick="generateCompletedPreview()">Сформировать</button>
             <div id="completedPreviewContainer" style="margin-top: 10px;"></div>
-
-            <button class="button confirm-button" onclick="exportCompletedToCSV()">Выгрузить в CSV</button>
+            <button class="export-button" onclick="exportCompletedToExcel()">⬇️ Выгрузить в Excel</button>
         </div>
     </div>
 
@@ -351,14 +356,11 @@
         <div style="margin-bottom: 15px;">
             <label for="analyticsStartDate">Дата от:</label>
             <input type="datetime-local" id="analyticsStartDate">
-
             <label for="analyticsEndDate">Дата до:</label>
             <input type="datetime-local" id="analyticsEndDate">
-
             <button onclick="previewAnalyticsReport()">Сформировать</button>
             <div id="analyticsPreviewContainer"></div>
-
-            <button class="button confirm-button" onclick="exportAnalyticsToCSV()">Выгрузить в CSV</button>
+            <button class="export-button" onclick="exportAnalyticsToExcel()">⬇️ Выгрузить в Excel</button>
         </div>
     </div>
 
@@ -367,14 +369,11 @@
         <div style="margin-bottom: 15px;">
             <label for="clientsStartDate">Дата от:</label>
             <input type="datetime-local" id="clientsStartDate">
-
             <label for="clientsEndDate">Дата до:</label>
             <input type="datetime-local" id="clientsEndDate">
-
             <button onclick="previewClientsReport()">Сформировать</button>
             <div id="clientsPreviewContainer"></div>
-
-            <button class="button confirm-button" onclick="exportClientsToCSV()">Выгрузить в CSV</button>
+            <button class="export-button" onclick="exportClientsToExcel()">⬇️ Выгрузить в Excel</button>
         </div>
     </div>
 </div>
@@ -535,7 +534,6 @@
             return;
         }
 
-        // Обёртка для горизонтального скролла
         const scrollWrapper = document.createElement('div');
         scrollWrapper.style.overflowX = 'auto';
         scrollWrapper.style.maxWidth = '100%';
@@ -543,7 +541,7 @@
         const table = document.createElement('table');
         table.style.borderCollapse = 'collapse';
         table.style.width = '100%';
-        table.style.minWidth = '600px'; // Чтобы была ширина для скролла при необходимости
+        table.style.minWidth = '600px';
         table.style.marginTop = '10px';
 
         const thead = document.createElement('thead');
@@ -578,7 +576,6 @@
         scrollWrapper.appendChild(table);
         container.appendChild(scrollWrapper);
     }
-
 
     async function loadProjects() {
         try {
@@ -810,12 +807,11 @@
         });
     }
 
-    async function exportCompletedToCSV() {
+    async function exportCompletedToExcel() {
         const startDateInput = document.getElementById('completedStartDate').value;
         const endDateInput = document.getElementById('completedEndDate').value;
 
         try {
-            // Загружаем все завершенные проекты
             const response = await fetch("http://localhost:8090/projects/all/all");
             if (!response.ok) {
                 throw new Error('Ошибка при получении данных');
@@ -824,7 +820,6 @@
             let completedProjects = await response.json();
             completedProjects = completedProjects.filter(project => project.finishedAt);
 
-            // Фильтруем по дате завершения
             const startDate = new Date(startDateInput);
             const endDate = new Date(endDateInput);
 
@@ -838,29 +833,56 @@
                 return;
             }
 
-            const csvContent = convertCompletedToCSV(filteredProjects);
-            downloadCSV(csvContent, `completed_projects_report_${new Date().toISOString().slice(0, 10)}.csv`);
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Завершенные проекты');
 
+            const headerRow = ['ID', 'Название проекта', 'Дата создания', 'Дата завершения', 'Количество пользователей'];
+            worksheet.addRow(headerRow);
+
+            worksheet.getRow(1).eachCell(cell => {
+                cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FF002B80' }
+                };
+                cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                cell.border = {
+                    top: { style: 'thin' },
+                    left: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                    right: { style: 'thin' }
+                };
+            });
+
+            filteredProjects.forEach(project => {
+                worksheet.addRow([
+                    project.id,
+                    project.name,
+                    formatDate(project.createdAt),
+                    formatDate(project.finishedAt),
+                    project.usersCount
+                ]);
+            });
+
+            worksheet.columns.forEach(column => {
+                let maxLength = 0;
+                column.eachCell({ includeEmpty: true }, cell => {
+                    const length = (cell.value || '').toString().length;
+                    if (length > maxLength) {
+                        maxLength = length;
+                    }
+                });
+                column.width = maxLength + 2;
+            });
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, `completed_projects_report_${new Date().toISOString().slice(0, 10)}.xlsx`);
         } catch (error) {
             console.error('Ошибка при выгрузке отчета:', error);
             alert('Произошла ошибка при выгрузке отчета');
         }
-    }
-
-    function convertCompletedToCSV(projects) {
-        const headers = ['ID', 'Название проекта', 'Дата создания', 'Дата завершения', 'Количество пользователей'];
-
-        const rows = projects.map(project => [
-            project.id,
-            `"${project.name}"`,
-            formatDate(project.createdAt),
-            formatDate(project.finishedAt),
-            project.usersCount
-        ]);
-
-        return [headers, ...rows]
-            .map(row => row.join(','))
-            .join('\n');
     }
 
     function sortAnalysts(order) {
@@ -955,11 +977,10 @@
     }
 
     function normalizeDate(dateString) {
-        // Просто создаем Date объект из строки без дополнительных преобразований
         return new Date(dateString);
     }
 
-    async function exportToCSV() {
+    async function exportProjectsToExcel() {
         const startDateInput = document.getElementById('reportStartDate').value;
         const endDateInput = document.getElementById('reportEndDate').value;
 
@@ -977,20 +998,59 @@
                 return projectDate >= startDate && projectDate <= endDate;
             });
 
-            console.log('Filtered projects dates:',
-                filteredProjects.map(p => ({id: p.id, date: new Date(p.createdAt)})));
-            console.log('Start date:', new Date(startDateInput));
-            console.log('End date:', new Date(endDateInput));
-            console.log(filteredProjects.map(p => p.createdAt));
-
             if (filteredProjects.length === 0) {
                 alert('Нет данных для выгрузки в выбранном диапазоне дат');
                 return;
             }
 
-            const csvContent = convertToCSV(filteredProjects);
-            downloadCSV(csvContent, `projects_report_${new Date().toISOString().slice(0, 10)}.csv`);
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Проекты');
 
+            const headerRow = ['ID', 'Название', 'Дата создания', 'Дата подтверждения', 'Дата завершения', 'Количество пользователей', 'Почта клиента'];
+            worksheet.addRow(headerRow);
+
+            worksheet.getRow(1).eachCell(cell => {
+                cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FF002B80' }
+                };
+                cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                cell.border = {
+                    top: { style: 'thin' },
+                    left: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                    right: { style: 'thin' }
+                };
+            });
+
+            filteredProjects.forEach(project => {
+                worksheet.addRow([
+                    project.id,
+                    project.name,
+                    formatDate(project.createdAt),
+                    formatDate(project.approvedAt),
+                    formatDate(project.finishedAt),
+                    project.usersCount,
+                    project.clientEmail
+                ]);
+            });
+
+            worksheet.columns.forEach(column => {
+                let maxLength = 0;
+                column.eachCell({ includeEmpty: true }, cell => {
+                    const length = (cell.value || '').toString().length;
+                    if (length > maxLength) {
+                        maxLength = length;
+                    }
+                });
+                column.width = maxLength + 2;
+            });
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, `projects_report_${new Date().toISOString().slice(0, 10)}.xlsx`);
         } catch (error) {
             console.error('Ошибка при выгрузке отчета:', error);
             alert('Произошла ошибка при выгрузке отчета');
@@ -1010,82 +1070,30 @@
         }
     }
 
-    function convertToCSV(projects) {
-        const headers = ['ID', 'Название', 'Дата создания', 'Дата подтверждения', 'Дата завершения', 'Количество пользователей', 'Почта Клиента'];
-
-        const rows = projects.map(project => [
-            project.id,
-            `"${project.name}"`, // Оборачиваем в кавычки на случай, если название содержит запятые
-            formatDate(project.createdAt),
-            formatDate(project.approvedAt),
-            formatDate(project.finishedAt),
-            project.usersCount,
-            project.clientEmail
-        ]);
-
-        return [headers, ...rows]
-            .map(row => row.join(','))
-            .join('\n');
-    }
-
     function formatDate(dateString) {
         if (!dateString) return '';
         const date = new Date(dateString);
         return date.toLocaleString('ru-RU');
     }
 
-    function downloadCSV(content, filename) {
-        const blob = new Blob(["\uFEFF" + content], {type: 'text/csv;charset=utf-8;'});
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-
-        link.setAttribute('href', url);
-        link.setAttribute('download', filename);
-        link.style.visibility = 'hidden';
-
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    function toggleAnalystForm() {
-        const form = document.getElementById("analystForm");
-        form.style.display = form.style.display === "none" ? "block" : "none";
-    }
-
-    async function exportAnalyticsToCSV() {
+    async function exportAnalyticsToExcel() {
         const startDateInput = document.getElementById('analyticsStartDate').value;
         const endDateInput = document.getElementById('analyticsEndDate').value;
 
         try {
-            // Загружаем всех аналитиков
-            const analystsResponse = await fetch("http://localhost:8090/users/analysts");
-            if (!analystsResponse.ok) {
-                throw new Error('Ошибка при получении списка аналитиков');
-            }
-            const analysts = await analystsResponse.json();
-
-            // Собираем данные по каждому аналитику
-            let allCriteria = [];
-
-            try {
-                const criteriaResponse = await fetch(`http://localhost:8090/projects/0/criteries/done`);
-                if (criteriaResponse.ok) {
-                    const criteria = await criteriaResponse.json();
-                    allCriteria = allCriteria.concat(criteria);
-                }
-            } catch (error) {
-                console.error(`Ошибка при загрузке критериев для аналитика ${analyst.email}:`, error);
+            const response = await fetch("http://localhost:8090/projects/0/criteries/done");
+            if (!response.ok) {
+                throw new Error('Ошибка при получении данных');
             }
 
-            // Фильтруем по дате завершения
+            const data = await response.json();
             const startDate = new Date(startDateInput);
             const endDate = new Date(endDateInput);
 
-            const filteredCriteria = allCriteria.filter(criteria => {
-                if (!criteria.finishedAt) return false;
-                const finishDate = new Date(criteria.finishedAt);
-                return finishDate >= startDate && finishDate <= endDate;
+            const filteredCriteria = data.filter(c => {
+                if (!c.finishedAt) return false;
+                const d = new Date(c.finishedAt);
+                return d >= startDate && d <= endDate;
             });
 
             if (filteredCriteria.length === 0) {
@@ -1093,45 +1101,72 @@
                 return;
             }
 
-            const csvContent = convertAnalyticsToCSV(filteredCriteria);
-            downloadCSV(csvContent, `analytics_report_${new Date().toISOString().slice(0, 10)}.csv`);
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Аналитики');
 
+            const headerRow = [
+                'ID проекта',
+                'Название проекта',
+                'ID критерия',
+                'Название критерия',
+                'Email пользователя',
+                'Дата завершения',
+                'Описание',
+                'Статус',
+                'Предложение',
+                'Дедлайн'
+            ];
+            worksheet.addRow(headerRow);
+
+            worksheet.getRow(1).eachCell(cell => {
+                cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FF002B80' }
+                };
+                cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                cell.border = {
+                    top: { style: 'thin' },
+                    left: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                    right: { style: 'thin' }
+                };
+            });
+
+            filteredCriteria.forEach(c => {
+                worksheet.addRow([
+                    c.projectId,
+                    c.projectName,
+                    c.criteriaId,
+                    c.criteriaName,
+                    c.userEmail,
+                    formatDate(c.finishedAt),
+                    c.description || '',
+                    c.status,
+                    c.offer || '',
+                    formatDate(c.deadline)
+                ]);
+            });
+
+            worksheet.columns.forEach(column => {
+                let maxLength = 0;
+                column.eachCell({ includeEmpty: true }, cell => {
+                    const length = (cell.value || '').toString().length;
+                    if (length > maxLength) {
+                        maxLength = length;
+                    }
+                });
+                column.width = maxLength + 2;
+            });
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, `analytics_report_${new Date().toISOString().slice(0, 10)}.xlsx`);
         } catch (error) {
             console.error('Ошибка при выгрузке отчета:', error);
             alert('Произошла ошибка при выгрузке отчета');
         }
-    }
-
-    function convertAnalyticsToCSV(criteriaList) {
-        const headers = [
-            'ID проекта',
-            'Название проекта',
-            'ID критерия',
-            'Название критерия',
-            'Email пользователя',
-            'Дата завершения',
-            'Описание',
-            'Статус',
-            'Предложение',
-            'Дедлайн'
-        ];
-
-        const rows = criteriaList.map(criteria => [
-            criteria.projectId,
-            `"${criteria.projectName}"`,
-            criteria.criteriaId,
-            `"${criteria.criteriaName}"`,
-            criteria.userEmail,
-            formatDate(criteria.finishedAt),
-            `"${criteria.description || ''}"`,
-            criteria.status,
-            `"${criteria.offer || ''}"`,
-            formatDate(criteria.deadline)
-        ]);
-
-        return [headers, ...rows]
-            .map(row => row.join(','))
-            .join('\n');
     }
 
     async function submitAnalyst() {
@@ -1163,7 +1198,7 @@
         }
     }
 
-    async function exportClientsToCSV() {
+    async function exportClientsToExcel() {
         const startDateInput = document.getElementById('clientsStartDate').value;
         const endDateInput = document.getElementById('clientsEndDate').value;
 
@@ -1186,28 +1221,60 @@
                 return;
             }
 
-            const csvContent = convertClientsToCSV(filteredProjects);
-            downloadCSV(csvContent, `clients_report_${new Date().toISOString().slice(0, 10)}.csv`);
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Клиенты');
 
+            const headerRow = ['Почта клиента', 'Название', 'Дата создания', 'Дата завершения'];
+            worksheet.addRow(headerRow);
+
+            worksheet.getRow(1).eachCell(cell => {
+                cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FF002B80' }
+                };
+                cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                cell.border = {
+                    top: { style: 'thin' },
+                    left: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                    right: { style: 'thin' }
+                };
+            });
+
+            filteredProjects.forEach(project => {
+                worksheet.addRow([
+                    project.clientEmail || '',
+                    project.name,
+                    formatDate(project.createdAt),
+                    formatDate(project.finishedAt)
+                ]);
+            });
+
+            worksheet.columns.forEach(column => {
+                let maxLength = 0;
+                column.eachCell({ includeEmpty: true }, cell => {
+                    const length = (cell.value || '').toString().length;
+                    if (length > maxLength) {
+                        maxLength = length;
+                    }
+                });
+                column.width = maxLength + 2;
+            });
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, `clients_report_${new Date().toISOString().slice(0, 10)}.xlsx`);
         } catch (error) {
             console.error('Ошибка при выгрузке отчета:', error);
             alert('Произошла ошибка при выгрузке отчета');
         }
     }
 
-    function convertClientsToCSV(projects) {
-        const headers = ['Почта Клиента', 'Название', 'Дата создания', 'Дата завершения'];
-
-        const rows = projects.map(project => [
-            project.clientEmail || '',
-            `"${project.name}"`,
-            formatDate(project.createdAt),
-            formatDate(project.finishedAt)
-        ]);
-
-        return [headers, ...rows]
-            .map(row => row.join(','))
-            .join('\n');
+    function toggleAnalystForm() {
+        const form = document.getElementById("analystForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
     }
 
     document.getElementById("logoutButton").addEventListener("click", function () {
@@ -1250,10 +1317,8 @@
         document.getElementById('clientsStartDate').value = monthAgo.toISOString().slice(0, 16);
         document.getElementById('clientsEndDate').value = now.toISOString().slice(0, 16);
 
-        // Предзагрузка данных для отчетов
         loadProjectsForReport().catch(e => console.error('Не удалось загрузить данные для отчетов:', e));
     });
 </script>
-
 </body>
 </html>
