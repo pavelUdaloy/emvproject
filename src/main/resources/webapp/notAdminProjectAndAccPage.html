@@ -6,6 +6,7 @@
     <title>CLIENT</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -425,53 +426,65 @@
         }
     }
 
-    function exportToExcel() {
+    async function exportToExcel() {
         const table = document.getElementById('criteriesTable');
         if (!table || table.rows.length === 0) {
             alert('Таблица пуста или не найдена');
             return;
         }
 
-        // Подготовка данных
-        const data = [
-            ['Название', 'Описание', 'Статус', 'Срок', 'Ответственный аналитик']
-        ];
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Критерии');
 
+        // Заголовки
+        const headerRow = ['Название', 'Описание', 'Статус', 'Срок', 'Ответственный аналитик'];
+        worksheet.addRow(headerRow);
+
+        // Стилизация заголовков
+        worksheet.getRow(1).eachCell(cell => {
+            cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FF002B80' }
+            };
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+        });
+
+        // Данные
         for (let i = 0; i < table.rows.length; i++) {
             const cells = table.rows[i].cells;
-            const rowData = [
-                cells[1].innerText, // Название
-                cells[2].innerText, // Описание
-                cells[3].innerText, // Статус
-                cells[4].innerText, // Срок
-                cells[5].innerText  // Ответственный аналитик
-            ];
-            data.push(rowData);
+            worksheet.addRow([
+                cells[1].innerText,
+                cells[2].innerText,
+                cells[3].innerText,
+                cells[4].innerText,
+                cells[5].innerText
+            ]);
         }
 
-        // Создание книги и листа
-        const ws = XLSX.utils.aoa_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Критерии');
+        // Автоширина колонок
+        worksheet.columns.forEach(column => {
+            let maxLength = 0;
+            column.eachCell({ includeEmpty: true }, cell => {
+                const length = (cell.value || '').toString().length;
+                if (length > maxLength) {
+                    maxLength = length;
+                }
+            });
+            column.width = maxLength + 2;
+        });
 
-        // Попытка сохранить файл
-        try {
-            // Используем XLSX.write с типом blob
-            XLSX.write(wb, 'criteries.xlsx', { bookType: 'xlsx', type: 'blob' });
-        } catch (e) {
-            console.error('Ошибка при сохранении файла:', e);
-            // Альтернативный способ сохранения
-            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-            const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'criteries.xlsx');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
+        // Скачивание файла
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'Критерии.xlsx');
     }
 
     document.getElementById("exportCSVButton").addEventListener("click", exportToExcel);
