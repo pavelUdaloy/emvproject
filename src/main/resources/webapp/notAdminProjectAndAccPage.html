@@ -206,6 +206,23 @@
             color: #fff;
         }
 
+        .export-button {
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 24px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, background-color 0.3s;
+            border: none;
+        }
+
+        .export-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -243,7 +260,7 @@
         <p id="noCriteriesMessage" style="display: none;">Критериев нет</p>
     </div>
 
-    <button class="button" id="exportCSVButton">Выгрузить в Excel</button>
+    <button class="export-button" id="exportCSVButton">⬇️ Выгрузить в Excel</button>
 </div>
 
 <div class="logout-section">
