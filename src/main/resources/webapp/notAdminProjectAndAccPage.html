@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CLIENT</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -240,7 +242,7 @@
         <p id="noCriteriesMessage" style="display: none;">Критериев нет</p>
     </div>
 
-    <button class="button" id="exportCSVButton">Выгрузить в CSV</button>
+    <button class="button" id="exportCSVButton">Выгрузить в Excel</button>
 </div>
 
 <div class="logout-section">
@@ -423,42 +425,56 @@
         }
     }
 
-    function exportToCSV() {
+    function exportToExcel() {
         const table = document.getElementById('criteriesTable');
-        const rows = table.rows;
-
-        let csvContent = 'Название,Описание,Статус,Срок,Ответственный аналитик\n'; // Заголовки
-
-        for (let i = 0; i < rows.length; i++) {
-            const cells = rows[i].cells;
-
-            const deadline = cells[4].innerText;
-            const formattedDeadline = `"${deadline.replace(/,/g, '\,')}"`;
-
-            const rowData = [
-                cells[1].innerText,
-                cells[2].innerText,
-                cells[3].innerText,
-                formattedDeadline,
-                cells[5].innerText
-            ].join(',');
-
-            csvContent += rowData + '\n';
+        if (!table || table.rows.length === 0) {
+            alert('Таблица пуста или не найдена');
+            return;
         }
 
-        const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
-        const link = document.createElement('a');
-        if (link.download !== undefined) {
+        // Подготовка данных
+        const data = [
+            ['Название', 'Описание', 'Статус', 'Срок', 'Ответственный аналитик']
+        ];
+
+        for (let i = 0; i < table.rows.length; i++) {
+            const cells = table.rows[i].cells;
+            const rowData = [
+                cells[1].innerText, // Название
+                cells[2].innerText, // Описание
+                cells[3].innerText, // Статус
+                cells[4].innerText, // Срок
+                cells[5].innerText  // Ответственный аналитик
+            ];
+            data.push(rowData);
+        }
+
+        // Создание книги и листа
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Критерии');
+
+        // Попытка сохранить файл
+        try {
+            // Используем XLSX.write с типом blob
+            XLSX.write(wb, 'criteries.xlsx', { bookType: 'xlsx', type: 'blob' });
+        } catch (e) {
+            console.error('Ошибка при сохранении файла:', e);
+            // Альтернативный способ сохранения
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'criteries.csv');
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'criteries.xlsx');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
     }
 
-    document.getElementById("exportCSVButton").addEventListener("click", exportToCSV);
+    document.getElementById("exportCSVButton").addEventListener("click", exportToExcel);
 
     document.getElementById("logoutButton").addEventListener("click", function () {
         window.location.href = "start.html";
