@@ -289,6 +289,9 @@
 
     <div class="section">
         <h3>Список завершенных проектов</h3>
+        <input type="text" id="completedProjectsSearchInput" placeholder="Поиск по названию завершенного проекта..."
+               style="width: 95%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc;">
+
         <div id="completedProjectsContainer" class="list"></div>
     </div>
 
@@ -379,6 +382,7 @@
 <script>
     let allProjectsForReport = [];
     let previewedCompletedProjects = [];
+    let allCompletedProjects = [];
     const urlParams = new URLSearchParams(window.location.search);
 
     function generateCompletedPreview() {
@@ -389,6 +393,7 @@
             .then(res => res.json())
             .then(data => {
                 const completed = data.filter(p => p.finishedAt);
+                allCompletedProjects = completed;
                 const start = new Date(startDateInput);
                 const end = new Date(endDateInput);
 
@@ -667,6 +672,7 @@
             if (response.ok) {
                 const allProjects = await response.json();
                 const completedProjects = allProjects.filter(project => project.finishedAt);
+                allCompletedProjects = completedProjects;
                 renderCompletedProjects(completedProjects);
             }
         } catch (error) {
@@ -705,6 +711,19 @@
                 `;
             container.appendChild(item);
         });
+    }
+
+    function filterCompletedProjects() {
+        const searchInput = document.getElementById('completedProjectsSearchInput');
+        const query = searchInput.value.toLowerCase();
+
+        if (!allCompletedProjects) return;
+
+        const filteredProjects = allCompletedProjects.filter(project =>
+            project.name.toLowerCase().includes(query)
+        );
+
+        renderCompletedProjects(filteredProjects);
     }
 
     async function deleteCompletedProject(projectId) {
@@ -1201,6 +1220,10 @@
             project.name.toLowerCase().includes(query)
         );
         renderProjects(filtered);
+    });
+
+    document.getElementById("completedProjectsSearchInput").addEventListener("input", function () {
+        filterCompletedProjects();
     });
 
     window.addEventListener("load", function () {
