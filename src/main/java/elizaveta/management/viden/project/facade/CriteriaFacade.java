@@ -54,6 +54,7 @@ public class CriteriaFacade {
                         .userEmail(criteria.getAnalyst().getLastName() + " " + criteria.getAnalyst().getFirstName())
                         .description(criteria.getDescription())
                         .status(criteria.getStatus())
+                        .offer(criteria.getOffer())
                         .deadline(criteria.getDeadline())
                         .build())
                 .collect(Collectors.toList());

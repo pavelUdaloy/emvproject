@@ -253,6 +253,7 @@
                 <th>Срок</th>
                 <th>Ответственный аналитик</th>
                 <th>Комментарии</th>
+                <th>Предложение</th>
             </tr>
             </thead>
             <tbody id="criteriesTable"></tbody>
@@ -375,6 +376,7 @@
                             <td>
                                 <div id="comments-${criteria.criteriaId}" class="comments-container"></div>
                             </td>
+                            <td>${criteria.offer || 'Нет предложения'}</td>
                         `;
                         criteriesTableBody.appendChild(row);
                         loadComments(criteria.projectId, criteria.criteriaId, document.getElementById(`comments-${criteria.criteriaId}`));
